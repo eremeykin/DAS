@@ -77,7 +77,7 @@ public final class EditorTopComponent extends TopComponent implements ExplorerMa
 
         //Hide the root node, since we only care about the children:
         ov.getOutline().setRootVisible(false);
-              
+        ov.getOutline().setShowGrid(true);
 
         //Add the OutlineView to the TopComponent:
         add(ov, BorderLayout.CENTER);
