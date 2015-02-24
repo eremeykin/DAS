@@ -1,5 +1,6 @@
 package eremeykin.pete.viewport;
 
+import com.interactivemesh.j3d.community.utils.navigation.orbit.OrbitBehaviorInterim;
 import com.sun.j3d.exp.swing.JCanvas3D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
@@ -69,6 +70,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.vecmath.Color3f;
+import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import org.openide.windows.TopComponent;
 
@@ -132,35 +134,40 @@ public final class AppletObjLoader {
 
     private ClassLoader classLoader = null;
     private SimpleUniverse universe;
+    private TransformGroup objRot;
 
     public AppletObjLoader(TopComponent window) {
 
         try {
-//
-//            BranchGroup bg = new BranchGroup();
-//            ColorCube cube = new ColorCube(0.9f);
-//            bg.addChild(cube);
-//// JCanvas
-//            JCanvas3D jCanvas = new JCanvas3D();
-//            jCanvas.setLayout(new BorderLayout());
-//            jCanvas.setResizeMode(JCanvas3D.RESIZE_IMMEDIATELY);
-//            window.setLayout(new BorderLayout());
-//            Dimension dim = new Dimension(500, 500);
-//            jCanvas.setPreferredSize(dim);
-//            jCanvas.setSize(dim);
-//            TransformGroup listenerGroup= new TransformGroup();
-//            
-//            window.add("Center", jCanvas);
-//            
-//
-//            canvas3D = jCanvas.getOffscreenCanvas3D();
-//
-//            universe = new SimpleUniverse(canvas3D);
-//            BranchGroup scene = createSceneGraph();
-//
-//            universe.getViewingPlatform().setNominalViewingTransform();
-//            universe.addBranchGraph(scene);
-//            universe.addBranchGraph(sceneBranch);
+
+            BranchGroup bg = new BranchGroup();
+            ColorCube cube = new ColorCube(0.9f);
+            bg.addChild(cube);
+// JCanvas
+            JCanvas3D jCanvas = new JCanvas3D();
+            jCanvas.setLayout(new BorderLayout());
+            jCanvas.setResizeMode(JCanvas3D.RESIZE_IMMEDIATELY);
+            window.setLayout(new BorderLayout());
+            Dimension dim = new Dimension(500, 500);
+            jCanvas.setPreferredSize(dim);
+            jCanvas.setSize(dim);
+            TransformGroup listenerGroup= new TransformGroup();
+            
+            window.add("Center", jCanvas);
+            
+
+            canvas3D = jCanvas.getOffscreenCanvas3D();
+
+            universe = new SimpleUniverse(canvas3D);
+            BranchGroup scene = createSceneGraph();
+
+            universe.getViewingPlatform().setNominalViewingTransform();
+            universe.addBranchGraph(scene);
+            universe.addBranchGraph(sceneBranch);
+            
+            OrbitBehaviorInterim obi = new OrbitBehaviorInterim(jCanvas, objRot);
+            obi.setRotateEnable(true);
+            obi.setRotationCenter(new Point3d(0, 0, 0));
             
             
 //
@@ -178,28 +185,28 @@ public final class AppletObjLoader {
             }
 /////////////////////////////////////////////////////////////////////////////////////
             /////////////////////////////////////////////////////////////////////////
-            window.setLayout(new BorderLayout());
-            GraphicsConfiguration config
-                    = SimpleUniverse.getPreferredConfiguration();
-            Canvas3D canvas3D = new Canvas3D(config);
-
-            JCanvas3D p = new JCanvas3D();
-            p.setLayout(new  BorderLayout());
-            p.add("Center", canvas3D);
-//            Panel panel = new Panel(new BorderLayout());
-//            panel.add("Center", canvas3D);
-            window.add("Center", p);
-
-            BranchGroup scene = createSceneGraph();
-            SimpleUniverse simpleU = new SimpleUniverse(canvas3D);
-
-            simpleU.getViewingPlatform().setNominalViewingTransform();
-            simpleU.addBranchGraph(scene);
-            simpleU.addBranchGraph(sceneBranch);
-            
-             if (false) {
-                throw new MalformedURLException();
-            }
+//            window.setLayout(new BorderLayout());
+//            GraphicsConfiguration config
+//                    = SimpleUniverse.getPreferredConfiguration();
+//            Canvas3D canvas3D = new Canvas3D(config);
+//
+//            JCanvas3D p = new JCanvas3D();
+//            p.setLayout(new  BorderLayout());
+//            p.add("Center", canvas3D);
+////            Panel panel = new Panel(new BorderLayout());
+////            panel.add("Center", canvas3D);
+//            window.add("Center", p);
+//
+//            BranchGroup scene = createSceneGraph();
+//            SimpleUniverse simpleU = new SimpleUniverse(canvas3D);
+//
+//            simpleU.getViewingPlatform().setNominalViewingTransform();
+//            simpleU.addBranchGraph(scene);
+//            simpleU.addBranchGraph(sceneBranch);
+//            
+//             if (false) {
+//                throw new MalformedURLException();
+//            }
 
         } catch (MalformedURLException ex) {
             Logger.getLogger(AppletObjLoader.class.getName()).log(Level.SEVERE, null, ex);
@@ -284,7 +291,7 @@ public final class AppletObjLoader {
         // jar:http://www.interactivemesh.org/sourcecode/webstart/appletObjLoader.jar!/com/interactivemesh/j3d/sourcecode/applet/scenes/Fish.wrl			
 //        File f = new File("C:\\Users\\Pete\\Desktop\\DAS\\YouTube-tutorials-master\\res\\models\\bunny.obj");
 //        File f = new File("C:\\Users\\Pete\\Desktop\\DAS\\Beethoven.obj");
-        File f = new File("C:\\Users\\Pete\\Desktop\\Курсовой DAS\\Модели 3D\\bunny.obj");
+        File f = new File("C:\\Users\\Pete\\Desktop\\Курсовой DAS\\Модели 3D\\test.obj");
 
         URL sceneUrl = f.toURI().toURL();
 //        sceneUrl = null;
@@ -513,7 +520,7 @@ public final class AppletObjLoader {
 
         BranchGroup Root = new BranchGroup();
 
-        TransformGroup objRot = new TransformGroup();
+        objRot = new TransformGroup();
 
         objRot.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
         objRot.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
