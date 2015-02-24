@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<!-- не забы дописать вычленене таблицы  колонки из атрибтов -->
+
+<root name="Модель" description="" value="">
+    <name>Модель</name>
+    <description></description>
+    <value></value>
+    <node>
+        <name>Деталь</name>
+        <description></description>
+        <value></value>
+        <node id="INNER_RADIUS">
+            <name>Внешний радиус</name>
+            <description>Внешний радиус цилиндрической детали [мм]</description>
+            <value editor="textField"></value>
+        </node>
+        <node id="OUTER_RADIUS">
+            <name>Внутренний радиус</name>
+            <description>Внешний радиус цилиндрической детали [мм]</description>
+            <value editor="textField"></value>
+        </node>
+        <node id="LENGTH">
+            <name>Длина</name>
+            <description>Высота цилиндра [мм]</description>
+            <value editor="textField"></value>
+        </node>
+        <node>
+            <name>Материал</name>
+            <description></description>
+            <value></value>
+            <node id="PART_MATERIAL_NAME">
+                <name>Название</name>
+                <description>Название материала заготовки</description>
+                <value editor="comboBox" source="dataBase" table="part_material" name="name"></value>
+            </node>
+            <node id="PART_E_MODULUS">
+                <name>Модуль упругости</name>
+                <description>Значение модуля упругости (Юнга) для материала детали [МПа]</description>
+                <value></value>
+            </node>
+            <node id="PART_POISSON">
+                <name>Коэффициент Пуассона</name>
+                <description>Значение коэффициента Пуассона для материала детали [-]</description>
+                <value></value>
+            </node>
+        </node>
+    </node>
+    <node>
+        <name>Кулачки</name>
+        <description></description>
+        <value></value>
+        <node id="JAW_DELTA">
+            <name>Величина смещения</name>
+            <description>Величина смещения каждого из кулачков в радиальном направлении при закреплении [мкм]</description>
+            <value editor="textField"></value>       
+        </node>
+        <node>
+            <name>Размеры</name>
+            <description></description>
+            <value></value>
+            <node id="JAW_LENGTH">
+                <name>Длина</name>
+                <description>Длина кулачка [мм]</description>
+                <value editor="textField"></value>
+            </node>
+            <node  id="JAW_WIDTH">
+                <name>Высота</name>
+                <description>Высота кулачка [мм]</description>
+                <value editor="textField"></value>
+            </node>
+            <node  id="JAW_HEIGHT">
+                <name>Ширина</name>
+                <description>Ширина кулачка [мм]</description>
+                <value editor="textField"></value>
+            </node>
+        </node>
+        <node>
+            <name>Материал</name>
+            <description></description>
+            <value></value>
+            <node id="JAW_MATERIAL_NAME">
+                <name >Название</name>
+                <description>Название материала кулачка</description>
+                <value editor="comboBox" source="dataBase" table="part_material" name="name"></value>
+            </node>
+            <node id="JAW_E_MODULUS">
+                <name>Модуль упругости</name>
+                <description>Значение модуля упругости (Юнга) для материала кулачка [МПа]</description>
+                <value></value>
+            </node>
+            <node  id="JAW_POISSON">
+                <name>Коэффициент Пуассона</name>
+                <description>Значение коэффициента Пуассона для материала кулачка [-]</description>
+                <value></value>
+            </node>
+        </node>
+    </node>
+    <node>
+        <name>Силы резания</name>
+        <description></description>
+        <value></value>
+        <node>
+            <name>Проекции</name>
+            <description></description>
+            <value></value>
+            <node id="FORCE_TAN">
+                <name >Касательная, Ftan</name>
+                <description>Касательная составляющая силы резания [Н]</description>
+                <value editor="textField"></value>
+            </node>
+            <node  id="FORCE_RAD">
+                <name>Радиальная, Frad</name>
+                <description>Радиальная составляющая силы резания [Н]</description>
+                <value editor="textField"></value>      
+            </node>
+            <node  id="FORCE_AX">
+                <name>Осевая, Fax</name>
+                <description>Осевая составляющая силы резания [Н]</description>
+                <value editor="textField"></value> 
+            </node>
+        </node>
+        <node  id="FORCE_POS">
+            <name>Угловое положение</name>
+            <description>Угловое положение силы резания [рад]</description>
+            <value editor="textField"></value>
+        </node>
+    </node>
+</root>
