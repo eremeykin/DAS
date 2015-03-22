@@ -7,47 +7,6 @@
             <suite-component/>
             <module-dependencies/>
             <public-packages>
-                <package>com.google.common.annotations</package>
-                <package>com.google.common.base</package>
-                <package>com.google.common.base.internal</package>
-                <package>com.google.common.cache</package>
-                <package>com.google.common.collect</package>
-                <package>com.google.common.eventbus</package>
-                <package>com.google.common.hash</package>
-                <package>com.google.common.io</package>
-                <package>com.google.common.math</package>
-                <package>com.google.common.net</package>
-                <package>com.google.common.primitives</package>
-                <package>com.google.common.reflect</package>
-                <package>com.google.common.util.concurrent</package>
-                <package>com.google.inject</package>
-                <package>com.google.inject.binder</package>
-                <package>com.google.inject.internal</package>
-                <package>com.google.inject.internal.util</package>
-                <package>com.google.inject.matcher</package>
-                <package>com.google.inject.name</package>
-                <package>com.google.inject.spi</package>
-                <package>com.google.inject.util</package>
-                <package>com.google.protobuf</package>
-                <package>com.lowagie.text</package>
-                <package>com.lowagie.text.factories</package>
-                <package>com.lowagie.text.html</package>
-                <package>com.lowagie.text.html.simpleparser</package>
-                <package>com.lowagie.text.pdf</package>
-                <package>com.lowagie.text.pdf.codec</package>
-                <package>com.lowagie.text.pdf.codec.wmf</package>
-                <package>com.lowagie.text.pdf.collection</package>
-                <package>com.lowagie.text.pdf.crypto</package>
-                <package>com.lowagie.text.pdf.draw</package>
-                <package>com.lowagie.text.pdf.events</package>
-                <package>com.lowagie.text.pdf.fonts</package>
-                <package>com.lowagie.text.pdf.hyphenation</package>
-                <package>com.lowagie.text.pdf.interfaces</package>
-                <package>com.lowagie.text.pdf.internal</package>
-                <package>com.lowagie.text.xml</package>
-                <package>com.lowagie.text.xml.simpleparser</package>
-                <package>com.lowagie.text.xml.xmp</package>
-                <package>com.lowagie.tools</package>
                 <package>com.microsoft.schemas.office.x2006.encryption</package>
                 <package>com.microsoft.schemas.office.x2006.encryption.impl</package>
                 <package>com.microsoft.schemas.office.x2006.keyEncryptor.certificate</package>
@@ -76,214 +35,10 @@
                 <package>com.thoughtworks.xstream.mapper</package>
                 <package>com.thoughtworks.xstream.persistence</package>
                 <package>com.thoughtworks.xstream.security</package>
-                <package>javassist</package>
-                <package>javassist.bytecode</package>
-                <package>javassist.bytecode.analysis</package>
-                <package>javassist.bytecode.annotation</package>
-                <package>javassist.bytecode.stackmap</package>
-                <package>javassist.compiler</package>
-                <package>javassist.compiler.ast</package>
-                <package>javassist.convert</package>
-                <package>javassist.expr</package>
-                <package>javassist.runtime</package>
-                <package>javassist.scopedpool</package>
-                <package>javassist.tools</package>
-                <package>javassist.tools.reflect</package>
-                <package>javassist.tools.rmi</package>
-                <package>javassist.tools.web</package>
-                <package>javassist.util</package>
-                <package>javassist.util.proxy</package>
-                <package>javax.annotation</package>
-                <package>javax.annotation.security</package>
-                <package>javax.decorator</package>
-                <package>javax.enterprise.context</package>
-                <package>javax.enterprise.context.spi</package>
-                <package>javax.enterprise.event</package>
-                <package>javax.enterprise.inject</package>
-                <package>javax.enterprise.inject.spi</package>
-                <package>javax.enterprise.util</package>
-                <package>javax.inject</package>
-                <package>javax.interceptor</package>
-                <package>javax.persistence</package>
-                <package>javax.persistence.criteria</package>
-                <package>javax.persistence.metamodel</package>
-                <package>javax.persistence.spi</package>
-                <package>javax.rules</package>
-                <package>javax.rules.admin</package>
-                <package>javax.transaction</package>
-                <package>javax.transaction.xa</package>
-                <package>javax.xml</package>
-                <package>javax.xml.datatype</package>
-                <package>javax.xml.namespace</package>
-                <package>javax.xml.parsers</package>
-                <package>javax.xml.stream</package>
-                <package>javax.xml.stream.events</package>
-                <package>javax.xml.stream.util</package>
-                <package>javax.xml.transform</package>
-                <package>javax.xml.transform.dom</package>
-                <package>javax.xml.transform.sax</package>
-                <package>javax.xml.transform.stream</package>
-                <package>javax.xml.validation</package>
-                <package>javax.xml.xpath</package>
                 <package>org.antlr.runtime</package>
                 <package>org.antlr.runtime.debug</package>
                 <package>org.antlr.runtime.misc</package>
                 <package>org.antlr.runtime.tree</package>
-                <package>org.aopalliance.aop</package>
-                <package>org.aopalliance.intercept</package>
-                <package>org.apache.commons.codec</package>
-                <package>org.apache.commons.codec.binary</package>
-                <package>org.apache.commons.codec.digest</package>
-                <package>org.apache.commons.codec.language</package>
-                <package>org.apache.commons.codec.net</package>
-                <package>org.apache.commons.logging</package>
-                <package>org.apache.commons.logging.impl</package>
-                <package>org.apache.http</package>
-                <package>org.apache.http.annotation</package>
-                <package>org.apache.http.auth</package>
-                <package>org.apache.http.auth.params</package>
-                <package>org.apache.http.client</package>
-                <package>org.apache.http.client.config</package>
-                <package>org.apache.http.client.entity</package>
-                <package>org.apache.http.client.methods</package>
-                <package>org.apache.http.client.params</package>
-                <package>org.apache.http.client.protocol</package>
-                <package>org.apache.http.client.utils</package>
-                <package>org.apache.http.concurrent</package>
-                <package>org.apache.http.config</package>
-                <package>org.apache.http.conn</package>
-                <package>org.apache.http.conn.params</package>
-                <package>org.apache.http.conn.routing</package>
-                <package>org.apache.http.conn.scheme</package>
-                <package>org.apache.http.conn.socket</package>
-                <package>org.apache.http.conn.ssl</package>
-                <package>org.apache.http.conn.util</package>
-                <package>org.apache.http.cookie</package>
-                <package>org.apache.http.cookie.params</package>
-                <package>org.apache.http.entity</package>
-                <package>org.apache.http.impl</package>
-                <package>org.apache.http.impl.auth</package>
-                <package>org.apache.http.impl.client</package>
-                <package>org.apache.http.impl.conn</package>
-                <package>org.apache.http.impl.conn.tsccm</package>
-                <package>org.apache.http.impl.cookie</package>
-                <package>org.apache.http.impl.entity</package>
-                <package>org.apache.http.impl.execchain</package>
-                <package>org.apache.http.impl.io</package>
-                <package>org.apache.http.impl.pool</package>
-                <package>org.apache.http.io</package>
-                <package>org.apache.http.message</package>
-                <package>org.apache.http.params</package>
-                <package>org.apache.http.pool</package>
-                <package>org.apache.http.protocol</package>
-                <package>org.apache.http.util</package>
-                <package>org.apache.maven</package>
-                <package>org.apache.maven.artifact</package>
-                <package>org.apache.maven.artifact.deployer</package>
-                <package>org.apache.maven.artifact.factory</package>
-                <package>org.apache.maven.artifact.handler</package>
-                <package>org.apache.maven.artifact.handler.manager</package>
-                <package>org.apache.maven.artifact.installer</package>
-                <package>org.apache.maven.artifact.manager</package>
-                <package>org.apache.maven.artifact.metadata</package>
-                <package>org.apache.maven.artifact.repository</package>
-                <package>org.apache.maven.artifact.repository.layout</package>
-                <package>org.apache.maven.artifact.repository.metadata</package>
-                <package>org.apache.maven.artifact.repository.metadata.io</package>
-                <package>org.apache.maven.artifact.repository.metadata.io.xpp3</package>
-                <package>org.apache.maven.artifact.resolver</package>
-                <package>org.apache.maven.artifact.resolver.filter</package>
-                <package>org.apache.maven.artifact.versioning</package>
-                <package>org.apache.maven.classrealm</package>
-                <package>org.apache.maven.configuration</package>
-                <package>org.apache.maven.configuration.internal</package>
-                <package>org.apache.maven.eventspy</package>
-                <package>org.apache.maven.eventspy.internal</package>
-                <package>org.apache.maven.exception</package>
-                <package>org.apache.maven.execution</package>
-                <package>org.apache.maven.execution.scope</package>
-                <package>org.apache.maven.execution.scope.internal</package>
-                <package>org.apache.maven.lifecycle</package>
-                <package>org.apache.maven.lifecycle.internal</package>
-                <package>org.apache.maven.lifecycle.internal.builder</package>
-                <package>org.apache.maven.lifecycle.internal.builder.multithreaded</package>
-                <package>org.apache.maven.lifecycle.internal.builder.singlethreaded</package>
-                <package>org.apache.maven.lifecycle.mapping</package>
-                <package>org.apache.maven.model</package>
-                <package>org.apache.maven.model.building</package>
-                <package>org.apache.maven.model.composition</package>
-                <package>org.apache.maven.model.inheritance</package>
-                <package>org.apache.maven.model.interpolation</package>
-                <package>org.apache.maven.model.io</package>
-                <package>org.apache.maven.model.io.xpp3</package>
-                <package>org.apache.maven.model.locator</package>
-                <package>org.apache.maven.model.management</package>
-                <package>org.apache.maven.model.merge</package>
-                <package>org.apache.maven.model.normalization</package>
-                <package>org.apache.maven.model.path</package>
-                <package>org.apache.maven.model.plugin</package>
-                <package>org.apache.maven.model.profile</package>
-                <package>org.apache.maven.model.profile.activation</package>
-                <package>org.apache.maven.model.resolution</package>
-                <package>org.apache.maven.model.superpom</package>
-                <package>org.apache.maven.model.validation</package>
-                <package>org.apache.maven.monitor.event</package>
-                <package>org.apache.maven.monitor.logging</package>
-                <package>org.apache.maven.plugin</package>
-                <package>org.apache.maven.plugin.descriptor</package>
-                <package>org.apache.maven.plugin.internal</package>
-                <package>org.apache.maven.plugin.lifecycle</package>
-                <package>org.apache.maven.plugin.lifecycle.io.xpp3</package>
-                <package>org.apache.maven.plugin.logging</package>
-                <package>org.apache.maven.plugin.prefix</package>
-                <package>org.apache.maven.plugin.prefix.internal</package>
-                <package>org.apache.maven.plugin.version</package>
-                <package>org.apache.maven.plugin.version.internal</package>
-                <package>org.apache.maven.profiles</package>
-                <package>org.apache.maven.profiles.activation</package>
-                <package>org.apache.maven.profiles.io.xpp3</package>
-                <package>org.apache.maven.project</package>
-                <package>org.apache.maven.project.artifact</package>
-                <package>org.apache.maven.project.inheritance</package>
-                <package>org.apache.maven.project.interpolation</package>
-                <package>org.apache.maven.project.path</package>
-                <package>org.apache.maven.project.validation</package>
-                <package>org.apache.maven.properties.internal</package>
-                <package>org.apache.maven.reporting</package>
-                <package>org.apache.maven.repository</package>
-                <package>org.apache.maven.repository.internal</package>
-                <package>org.apache.maven.repository.legacy</package>
-                <package>org.apache.maven.repository.legacy.metadata</package>
-                <package>org.apache.maven.repository.legacy.repository</package>
-                <package>org.apache.maven.repository.legacy.resolver</package>
-                <package>org.apache.maven.repository.legacy.resolver.conflict</package>
-                <package>org.apache.maven.repository.legacy.resolver.transform</package>
-                <package>org.apache.maven.repository.metadata</package>
-                <package>org.apache.maven.rtinfo</package>
-                <package>org.apache.maven.rtinfo.internal</package>
-                <package>org.apache.maven.settings</package>
-                <package>org.apache.maven.settings.building</package>
-                <package>org.apache.maven.settings.crypto</package>
-                <package>org.apache.maven.settings.io</package>
-                <package>org.apache.maven.settings.io.xpp3</package>
-                <package>org.apache.maven.settings.merge</package>
-                <package>org.apache.maven.settings.validation</package>
-                <package>org.apache.maven.toolchain</package>
-                <package>org.apache.maven.toolchain.java</package>
-                <package>org.apache.maven.toolchain.model</package>
-                <package>org.apache.maven.toolchain.model.io.xpp3</package>
-                <package>org.apache.maven.usability.plugin</package>
-                <package>org.apache.maven.usability.plugin.io.xpp3</package>
-                <package>org.apache.maven.wagon</package>
-                <package>org.apache.maven.wagon.authentication</package>
-                <package>org.apache.maven.wagon.authorization</package>
-                <package>org.apache.maven.wagon.events</package>
-                <package>org.apache.maven.wagon.observers</package>
-                <package>org.apache.maven.wagon.providers.http</package>
-                <package>org.apache.maven.wagon.proxy</package>
-                <package>org.apache.maven.wagon.repository</package>
-                <package>org.apache.maven.wagon.resource</package>
-                <package>org.apache.maven.wagon.shared.http</package>
                 <package>org.apache.poi</package>
                 <package>org.apache.poi.common.usermodel</package>
                 <package>org.apache.poi.ddf</package>
@@ -363,167 +118,6 @@
                 <package>org.apache.poi.xwpf.extractor</package>
                 <package>org.apache.poi.xwpf.model</package>
                 <package>org.apache.poi.xwpf.usermodel</package>
-                <package>org.apache.tools.ant</package>
-                <package>org.apache.tools.ant.dispatch</package>
-                <package>org.apache.tools.ant.filters</package>
-                <package>org.apache.tools.ant.filters.util</package>
-                <package>org.apache.tools.ant.helper</package>
-                <package>org.apache.tools.ant.input</package>
-                <package>org.apache.tools.ant.launch</package>
-                <package>org.apache.tools.ant.listener</package>
-                <package>org.apache.tools.ant.loader</package>
-                <package>org.apache.tools.ant.property</package>
-                <package>org.apache.tools.ant.taskdefs</package>
-                <package>org.apache.tools.ant.taskdefs.compilers</package>
-                <package>org.apache.tools.ant.taskdefs.condition</package>
-                <package>org.apache.tools.ant.taskdefs.cvslib</package>
-                <package>org.apache.tools.ant.taskdefs.email</package>
-                <package>org.apache.tools.ant.taskdefs.optional</package>
-                <package>org.apache.tools.ant.taskdefs.optional.ccm</package>
-                <package>org.apache.tools.ant.taskdefs.optional.clearcase</package>
-                <package>org.apache.tools.ant.taskdefs.optional.depend</package>
-                <package>org.apache.tools.ant.taskdefs.optional.depend.constantpool</package>
-                <package>org.apache.tools.ant.taskdefs.optional.ejb</package>
-                <package>org.apache.tools.ant.taskdefs.optional.extension</package>
-                <package>org.apache.tools.ant.taskdefs.optional.extension.resolvers</package>
-                <package>org.apache.tools.ant.taskdefs.optional.i18n</package>
-                <package>org.apache.tools.ant.taskdefs.optional.j2ee</package>
-                <package>org.apache.tools.ant.taskdefs.optional.javacc</package>
-                <package>org.apache.tools.ant.taskdefs.optional.javah</package>
-                <package>org.apache.tools.ant.taskdefs.optional.jlink</package>
-                <package>org.apache.tools.ant.taskdefs.optional.jsp</package>
-                <package>org.apache.tools.ant.taskdefs.optional.jsp.compilers</package>
-                <package>org.apache.tools.ant.taskdefs.optional.native2ascii</package>
-                <package>org.apache.tools.ant.taskdefs.optional.net</package>
-                <package>org.apache.tools.ant.taskdefs.optional.pvcs</package>
-                <package>org.apache.tools.ant.taskdefs.optional.script</package>
-                <package>org.apache.tools.ant.taskdefs.optional.sos</package>
-                <package>org.apache.tools.ant.taskdefs.optional.testing</package>
-                <package>org.apache.tools.ant.taskdefs.optional.unix</package>
-                <package>org.apache.tools.ant.taskdefs.optional.vss</package>
-                <package>org.apache.tools.ant.taskdefs.optional.windows</package>
-                <package>org.apache.tools.ant.taskdefs.rmic</package>
-                <package>org.apache.tools.ant.types</package>
-                <package>org.apache.tools.ant.types.mappers</package>
-                <package>org.apache.tools.ant.types.optional</package>
-                <package>org.apache.tools.ant.types.optional.depend</package>
-                <package>org.apache.tools.ant.types.resources</package>
-                <package>org.apache.tools.ant.types.resources.comparators</package>
-                <package>org.apache.tools.ant.types.resources.selectors</package>
-                <package>org.apache.tools.ant.types.selectors</package>
-                <package>org.apache.tools.ant.types.selectors.modifiedselector</package>
-                <package>org.apache.tools.ant.types.spi</package>
-                <package>org.apache.tools.ant.util</package>
-                <package>org.apache.tools.ant.util.depend</package>
-                <package>org.apache.tools.ant.util.facade</package>
-                <package>org.apache.tools.ant.util.java15</package>
-                <package>org.apache.tools.ant.util.optional</package>
-                <package>org.apache.tools.ant.util.regexp</package>
-                <package>org.apache.tools.bzip2</package>
-                <package>org.apache.tools.mail</package>
-                <package>org.apache.tools.tar</package>
-                <package>org.apache.tools.zip</package>
-                <package>org.apache.xmlbeans</package>
-                <package>org.apache.xmlbeans.impl.common</package>
-                <package>org.apache.xmlbeans.impl.config</package>
-                <package>org.apache.xmlbeans.impl.inst2xsd</package>
-                <package>org.apache.xmlbeans.impl.inst2xsd.util</package>
-                <package>org.apache.xmlbeans.impl.jam</package>
-                <package>org.apache.xmlbeans.impl.jam.annotation</package>
-                <package>org.apache.xmlbeans.impl.jam.internal</package>
-                <package>org.apache.xmlbeans.impl.jam.internal.classrefs</package>
-                <package>org.apache.xmlbeans.impl.jam.internal.elements</package>
-                <package>org.apache.xmlbeans.impl.jam.internal.javadoc</package>
-                <package>org.apache.xmlbeans.impl.jam.internal.parser</package>
-                <package>org.apache.xmlbeans.impl.jam.internal.reflect</package>
-                <package>org.apache.xmlbeans.impl.jam.mutable</package>
-                <package>org.apache.xmlbeans.impl.jam.provider</package>
-                <package>org.apache.xmlbeans.impl.jam.visitor</package>
-                <package>org.apache.xmlbeans.impl.jam.xml</package>
-                <package>org.apache.xmlbeans.impl.piccolo.io</package>
-                <package>org.apache.xmlbeans.impl.piccolo.util</package>
-                <package>org.apache.xmlbeans.impl.piccolo.xml</package>
-                <package>org.apache.xmlbeans.impl.regex</package>
-                <package>org.apache.xmlbeans.impl.richParser</package>
-                <package>org.apache.xmlbeans.impl.schema</package>
-                <package>org.apache.xmlbeans.impl.soap</package>
-                <package>org.apache.xmlbeans.impl.store</package>
-                <package>org.apache.xmlbeans.impl.tool</package>
-                <package>org.apache.xmlbeans.impl.util</package>
-                <package>org.apache.xmlbeans.impl.validator</package>
-                <package>org.apache.xmlbeans.impl.values</package>
-                <package>org.apache.xmlbeans.impl.xb.ltgfmt</package>
-                <package>org.apache.xmlbeans.impl.xb.ltgfmt.impl</package>
-                <package>org.apache.xmlbeans.impl.xb.substwsdl</package>
-                <package>org.apache.xmlbeans.impl.xb.substwsdl.impl</package>
-                <package>org.apache.xmlbeans.impl.xb.xmlconfig</package>
-                <package>org.apache.xmlbeans.impl.xb.xmlconfig.impl</package>
-                <package>org.apache.xmlbeans.impl.xb.xmlschema</package>
-                <package>org.apache.xmlbeans.impl.xb.xmlschema.impl</package>
-                <package>org.apache.xmlbeans.impl.xb.xsdownload</package>
-                <package>org.apache.xmlbeans.impl.xb.xsdownload.impl</package>
-                <package>org.apache.xmlbeans.impl.xb.xsdschema</package>
-                <package>org.apache.xmlbeans.impl.xb.xsdschema.impl</package>
-                <package>org.apache.xmlbeans.impl.xsd2inst</package>
-                <package>org.apache.xmlbeans.soap</package>
-                <package>org.apache.xmlbeans.xml.stream</package>
-                <package>org.apache.xmlbeans.xml.stream.events</package>
-                <package>org.apache.xmlbeans.xml.stream.utils</package>
-                <package>org.apache.xmlcommons</package>
-                <package>org.codehaus.classworlds</package>
-                <package>org.codehaus.plexus</package>
-                <package>org.codehaus.plexus.classworlds</package>
-                <package>org.codehaus.plexus.classworlds.launcher</package>
-                <package>org.codehaus.plexus.classworlds.realm</package>
-                <package>org.codehaus.plexus.classworlds.strategy</package>
-                <package>org.codehaus.plexus.component</package>
-                <package>org.codehaus.plexus.component.annotations</package>
-                <package>org.codehaus.plexus.component.composition</package>
-                <package>org.codehaus.plexus.component.configurator</package>
-                <package>org.codehaus.plexus.component.configurator.converters</package>
-                <package>org.codehaus.plexus.component.configurator.converters.basic</package>
-                <package>org.codehaus.plexus.component.configurator.converters.composite</package>
-                <package>org.codehaus.plexus.component.configurator.converters.lookup</package>
-                <package>org.codehaus.plexus.component.configurator.converters.special</package>
-                <package>org.codehaus.plexus.component.configurator.expression</package>
-                <package>org.codehaus.plexus.component.factory</package>
-                <package>org.codehaus.plexus.component.repository</package>
-                <package>org.codehaus.plexus.component.repository.exception</package>
-                <package>org.codehaus.plexus.configuration</package>
-                <package>org.codehaus.plexus.configuration.xml</package>
-                <package>org.codehaus.plexus.context</package>
-                <package>org.codehaus.plexus.interpolation</package>
-                <package>org.codehaus.plexus.interpolation.multi</package>
-                <package>org.codehaus.plexus.interpolation.object</package>
-                <package>org.codehaus.plexus.interpolation.os</package>
-                <package>org.codehaus.plexus.interpolation.reflection</package>
-                <package>org.codehaus.plexus.interpolation.util</package>
-                <package>org.codehaus.plexus.logging</package>
-                <package>org.codehaus.plexus.logging.console</package>
-                <package>org.codehaus.plexus.personality.plexus.lifecycle.phase</package>
-                <package>org.codehaus.plexus.util</package>
-                <package>org.codehaus.plexus.util.cli</package>
-                <package>org.codehaus.plexus.util.cli.shell</package>
-                <package>org.codehaus.plexus.util.dag</package>
-                <package>org.codehaus.plexus.util.introspection</package>
-                <package>org.codehaus.plexus.util.io</package>
-                <package>org.codehaus.plexus.util.reflection</package>
-                <package>org.codehaus.plexus.util.xml</package>
-                <package>org.codehaus.plexus.util.xml.pull</package>
-                <package>org.dom4j</package>
-                <package>org.dom4j.bean</package>
-                <package>org.dom4j.datatype</package>
-                <package>org.dom4j.dom</package>
-                <package>org.dom4j.dtd</package>
-                <package>org.dom4j.io</package>
-                <package>org.dom4j.jaxb</package>
-                <package>org.dom4j.rule</package>
-                <package>org.dom4j.rule.pattern</package>
-                <package>org.dom4j.swing</package>
-                <package>org.dom4j.tree</package>
-                <package>org.dom4j.util</package>
-                <package>org.dom4j.xpath</package>
-                <package>org.dom4j.xpp</package>
                 <package>org.drools.compiler.builder.impl</package>
                 <package>org.drools.compiler.builder.impl.errors</package>
                 <package>org.drools.compiler.cdi</package>
@@ -636,75 +230,11 @@
                 <package>org.drools.decisiontable.parser</package>
                 <package>org.drools.decisiontable.parser.csv</package>
                 <package>org.drools.decisiontable.parser.xls</package>
-                <package>org.drools.jsr94.rules</package>
-                <package>org.drools.jsr94.rules.admin</package>
-                <package>org.drools.jsr94.rules.repository</package>
-                <package>org.drools.persistence</package>
-                <package>org.drools.persistence.info</package>
-                <package>org.drools.persistence.jpa</package>
-                <package>org.drools.persistence.jpa.marshaller</package>
-                <package>org.drools.persistence.jpa.processinstance</package>
-                <package>org.drools.persistence.jta</package>
-                <package>org.drools.persistence.map</package>
-                <package>org.drools.persistence.osgi</package>
                 <package>org.drools.template</package>
                 <package>org.drools.template.jdbc</package>
                 <package>org.drools.template.model</package>
                 <package>org.drools.template.objects</package>
                 <package>org.drools.template.parser</package>
-                <package>org.drools.verifier</package>
-                <package>org.drools.verifier.builder</package>
-                <package>org.drools.verifier.components</package>
-                <package>org.drools.verifier.data</package>
-                <package>org.drools.verifier.doc</package>
-                <package>org.drools.verifier.jarloader</package>
-                <package>org.drools.verifier.misc</package>
-                <package>org.drools.verifier.report</package>
-                <package>org.drools.verifier.report.components</package>
-                <package>org.drools.verifier.report.html</package>
-                <package>org.drools.verifier.solver</package>
-                <package>org.drools.verifier.visitor</package>
-                <package>org.eclipse.aether</package>
-                <package>org.eclipse.aether.artifact</package>
-                <package>org.eclipse.aether.collection</package>
-                <package>org.eclipse.aether.connector.basic</package>
-                <package>org.eclipse.aether.deployment</package>
-                <package>org.eclipse.aether.graph</package>
-                <package>org.eclipse.aether.impl</package>
-                <package>org.eclipse.aether.impl.guice</package>
-                <package>org.eclipse.aether.installation</package>
-                <package>org.eclipse.aether.internal.impl</package>
-                <package>org.eclipse.aether.internal.impl.slf4j</package>
-                <package>org.eclipse.aether.internal.transport.wagon</package>
-                <package>org.eclipse.aether.metadata</package>
-                <package>org.eclipse.aether.repository</package>
-                <package>org.eclipse.aether.resolution</package>
-                <package>org.eclipse.aether.spi.connector</package>
-                <package>org.eclipse.aether.spi.connector.checksum</package>
-                <package>org.eclipse.aether.spi.connector.layout</package>
-                <package>org.eclipse.aether.spi.connector.transport</package>
-                <package>org.eclipse.aether.spi.io</package>
-                <package>org.eclipse.aether.spi.localrepo</package>
-                <package>org.eclipse.aether.spi.locator</package>
-                <package>org.eclipse.aether.spi.log</package>
-                <package>org.eclipse.aether.transfer</package>
-                <package>org.eclipse.aether.transport.file</package>
-                <package>org.eclipse.aether.transport.http</package>
-                <package>org.eclipse.aether.transport.wagon</package>
-                <package>org.eclipse.aether.util</package>
-                <package>org.eclipse.aether.util.artifact</package>
-                <package>org.eclipse.aether.util.concurrency</package>
-                <package>org.eclipse.aether.util.filter</package>
-                <package>org.eclipse.aether.util.graph.manager</package>
-                <package>org.eclipse.aether.util.graph.selector</package>
-                <package>org.eclipse.aether.util.graph.transformer</package>
-                <package>org.eclipse.aether.util.graph.traverser</package>
-                <package>org.eclipse.aether.util.graph.version</package>
-                <package>org.eclipse.aether.util.graph.visitor</package>
-                <package>org.eclipse.aether.util.listener</package>
-                <package>org.eclipse.aether.util.repository</package>
-                <package>org.eclipse.aether.util.version</package>
-                <package>org.eclipse.aether.version</package>
                 <package>org.eclipse.jdt.core</package>
                 <package>org.eclipse.jdt.core.compiler</package>
                 <package>org.eclipse.jdt.core.compiler.batch</package>
@@ -726,24 +256,8 @@
                 <package>org.eclipse.jdt.internal.compiler.problem</package>
                 <package>org.eclipse.jdt.internal.compiler.tool</package>
                 <package>org.eclipse.jdt.internal.compiler.util</package>
-                <package>org.eclipse.sisu</package>
-                <package>org.eclipse.sisu.bean</package>
-                <package>org.eclipse.sisu.inject</package>
-                <package>org.eclipse.sisu.launch</package>
-                <package>org.eclipse.sisu.plexus</package>
-                <package>org.eclipse.sisu.space</package>
-                <package>org.eclipse.sisu.space.asm</package>
-                <package>org.eclipse.sisu.wire</package>
-                <package>org.jsoup</package>
-                <package>org.jsoup.examples</package>
-                <package>org.jsoup.helper</package>
-                <package>org.jsoup.nodes</package>
-                <package>org.jsoup.parser</package>
-                <package>org.jsoup.safety</package>
-                <package>org.jsoup.select</package>
                 <package>org.kie.api</package>
                 <package>org.kie.api.builder</package>
-                <package>org.kie.api.builder.helper</package>
                 <package>org.kie.api.builder.model</package>
                 <package>org.kie.api.cdi</package>
                 <package>org.kie.api.command</package>
@@ -825,9 +339,6 @@
                 <package>org.kie.internal.task.service</package>
                 <package>org.kie.internal.utils</package>
                 <package>org.kie.internal.weaver</package>
-                <package>org.kie.scanner</package>
-                <package>org.kie.scanner.embedder</package>
-                <package>org.kie.scanner.management</package>
                 <package>org.mvel2</package>
                 <package>org.mvel2.asm</package>
                 <package>org.mvel2.asm.commons</package>
@@ -885,34 +396,8 @@
                 <package>org.slf4j</package>
                 <package>org.slf4j.helpers</package>
                 <package>org.slf4j.spi</package>
-                <package>org.sonatype.inject</package>
-                <package>org.sonatype.plexus.components.cipher</package>
-                <package>org.sonatype.plexus.components.sec.dispatcher</package>
-                <package>org.sonatype.plexus.components.sec.dispatcher.model</package>
-                <package>org.sonatype.plexus.components.sec.dispatcher.model.io.xpp3</package>
-                <package>org.w3c.dom</package>
-                <package>org.w3c.dom.bootstrap</package>
-                <package>org.w3c.dom.css</package>
-                <package>org.w3c.dom.events</package>
-                <package>org.w3c.dom.html</package>
-                <package>org.w3c.dom.ls</package>
-                <package>org.w3c.dom.ranges</package>
-                <package>org.w3c.dom.stylesheets</package>
-                <package>org.w3c.dom.traversal</package>
-                <package>org.w3c.dom.views</package>
-                <package>org.w3c.dom.xpath</package>
-                <package>org.xml.sax</package>
-                <package>org.xml.sax.ext</package>
-                <package>org.xml.sax.helpers</package>
-                <package>org.xmlpull.mxp1</package>
-                <package>org.xmlpull.v1</package>
-                <package>repackage</package>
                 <package>schemaorg_apache_xmlbeans.system.sE130CAA0A01A7CDE5A2B4FEB8B311707</package>
                 <package>schemaorg_apache_xmlbeans.system.sE5DEF300EF120945DCDBF7C4471C059C</package>
-                <package>schemaorg_apache_xmlbeans.system.sXMLCONFIG</package>
-                <package>schemaorg_apache_xmlbeans.system.sXMLLANG</package>
-                <package>schemaorg_apache_xmlbeans.system.sXMLSCHEMA</package>
-                <package>schemaorg_apache_xmlbeans.system.sXMLTOOLS</package>
                 <package>schemasMicrosoftComOfficeExcel</package>
                 <package>schemasMicrosoftComOfficeExcel.impl</package>
                 <package>schemasMicrosoftComOfficeOffice</package>
@@ -921,156 +406,24 @@
                 <package>schemasMicrosoftComVml.impl</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/ant-launcher-1.8.2.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/ant-launcher-1.8.2.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/plexus-sec-dispatcher-1.3.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/plexus-sec-dispatcher-1.3.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/wagon-http-2.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/wagon-http-2.0.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/xmlpull-1.1.3.1.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/xmlpull-1.1.3.1.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/aether-transport-http-1.0.0.v20140518.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/aether-transport-http-1.0.0.v20140518.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/aether-impl-1.0.0.v20140518.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/aether-impl-1.0.0.v20140518.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/maven-compat-3.2.2.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/maven-compat-3.2.2.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/xmlbeans-2.3.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/xmlbeans-2.3.0.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/poi-ooxml-schemas-3.10.1.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/poi-ooxml-schemas-3.10.1.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/xml-apis-1.3.04.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/xml-apis-1.3.04.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/guava-13.0.1.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/guava-13.0.1.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/javax.inject-1.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/javax.inject-1.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.sisu.plexus-0.0.0.M5.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/org.eclipse.sisu.plexus-0.0.0.M5.jar</binary-origin>
+                <runtime-relative-path>ext/drools-templates-6.2.0.Final.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/drools-templates-6.2.0.Final.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/drools-decisiontables-6.2.0.Final.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/drools-decisiontables-6.2.0.Final.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/commons-codec-1.4.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/commons-codec-1.4.jar</binary-origin>
+                <runtime-relative-path>ext/kie-internal-6.2.0.Final.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/kie-internal-6.2.0.Final.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/drools-core-6.2.0.Final.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/drools-core-6.2.0.Final.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/aether-spi-1.0.0.v20140518.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/aether-spi-1.0.0.v20140518.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/plexus-utils-3.0.17.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/plexus-utils-3.0.17.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
                 <runtime-relative-path>ext/xstream-1.4.7.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/xstream-1.4.7.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/jboss-transaction-api_1.1_spec-1.0.1.Final.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jboss-transaction-api_1.1_spec-1.0.1.Final.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.sisu.inject-0.0.0.M5.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/org.eclipse.sisu.inject-0.0.0.M5.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/stax-api-1.0.1.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/stax-api-1.0.1.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/jcl-over-slf4j-1.7.2.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jcl-over-slf4j-1.7.2.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/ecj-4.3.1.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/ecj-4.3.1.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/mvel2-2.2.4.Final.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/mvel2-2.2.4.Final.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/maven-model-3.2.2.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/maven-model-3.2.2.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/aopalliance-1.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/aopalliance-1.0.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/drools-persistence-jpa-6.2.0.Final.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/drools-persistence-jpa-6.2.0.Final.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/drools-verifier-6.2.0.Final.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/drools-verifier-6.2.0.Final.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/maven-artifact-3.2.2.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/maven-artifact-3.2.2.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/plexus-component-annotations-1.5.5.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/plexus-component-annotations-1.5.5.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/wagon-provider-api-1.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/wagon-provider-api-1.0.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/aether-api-1.0.0.v20140518.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/aether-api-1.0.0.v20140518.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/drools-jsr94-6.2.0.Final.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/drools-jsr94-6.2.0.Final.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/drools-templates-6.2.0.Final.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/drools-templates-6.2.0.Final.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/sisu-guice-3.1.0-no_aop.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/sisu-guice-3.1.0-no_aop.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/kie-internal-6.2.0.Final.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/kie-internal-6.2.0.Final.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/commons-logging-1.1.1.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/commons-logging-1.1.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/kie-api-6.2.0.Final.jar</runtime-relative-path>
@@ -1085,136 +438,28 @@
                 <binary-origin>release/modules/ext/drools-compiler-6.2.0.Final.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jsoup-1.7.1.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jsoup-1.7.1.jar</binary-origin>
+                <runtime-relative-path>ext/ecj-4.3.1.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/ecj-4.3.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven-model-builder-3.2.2.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/maven-model-builder-3.2.2.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/protobuf-java-2.5.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/protobuf-java-2.5.0.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/maven-aether-provider-3.2.2.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/maven-aether-provider-3.2.2.jar</binary-origin>
+                <runtime-relative-path>ext/poi-ooxml-schemas-3.10.1.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/poi-ooxml-schemas-3.10.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/slf4j-api-1.7.2.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/slf4j-api-1.7.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/aether-connector-basic-1.0.0.v20140518.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/aether-connector-basic-1.0.0.v20140518.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/plexus-classworlds-2.5.1.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/plexus-classworlds-2.5.1.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/itext-2.1.2.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/itext-2.1.2.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/jboss-interceptors-api_1.1_spec-1.0.1.Final.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jboss-interceptors-api_1.1_spec-1.0.1.Final.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/httpclient-4.3.6.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/httpclient-4.3.6.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/javassist-3.18.1-GA.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/javassist-3.18.1-GA.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/xpp3_min-1.1.4c.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/xpp3_min-1.1.4c.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/ant-1.8.2.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/ant-1.8.2.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/jsr94-1.1.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jsr94-1.1.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/maven-core-3.2.2.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/maven-core-3.2.2.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/cdi-api-1.0-SP4.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/cdi-api-1.0-SP4.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/wagon-http-shared4-2.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/wagon-http-shared4-2.0.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/antlr-runtime-3.5.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/antlr-runtime-3.5.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/maven-repository-metadata-3.2.2.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/maven-repository-metadata-3.2.2.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/maven-plugin-api-3.2.2.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/maven-plugin-api-3.2.2.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/maven-settings-builder-3.2.2.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/maven-settings-builder-3.2.2.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/httpcore-4.3.3.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/httpcore-4.3.3.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/aether-transport-file-1.0.0.v20140518.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/aether-transport-file-1.0.0.v20140518.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/hibernate-jpa-2.0-api-1.0.1.Final.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/hibernate-jpa-2.0-api-1.0.1.Final.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/plexus-cipher-1.4.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/plexus-cipher-1.4.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/aether-util-1.0.0.v20140518.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/aether-util-1.0.0.v20140518.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/maven-settings-3.2.2.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/maven-settings-3.2.2.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/dom4j-1.6.1.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/dom4j-1.6.1.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/jsr250-api-1.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jsr250-api-1.0.jar</binary-origin>
+                <runtime-relative-path>ext/mvel2-2.2.4.Final.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/mvel2-2.2.4.Final.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/poi-ooxml-3.10.1.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/poi-ooxml-3.10.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/aether-transport-wagon-1.0.0.v20140518.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/aether-transport-wagon-1.0.0.v20140518.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/kie-ci-6.2.0.Final.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/kie-ci-6.2.0.Final.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/plexus-interpolation-1.19.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/plexus-interpolation-1.19.jar</binary-origin>
+                <runtime-relative-path>ext/antlr-runtime-3.5.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/antlr-runtime-3.5.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>
