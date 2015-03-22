@@ -2,4 +2,4 @@
 Deformation analysis system
 
 Система анализа деформаций. Проект 10го семестра на NetBeans Platform
-![alt tag] (https://leto8h.storage.yandex.net/rdisk/c5776a5407ead6a8daaf9b640eae88de36b9e92adae69b49d7526c36a2d0787a/inf/yynXKmacaPRTI-R8dLEEXmwZEQW9YyOI-5RcQLLfHiOd9PzbDfRhSIDTV4Cw9lPEVxB7ZxX4xJ0WbLawhGzv0g==?uid=0&filename=2015-03-20%2000-09-17%20DAS%20201411181905.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&tknv=v2&rtoken=f4d1888f27b0a8eb17eeb19b7ac94949&force_default=no)
+![alt tag] (https://leto16d.storage.yandex.net/rdisk/29e75013b8e5d2269496f525fc338f6c5be30b331036eecc1caeee0079e4df8a/inf/HXUV50OZPCIe2EAd1bpI6bO99ZUFdXk3FSMAG1tV8UAxbZHEaCJwZUUsRsjA9UEK8INGSYB7TrlYI0J0R0AxNQ==?uid=0&filename=2015-03-22%2022-05-55%20DAS%20201411181905.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&tknv=v2&rtoken=46e980c1e16fba19b588db0f515881e1&force_default=no)
