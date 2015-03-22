@@ -61,6 +61,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.TabPane;
 import javax.media.j3d.AmbientLight;
+import javax.media.j3d.Bounds;
 import javax.media.j3d.Font3D;
 import javax.media.j3d.FontExtrusion;
 import javax.media.j3d.GeometryArray;
@@ -167,8 +168,7 @@ public final class AppletObjLoader {
             
             OrbitBehaviorInterim obi = new OrbitBehaviorInterim(jCanvas, objRot);
             obi.setRotateEnable(true);
-            obi.setRotationCenter(new Point3d(0, 0, 0));
-            
+            obi.setRotationCenter(new Point3d(0, 0, 0));            
             
 //
 //            universe.getViewingPlatform().setNominalViewingTransform();
@@ -291,7 +291,9 @@ public final class AppletObjLoader {
         // jar:http://www.interactivemesh.org/sourcecode/webstart/appletObjLoader.jar!/com/interactivemesh/j3d/sourcecode/applet/scenes/Fish.wrl			
 //        File f = new File("C:\\Users\\Pete\\Desktop\\DAS\\YouTube-tutorials-master\\res\\models\\bunny.obj");
 //        File f = new File("C:\\Users\\Pete\\Desktop\\DAS\\Beethoven.obj");
-        File f = new File("C:\\Users\\Pete\\Desktop\\Курсовой DAS\\Модели 3D\\test.obj");
+//        File f = new File("C:\\Users\\Pete\\Desktop\\Курсовой DAS\\Модели 3D\\test.obj");
+        File f = new File("C:\\Users\\Pete\\Desktop\\DAS porject\\Модели 3D\\test.obj");
+
 
         URL sceneUrl = f.toURI().toURL();
 //        sceneUrl = null;
@@ -537,19 +539,19 @@ public final class AppletObjLoader {
                     case 0:
                         objRot.addChild(makeBall(0.003f, start, 0.0f, 0.0f));//X
                         if (i == number - 1) {
-                            objRot.addChild(createName("X-Axis", 8 * start, 0.05f, 0.0f, e));
+                            objRot.addChild(createName("X", 10 * start, 0.05f, 0.0f, e));
                         }
                         break;
                     case 1:
                         objRot.addChild(makeBall(0.003f, 0.0f, start, 0.0f));//Y
                         if (i == number - 1) {
-                            objRot.addChild(createName("Y-Axis", 8 * start, 0.05f, 0.0f, e));
+                            objRot.addChild(createName("Y", 10 * start, 0.05f, 0.0f, e));
                         }
                         break;
                     case 2:
                         objRot.addChild(makeBall(0.003f, 0.0f, 0.0f, start));//Z
                         if (i == number - 1) {
-                            objRot.addChild(createName("Z-Axis", 8 * start, 0.05f, 0.0f, e));
+                            objRot.addChild(createName("Z", 10 * start, 0.05f, 0.0f, e));
                         }
                         break;
                 }

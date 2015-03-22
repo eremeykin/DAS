@@ -1,0 +1,133 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+dialect "mvel"
+
+/**
+ *
+ * @author Pete
+ */
+import eremeykin.pete.rulecalculator.TurningStepBean;
+import eremeykin.pete.rulecalculator.TurningStepBean.TurningType;
+import eremeykin.pete.rulecalculator.TurningStepBean.WorkpieceType;
+import eremeykin.pete.rulecalculator.TurningStepBean.InstrumentMaterial;
+import javax.swing.JOptionPane;
+import java.lang.Math;
+
+rule "Diameter is too small" 
+    when
+        $step : TurningStepBean (diameter < 6, kind == TurningStepBean.ProcessKind.EXTERNAL_TURNING) or $step : TurningStepBean (diameter < 10, kind == TurningStepBean.ProcessKind.BORING)
+    then
+        $step.setIncorrect(true);
+        $step.setErrorMessage("Диаметер слишком маленький");
+end
+
+
+
+
+rule "Set Kmv & Kmp for steel"
+    lock-on-active true
+    when
+        step : TurningStepBean (workpieceMaterial == TurningStepBean.WorkpieceMaterial.STEEL)
+    then
+        modify(step){setKmv(1.25)};
+        modify(step){setKmp(0.91)};
+end
+
+rule "Set Kmv & Kmp for cast iron"
+    lock-on-active true
+    when
+        step : TurningStepBean (workpieceMaterial == TurningStepBean.WorkpieceMaterial.CAST_IRON)
+    then
+        modify(step){setKmv(1)};
+        modify(step){setKmp(1)};
+end
+
+rule "Set Kpv for forging"
+    lock-on-active true
+    when
+        step : TurningStepBean (workpieceType == TurningStepBean.WorkpieceType.FORGING)
+    then
+        step.kpv=0.8;
+end
+
+rule "Set Kpv for casting"
+    lock-on-active true
+    when
+        step : TurningStepBean (workpieceType == TurningStepBean.WorkpieceType.CASTING)
+    then
+        modify(step){setKpv(0.85)};
+end
+
+rule "Set Kpv for rolling"
+    lock-on-active true
+    when
+        step : TurningStepBean (workpieceType == TurningStepBean.WorkpieceType.ROLLING)
+    then
+        modify(step){setKpv(0.9)};
+end
+
+rule "Set Kpv for crustless"
+    lock-on-active true
+    when
+        step : TurningStepBean (workpieceType == TurningStepBean.WorkpieceType.CRUSTLESS)
+    then
+        modify(step){setKpv(1)};
+end
+
+//rule "Set Kiv for crustless"
+//    when
+//        $step : TurningStepBean (workpieceMaterial == TurningStepBean.WorkpieceMaterial.STEEL, instrumentMaterial == TurningStepBean.InstrumentMaterial.T15K10)
+//    then
+//        $step.kpv=1;
+//end
+
+rule "Calculate V" salience -10
+    lock-on-active true
+    when
+        step : TurningStepBean (incorrect == false)
+    then
+        modify(step){setV((step.cv/(Math.pow(step.durability,step.mv)*Math.pow(step.t,step.xv)*Math.pow(step.s,step.yv)))*step.kmv*step.kpv*step.kiv)}
+end
+
+rule "Calculate Pz" salience -20
+    lock-on-active true
+    when
+        step : TurningStepBean (incorrect == false)
+    then
+        modify(step){setP(10*step.cp*Math.pow(step.t,step.xp)*Math.pow(step.s,step.yp)*Math.pow(step.v,step.np)*step.kmp)}
+end
+
+rule "Calculate M" salience -30
+    lock-on-active true
+    when
+        step : TurningStepBean (incorrect == false)
+    then
+        modify(step){setM(step.P*step.diameter/200)}
+end
+
+rule "Calculate N" salience -40
+    lock-on-active true
+    when
+        step : TurningStepBean (incorrect == false)
+    then
+        modify(step){setN(step.P*step.v/(1020*60))}
+end
+
+rule "Calculate f" salience -50
+    lock-on-active true
+    when
+        step : TurningStepBean (incorrect == false)
+    then
+        modify(step){setF(1000*step.v/(Math.PI*step.diameter))}
+end
+
+rule "Print" salience -100
+    when
+        step : TurningStepBean ()
+    then
+        System.out.println(step.toStr);
+end
