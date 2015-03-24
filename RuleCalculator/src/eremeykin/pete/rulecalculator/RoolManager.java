@@ -5,24 +5,10 @@
  */
 package eremeykin.pete.rulecalculator;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import org.drools.core.command.NewKieSessionCommand;
-import org.drools.decisiontable.InputType;
-import org.drools.decisiontable.SpreadsheetCompiler;
 import org.kie.api.KieServices;
-import org.kie.api.event.rule.DebugAgendaEventListener;
-import org.kie.api.event.rule.DebugRuleRuntimeEventListener;
-import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.FactHandle;
-import org.kie.internal.builder.DecisionTableConfiguration;
-import org.kie.internal.builder.DecisionTableInputType;
-import org.kie.internal.builder.KnowledgeBuilder;
-import org.kie.internal.builder.KnowledgeBuilderFactory;
-import org.kie.internal.io.ResourceFactory;
 
 /**
  *
@@ -44,12 +30,13 @@ public class RoolManager {
 //        ksession.addEventListener(new DebugAgendaEventListener());
 //        ksession.addEventListener(new DebugRuleRuntimeEventListener());
 
-        InputStream is = null;
-        try {
-            is = new FileInputStream("C:\\Users\\Pete\\Documents\\NetBeansProjects\\RuleCalculator\\src\\rulecalculator\\res\\RulesTable.xls");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+//        InputStream is = null;
+//        try {
+//            
+//            is = new FileInputStream("C:\\Users\\Pete\\Documents\\NetBeansProjects\\RuleCalculator\\src\\rulecalculator\\res\\RulesTable.xls");
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
 //        SpreadsheetCompiler sc = new SpreadsheetCompiler();
 //        String drl = sc.compile(is, InputType.XLS);
 //        System.out.println("Generate DRL file is –: ");

@@ -51,6 +51,7 @@ import com.sun.j3d.utils.behaviors.mouse.MouseWheelZoom;
 import com.sun.j3d.utils.geometry.ColorCube;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.universe.SimpleUniverse;
+import eremeykin.pete.configloader.ConfigLoader;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -152,10 +153,9 @@ public final class AppletObjLoader {
             Dimension dim = new Dimension(500, 500);
             jCanvas.setPreferredSize(dim);
             jCanvas.setSize(dim);
-            TransformGroup listenerGroup= new TransformGroup();
-            
+            TransformGroup listenerGroup = new TransformGroup();
+
             window.add("Center", jCanvas);
-            
 
             canvas3D = jCanvas.getOffscreenCanvas3D();
 
@@ -165,11 +165,11 @@ public final class AppletObjLoader {
             universe.getViewingPlatform().setNominalViewingTransform();
             universe.addBranchGraph(scene);
             universe.addBranchGraph(sceneBranch);
-            
+
             OrbitBehaviorInterim obi = new OrbitBehaviorInterim(jCanvas, objRot);
             obi.setRotateEnable(true);
-            obi.setRotationCenter(new Point3d(0, 0, 0));            
-            
+            obi.setRotationCenter(new Point3d(0, 0, 0));
+
 //
 //            universe.getViewingPlatform().setNominalViewingTransform();
 ////            universe.addBranchGraph(bg);
@@ -179,7 +179,6 @@ public final class AppletObjLoader {
 //            universe.getViewingPlatform().setNominalViewingTransform();
 //            universe.addBranchGraph(scene);
 ////            universe.addBranchGraph(sceneBranch);
-
             if (false) {
                 throw new MalformedURLException();
             }
@@ -292,8 +291,7 @@ public final class AppletObjLoader {
 //        File f = new File("C:\\Users\\Pete\\Desktop\\DAS\\YouTube-tutorials-master\\res\\models\\bunny.obj");
 //        File f = new File("C:\\Users\\Pete\\Desktop\\DAS\\Beethoven.obj");
 //        File f = new File("C:\\Users\\Pete\\Desktop\\Курсовой DAS\\Модели 3D\\test.obj");
-        File f = new File("C:\\Users\\Pete\\Desktop\\DAS porject\\Модели 3D\\test.obj");
-
+        File f = new File(ConfigLoader.load("path", "obj model"));
 
         URL sceneUrl = f.toURI().toURL();
 //        sceneUrl = null;
@@ -379,8 +377,7 @@ public final class AppletObjLoader {
             e.printStackTrace();
             System.exit(0);
         }
-        
-        
+
         view.addCanvas3D(canvas3D);
         //
         // SuperStructure

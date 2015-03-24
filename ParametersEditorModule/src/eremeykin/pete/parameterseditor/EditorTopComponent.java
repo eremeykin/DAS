@@ -5,17 +5,9 @@
  */
 package eremeykin.pete.parameterseditor;
 
+import eremeykin.pete.configloader.ConfigLoader;
 import java.awt.BorderLayout;
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.netbeans.swing.outline.Outline;
@@ -54,7 +46,8 @@ public final class EditorTopComponent extends TopComponent {
     private final ExplorerManager expManager = new ExplorerManager();
 
     private Outline outline;
-    private static final String DEFAULT_MODEL = "C:\\Users\\Pete\\Documents\\NetBeansProjects\\DAS\\Test model\\model1";
+
+    private static final String DEFAULT_MODEL = ConfigLoader.load("path", "default model");
     Model m;
 
     public EditorTopComponent() {
