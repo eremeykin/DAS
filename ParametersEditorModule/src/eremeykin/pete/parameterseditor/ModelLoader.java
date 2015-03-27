@@ -4,8 +4,8 @@ import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -47,13 +47,16 @@ public class ModelLoader {
             parentList.add(root);
             while (!parentList.isEmpty()) {
                 List<Parameter> childrenList = new ArrayList<>();
-                for (Iterator<Parameter> iterator = parentList.iterator(); iterator.hasNext();) {
+                for (ListIterator<Parameter> iterator = parentList.listIterator(); iterator.hasNext();) {
                     Parameter currParent = iterator.next();
                     childrenList = findChildren(currParent, table);
                     currParent.setChildren(childrenList);
                     iterator.remove();
+                    for (Parameter child : childrenList) {
+                        iterator.add(child);
+                    }
+
                 }
-                parentList.addAll(childrenList);
             }
             return root;
         } catch (SQLException ex) {
