@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
 
 public class ModelLoader {
 
@@ -19,7 +22,9 @@ public class ModelLoader {
     private static final String PARENT_COLUMN = "parent";
     private static final String SCRIPTARG_COLUMN = "script_arg";
     private static final String COMMENT_COLUMN = "comment";
-    private static final String EDITOR_COLUMN = "editor";
+    private static final String EDITOR_TYPE_COLUMN = "editor";
+    private static final String EDITOR_TABLE_COLUMN = "table";
+    private static final String EDITOR_COLUMN_COLUMN = "column";
 
     public ModelLoader(File file) throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
@@ -38,7 +43,10 @@ public class ModelLoader {
                 Integer parentId = getInteger(rs, PARENT_COLUMN);
                 Integer scarg = getInteger(rs, SCRIPTARG_COLUMN);
                 String comment = rs.getString(COMMENT_COLUMN);
-                String editor = rs.getString(EDITOR_COLUMN);
+                String eType = rs.getString(EDITOR_TYPE_COLUMN);
+                String eTable = rs.getString(EDITOR_TABLE_COLUMN);
+                String eColumn = rs.getString(EDITOR_COLUMN_COLUMN);
+                DefaultCellEditor editor = extractEditor(eType, eTable, eColumn);
                 Parameter p = new Parameter(id, name, scarg, comment, editor);
                 table.put(p, parentId);
             }
@@ -46,7 +54,7 @@ public class ModelLoader {
             List<Parameter> parentList = new ArrayList<>();
             parentList.add(root);
             while (!parentList.isEmpty()) {
-                List<Parameter> childrenList = new ArrayList<>();
+                List<Parameter> childrenList;
                 for (ListIterator<Parameter> iterator = parentList.listIterator(); iterator.hasNext();) {
                     Parameter currParent = iterator.next();
                     childrenList = findChildren(currParent, table);
@@ -105,6 +113,25 @@ public class ModelLoader {
             }
         }
         return children;
+    }
+
+    private DefaultCellEditor extractEditor(String editorType, String editorTable, String editorColumn) throws SQLException {
+        if (editorType == null) {
+            return null;
+        }
+        if (editorType.equals("text")) {
+            return new DefaultCellEditor(new JTextField());
+        }
+        if (editorType.equals("cbox")) {
+            Statement st = connection.createStatement();
+            ResultSet rs = st.executeQuery("select " + editorColumn + " from " + editorTable + ";");
+            List items = new ArrayList();
+            while (rs.next()) {
+                items.add(rs.getString(editorColumn));
+            }
+            return new DefaultCellEditor(new JComboBox(items.toArray()));
+        }
+        return null;
     }
 
     public static class LoadingException extends Exception {

@@ -55,22 +55,11 @@ public final class EditorTopComponent extends TopComponent {
         try {
             setName("Parameter Editor");
             setLayout(new BorderLayout());
-//            URL defaultModel = getClass().getResource(DEFAULT_MODEL);
             File defaultModelFile = new File(DEFAULT_MODEL);
             m = new Model(defaultModelFile);
             JScrollPane jsPane = new JScrollPane();
-//            System.err.println(m.getOutline().getRowCount());
             jsPane.setViewportView(new OutlineCreator(m.getRoot()).getOutline());
             add(jsPane);
-//            jTabbedPane1.setTabComponentAt(0, new ButtonTabComponent(jTabbedPane1));
-//            jTabbedPane1.setTitleAt(0, "model1.zip");
-//            m.getOutline().addMouseListener(new PopClickListener());
-//            jsPane.setViewportView(m.getOutline());
-//            this.add(jsPane);
-//            jTabbedPane1.add(jsPane);
-//            jTabbedPane1.setTabComponentAt(0, new ButtonTabComponent(jTabbedPane1));
-//            jTabbedPane1.setTitleAt(0, "model1.zip");
-//            m.getOutline().addMouseListener(new PopClickListener());
 
         } catch (Exception e) {
             e.printStackTrace();

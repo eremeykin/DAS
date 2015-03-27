@@ -7,13 +7,10 @@ package eremeykin.pete.parameterseditor;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
 import javax.swing.JTextField;
-import javax.swing.table.TableCellEditor;
-import javax.swing.tree.DefaultTreeCellEditor;
 
 /**
  *
@@ -21,16 +18,16 @@ import javax.swing.tree.DefaultTreeCellEditor;
  */
 public class Parameter {
 
-    private Integer id;
-    private String name;
+    private final Integer id;
+    private final String name;
     private Parameter parent;
-    private Integer scriptArg;
+    private final Integer scriptArg;
     private String value;
-    private String comment;
-    private String editor;
+    private final String comment;
+    private final DefaultCellEditor editor;
     private List<Parameter> children = new ArrayList<>();
 
-    public Parameter(Integer id, String name, Integer scriptArg, String comment, String editor) {
+    public Parameter(Integer id, String name, Integer scriptArg, String comment, DefaultCellEditor editor) {
         this.id = id;
         this.name = name;
         this.scriptArg = scriptArg;
@@ -75,10 +72,11 @@ public class Parameter {
         this.children = children;
     }
 
-    public DefaultCellEditor getEditor() {
-        return new DefaultCellEditor(new JTextField());
+    @Deprecated
+    DefaultCellEditor getEditor() {
+        return editor;
     }
-
+    
     @Override
     public String toString() {
         return name; //To change body of generated methods, choose Tools | Templates.
