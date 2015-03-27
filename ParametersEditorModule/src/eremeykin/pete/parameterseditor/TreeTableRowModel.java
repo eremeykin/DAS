@@ -37,13 +37,13 @@ public class TreeTableRowModel implements RowModel {
     }
 
     @Override
-    public Object getValueFor(Object node, int column) {
-        Node n = (Node) node;
+    public Object getValueFor(Object object, int column) {
+        Parameter parameter = (Parameter) object;
         switch (column) {
             case 0:
-                return n.getDescription();
+                return parameter.getComment();
             case 1:
-                return n.getValue();
+                return parameter.getValue();
             default:
                 assert false;
         }
@@ -56,9 +56,8 @@ public class TreeTableRowModel implements RowModel {
     }
 
     @Override
-    public void setValueFor(Object node, int column, Object value) {
-        //do nothing for now
-        Node n = (Node) node;
-        n.setValue(value.toString());
+    public void setValueFor(Object object, int column, Object value) {
+        Parameter parameter = (Parameter) object;
+        parameter.setValue(value.toString());
     }
 }

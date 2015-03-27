@@ -24,7 +24,7 @@ public class OutlineCreator {
 
     private Outline outline;
 
-    public OutlineCreator(Node root) {
+    public OutlineCreator(Parameter root) {
 
         TreeModel treeMdl = new ParametersModel(root);
         OutlineModel mdl = DefaultOutlineModel.createOutlineModel(treeMdl, new TreeTableRowModel(), true, "Название");
@@ -38,7 +38,7 @@ public class OutlineCreator {
                 if (modelColumn != 2) {
                     return null;
                 }
-                Node selected = (Node) (this.getModel().getValueAt(modelRow, 0));
+                Parameter selected = (Parameter) (this.getModel().getValueAt(modelRow, 0));
                 return selected.getEditor();
             }
 
@@ -47,7 +47,7 @@ public class OutlineCreator {
                 TableCellRenderer renderer = super.getCellRenderer(row, column);
                 int modelRow = convertRowIndexToModel(row);
                 int modelColumn = convertColumnIndexToModel(column);
-                Node selected = (Node) (this.getModel().getValueAt(modelRow, 0));
+                Parameter selected = (Parameter) (this.getModel().getValueAt(modelRow, 0));
                 if (modelColumn == 2 && selected.getEditor() != null && selected.getEditor().getComponent() instanceof JComboBox) {
                     renderer = new DefaultTableCellRenderer() {
                         @Override
@@ -62,7 +62,7 @@ public class OutlineCreator {
                 return renderer;
             }
         };
-        outline.setRootVisible(false);
+        outline.setRootVisible(true);
         outline.setModel(mdl);
         outline.setDefaultRenderer(String.class, new RendererForChangeable());
         outline.getTableHeader().setVisible(true);

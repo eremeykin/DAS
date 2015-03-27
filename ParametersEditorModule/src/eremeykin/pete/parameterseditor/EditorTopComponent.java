@@ -60,7 +60,7 @@ public final class EditorTopComponent extends TopComponent {
             m = new Model(defaultModelFile);
             JScrollPane jsPane = new JScrollPane();
 //            System.err.println(m.getOutline().getRowCount());
-            jsPane.setViewportView(m.getOutline());
+            jsPane.setViewportView(new OutlineCreator(m.getRoot()).getOutline());
             add(jsPane);
 //            jTabbedPane1.setTabComponentAt(0, new ButtonTabComponent(jTabbedPane1));
 //            jTabbedPane1.setTitleAt(0, "model1.zip");

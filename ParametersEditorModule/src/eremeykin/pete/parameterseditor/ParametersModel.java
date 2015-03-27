@@ -13,9 +13,9 @@ import javax.swing.tree.TreeModel;
  */
 public class ParametersModel implements TreeModel {
 
-    private Node root;
+    private Parameter root;
 
-    public ParametersModel(Node root) {
+    public ParametersModel(Parameter root) {
         this.root = root;
     }
 
@@ -26,21 +26,21 @@ public class ParametersModel implements TreeModel {
 
     @Override
     public Object getChild(Object parent, int index) {
-        Node n = (Node) parent;
-        return n.getChildren().get(index);
+        Parameter p = (Parameter) parent;
+        return p.getChildren().get(index);
     }
 
     @Override
     public int getChildCount(Object parent) {
-        Node node = (Node) parent;
-        return node.getChildren().size();
+        Parameter p = (Parameter) parent;
+        return p.getChildren().size();
     }
 
     @Override
     public int getIndexOfChild(Object parent, Object child) {
-        Node par = (Node) parent;
-        Node ch = (Node) child;
-        return par.getChildren().indexOf(ch);
+        Parameter p = (Parameter) parent;
+        Parameter ch = (Parameter) child;
+        return p.getChildren().indexOf(ch);
     }
 
     @Override
@@ -49,8 +49,8 @@ public class ParametersModel implements TreeModel {
     }
 
     @Override
-    public boolean isLeaf(Object node) {
-        return ((Node) node).getChildren().isEmpty();
+    public boolean isLeaf(Object object) {
+        return ((Parameter) object).getChildren().isEmpty();
     }
 
     @Override
