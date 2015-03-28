@@ -2,19 +2,24 @@ package eremeykin.pete.parameterseditor;
 
 import eremeykin.pete.parameterseditor.Parameter.CellProperties;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EventObject;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 import java.util.Set;
-import javax.swing.CellEditor;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.CellEditorListener;
@@ -44,7 +49,7 @@ public class ModelLoader {
 
     public Parameter load() throws LoadingException {
         try {
-            Map<Parameter, Integer> table = new HashMap<>();//key is a Parameter and value is parentId
+            Map<Integer, Row> map = new HashMap<>();//key is a ID and value is parameter
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery("select * from " + PARAMETERS_TABLE + ";");
             while (rs.next()) {
@@ -58,10 +63,10 @@ public class ModelLoader {
                 String eColumn = rs.getString(EDITOR_COLUMN_COLUMN);
                 CellProperties cProperties = extractEditor(eType, eTable, eColumn);
                 Parameter p = new Parameter(id, name, scarg, comment, cProperties);
-                table.put(p, parentId);
+                Row r = new Row(p, parentId, eType, eTable, eColumn);
+                map.put(r.parameter.getId(), r);
             }
-//            linkEditors(table.keySet());
-            Parameter root = findRoot(table);
+            Parameter root = findRoot(map.values());
             List<Parameter> parentList = new ArrayList<>();
             parentList.add(root);
             //accord parents wiht children
@@ -69,7 +74,7 @@ public class ModelLoader {
                 List<Parameter> childrenList;
                 for (ListIterator<Parameter> iterator = parentList.listIterator(); iterator.hasNext();) {
                     Parameter currParent = iterator.next();
-                    childrenList = findChildren(currParent, table);
+                    childrenList = findChildren(currParent, map.values());
                     currParent.setChildren(childrenList);
                     iterator.remove();
                     for (Parameter child : childrenList) {
@@ -77,6 +82,8 @@ public class ModelLoader {
                     }
                 }
             }
+            // link auto editors
+            linkEditors(map);
             return root;
         } catch (SQLException ex) {
             LoadingException lex = new LoadingException();
@@ -93,11 +100,11 @@ public class ModelLoader {
         return integer;
     }
 
-    private Parameter findRoot(Map<Parameter, Integer> table) throws LoadingException {
+    private Parameter findRoot(Collection<Row> rows) throws LoadingException {
         Parameter root = null;
-        for (Entry<Parameter, Integer> entry : table.entrySet()) {
-            Parameter parameter = entry.getKey();
-            Integer parentId = entry.getValue();
+        for (Row r : rows) {
+            Parameter parameter = r.parameter;
+            Integer parentId = r.parentId;
             if (parentId == null && root != null) {
                 throw new LoadingException("Больше одного корня.");
             }
@@ -113,14 +120,14 @@ public class ModelLoader {
 
     }
 
-    private List<Parameter> findChildren(Parameter parent, Map<Parameter, Integer> table) {
+    private List<Parameter> findChildren(Parameter parent, Collection<Row> rows) {
         Integer parentId = parent.getId();
         List<Parameter> children = new ArrayList<>();
-        for (Entry<Parameter, Integer> entrySet : table.entrySet()) {
-            Parameter key = entrySet.getKey();
-            Integer value = entrySet.getValue();
-            if (value != null && value.equals(parentId)) {//value == null if key is root
-                children.add(key);
+        for (Row r : rows) {
+            Parameter currParameter = r.parameter;
+            Integer currParentId = r.parentId;
+            if (currParentId != null && currParentId.equals(parentId)) {//value == null if key is root
+                children.add(currParameter);
             }
         }
         return children;
@@ -158,25 +165,64 @@ public class ModelLoader {
             CellProperties cp = new CellProperties(editor, renderer);
             return cp;
         }
-//        if (editorType.equals("auto")) {
-//            TableCellEditor editor = new AutoEditor(new JTextField());
-//            DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-//            CellProperties cp = new CellProperties(editor, renderer);
-//        }
+        if (editorType.equals("auto")) {
+            TableCellEditor editor = new AutoEditor(new JTextField());
+            DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+            CellProperties cp = new CellProperties(editor, renderer);
+            return cp;
+        }
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
         CellProperties cp = new CellProperties(null, renderer);
         return cp;
     }
 
-    private void linkEditors(Set<Parameter> set) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void linkEditors(Map<Integer, Row> map) throws LoadingException {
+        Set<Row> autoEditable = new HashSet();
+        for (Row r : map.values()) {
+            if (r.editorType != null && r.editorType.equals("auto")) {
+                autoEditable.add(r);
+            }
+        }
+        for (Row r : autoEditable) {
+            if (!r.editorTable.startsWith("$")) {
+                throw new LoadingException("В таблице найдена неправильная запись авторедактируемой ячейки.");
+            }
+            try {
+                Integer masterParameterId = new Scanner(r.editorTable.substring(1)).nextInt();
+                Parameter slaveParameter = r.parameter;
+                Parameter masterParameter = map.get(masterParameterId).parameter;
+                masterParameter.getEditor().addCellEditorListener((CellEditorListener) slaveParameter.getEditor());
+//                DefaultCellEditor editor = (DefaultCellEditor) masterParameter.getEditor();
+//                ((JComboBox) editor.getComponent()).addActionListener((ActionListener) slaveParameter.getEditor());
+            } catch (NoSuchElementException ex) {
+                throw new LoadingException("В таблице найдена неправильная запись авторедактируемой ячейки.");
+            }
+        }
+
+    }
+
+    private static class Row {
+
+        private Parameter parameter;
+        private Integer parentId;
+        private String editorType;
+        private String editorTable;
+        private String editorColumn;
+
+        Row(Parameter parameter, Integer parentId, String eType, String eTable, String eColumn) {
+            this.parameter = parameter;
+            this.parentId = parentId;
+            this.editorType = eType;
+            this.editorTable = eTable;
+            this.editorColumn = eColumn;
+        }
     }
 
     private static class AutoEditor extends DefaultCellEditor implements CellEditorListener {
 
         @Override
         public boolean isCellEditable(EventObject anEvent) {
-            return false; //To change body of generated methods, choose Tools | Templates.
+            return true; //To change body of generated methods, choose Tools | Templates.
         }
 
         public AutoEditor(JTextField textField) {
@@ -185,12 +231,17 @@ public class ModelLoader {
 
         @Override
         public void editingStopped(ChangeEvent e) {
-            this.delegate.setValue("Test");
+            DefaultCellEditor dce = (DefaultCellEditor)e.getSource();
+            if (dce.getCellEditorValue()!=null){
+                delegate.setValue("!!!!!!!!!!");
+            }
+            System.out.println(dce.getCellEditorValue());
+//            JOptionPane.showConfirmDialog(null, delegate.getCellEditorValue());
         }
 
         @Override
         public void editingCanceled(ChangeEvent e) {
-            this.delegate.setValue("Test");
+            JOptionPane.showConfirmDialog(null, "editingCanceled");
         }
 
     }
