@@ -32,7 +32,6 @@ public class OutlineCreator {
 
             @Override
             public TableCellEditor getCellEditor(int row, int column) {
-                //int modelColumn = convertColumnIndexToModel(column);
                 int modelRow = convertRowIndexToModel(row);
                 int modelColumn = convertColumnIndexToModel(column);
                 if (modelColumn != 2) {
@@ -48,16 +47,8 @@ public class OutlineCreator {
                 int modelRow = convertRowIndexToModel(row);
                 int modelColumn = convertColumnIndexToModel(column);
                 Parameter selected = (Parameter) (this.getModel().getValueAt(modelRow, 0));
-                if (modelColumn == 2 && selected.getEditor() != null && selected.getEditor().getComponent() instanceof JComboBox) {
-                    renderer = new DefaultTableCellRenderer() {
-                        @Override
-                        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                            Component c = new JComboBox(new String[]{selected.getValue()});
-                            return c;
-                        }
-
-                    };
-                    return renderer;
+                if (modelColumn == 2) {
+                    renderer = selected.getRenderer();
                 }
                 return renderer;
             }

@@ -11,6 +11,8 @@ import java.util.List;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -24,15 +26,15 @@ public class Parameter {
     private final Integer scriptArg;
     private String value;
     private final String comment;
-    private final DefaultCellEditor editor;
+    private final CellProperties<TableCellEditor, TableCellRenderer> cProperties;
     private List<Parameter> children = new ArrayList<>();
 
-    public Parameter(Integer id, String name, Integer scriptArg, String comment, DefaultCellEditor editor) {
+    public Parameter(Integer id, String name, Integer scriptArg, String comment, CellProperties<TableCellEditor, TableCellRenderer> cProperties) {
         this.id = id;
         this.name = name;
         this.scriptArg = scriptArg;
         this.comment = comment;
-        this.editor = editor;
+        this.cProperties = cProperties;
     }
 
     public String getComment() {
@@ -72,14 +74,42 @@ public class Parameter {
         this.children = children;
     }
 
-    @Deprecated
-    DefaultCellEditor getEditor() {
-        return editor;
+    TableCellEditor getEditor() {
+        return cProperties.getEditor();
     }
-    
+
+    TableCellRenderer getRenderer() {
+        return cProperties.getRenderer();
+    }
+
     @Override
     public String toString() {
         return name; //To change body of generated methods, choose Tools | Templates.
     }
+
+    public static final class CellProperties<E, R> {
+
+        E editor;
+        R renderer;
+
+        CellProperties(E editor, R renderer) {
+            this.editor = editor;
+            this.renderer = renderer;
+        }
+
+        public CellProperties() {
+            this.editor = null;
+            this.renderer = null;
+        }
+
+        private E getEditor() {
+            return editor;
+        }
+
+        private R getRenderer() {
+            return renderer;
+        }
+    ;
+}
 
 }
