@@ -4,16 +4,12 @@ import com.interactivemesh.j3d.community.utils.navigation.orbit.OrbitBehaviorInt
 import com.sun.j3d.exp.swing.JCanvas3D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
-
 import java.io.FileNotFoundException;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.Enumeration;
 import java.util.Vector;
-
-import javax.media.j3d.Alpha;
+import javax.media.j3d.*;
 import javax.media.j3d.Appearance;
 import javax.media.j3d.Background;
 import javax.media.j3d.BoundingSphere;
@@ -33,19 +29,12 @@ import javax.media.j3d.TransformGroup;
 import javax.media.j3d.View;
 import javax.media.j3d.ViewPlatform;
 import javax.media.j3d.VirtualUniverse;
-
-import javax.swing.JApplet;
-
 import javax.vecmath.Vector3f;
-
 import com.sun.j3d.loaders.IncorrectFormatException;
 import com.sun.j3d.loaders.Loader;
 import com.sun.j3d.loaders.ParsingErrorException;
 import com.sun.j3d.loaders.Scene;
-
 import com.sun.j3d.loaders.objectfile.ObjectFile;
-
-import com.sun.j3d.utils.applet.MainFrame;
 import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
 import com.sun.j3d.utils.behaviors.mouse.MouseWheelZoom;
 import com.sun.j3d.utils.geometry.ColorCube;
@@ -56,24 +45,19 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Panel;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.control.TabPane;
 import javax.media.j3d.AmbientLight;
-import javax.media.j3d.Bounds;
 import javax.media.j3d.Font3D;
 import javax.media.j3d.FontExtrusion;
 import javax.media.j3d.GeometryArray;
 import javax.media.j3d.LineArray;
 import javax.media.j3d.Text3D;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTabbedPane;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
+import org.openide.util.Exceptions;
 import org.openide.windows.TopComponent;
 
 /*
@@ -102,13 +86,13 @@ import org.openide.windows.TopComponent;
  * @author Copyright (c) 2007 August Lammersdorf, www.InteractiveMesh.com
  * @since March 5, 2009
  * @version 1.1
- *
- * Please create your own implementation. You are allowed to copy all lines you
- * like of this source code, but you may not modify, compile, or distribute this
- * 'AppletObjLoader'.
+
+ Please create your own implementation. You are allowed to copy all lines you
+ like of this source code, but you may not modify, compile, or distribute this
+ 'ObjLoader'.
  *
  */
-public final class AppletObjLoader {
+public final class ObjLoader {
 
     static {
         System.out.println("AppletObjLoader: Copyright (c) 2009 August Lammersdorf, www.InteractiveMesh.com.");
@@ -117,35 +101,33 @@ public final class AppletObjLoader {
     private boolean isJ3D = false;
     private boolean isJ3DLoader = false;
 
-    private BoundingSphere globalBounds = null;
+    private BoundingSphere globalBounds;
 
-    private View view = null;
-    private Canvas3D canvas3D = null;
+    private View view;
+    private Canvas3D canvas3D;
 
-    private VirtualUniverse vu = null;
-    private Locale locale = null;
+    private VirtualUniverse vu;
+    private Locale locale;
 
-    private BranchGroup sceneBranch = null;
-    private BranchGroup viewBranch = null;
-    private BranchGroup enviBranch = null;
+    private BranchGroup sceneBranch;
+    private BranchGroup viewBranch;
+    private BranchGroup enviBranch;
 
-    private TransformGroup rotTG = null;
-    private TransformGroup sceneTG = null;
+    private TransformGroup rotTG;
+    private TransformGroup sceneTG;
 
-    private Vector<Shape3D> shapesVec = null;
+    private Vector<Shape3D> shapesVec;
 
-    private ClassLoader classLoader = null;
+    private ClassLoader classLoader;
     private SimpleUniverse universe;
     private TransformGroup objRot;
 
-    public AppletObjLoader(TopComponent window) {
-
+    public ObjLoader(TopComponent window) {
         try {
-
             BranchGroup bg = new BranchGroup();
             ColorCube cube = new ColorCube(0.9f);
             bg.addChild(cube);
-// JCanvas
+            // JCanvas
             JCanvas3D jCanvas = new JCanvas3D();
             jCanvas.setLayout(new BorderLayout());
             jCanvas.setResizeMode(JCanvas3D.RESIZE_IMMEDIATELY);
@@ -169,133 +151,25 @@ public final class AppletObjLoader {
             OrbitBehaviorInterim obi = new OrbitBehaviorInterim(jCanvas, objRot);
             obi.setRotateEnable(true);
             obi.setRotationCenter(new Point3d(0, 0, 0));
-
-//
-//            universe.getViewingPlatform().setNominalViewingTransform();
-////            universe.addBranchGraph(bg);
-//
-//            BranchGroup scene = createSceneGraph();
-//
-//            universe.getViewingPlatform().setNominalViewingTransform();
-//            universe.addBranchGraph(scene);
-////            universe.addBranchGraph(sceneBranch);
-            if (false) {
-                throw new MalformedURLException();
-            }
-/////////////////////////////////////////////////////////////////////////////////////
-            /////////////////////////////////////////////////////////////////////////
-//            window.setLayout(new BorderLayout());
-//            GraphicsConfiguration config
-//                    = SimpleUniverse.getPreferredConfiguration();
-//            Canvas3D canvas3D = new Canvas3D(config);
-//
-//            JCanvas3D p = new JCanvas3D();
-//            p.setLayout(new  BorderLayout());
-//            p.add("Center", canvas3D);
-////            Panel panel = new Panel(new BorderLayout());
-////            panel.add("Center", canvas3D);
-//            window.add("Center", p);
-//
-//            BranchGroup scene = createSceneGraph();
-//            SimpleUniverse simpleU = new SimpleUniverse(canvas3D);
-//
-//            simpleU.getViewingPlatform().setNominalViewingTransform();
-//            simpleU.addBranchGraph(scene);
-//            simpleU.addBranchGraph(sceneBranch);
-//            
-//             if (false) {
-//                throw new MalformedURLException();
-//            }
-
         } catch (MalformedURLException ex) {
-            Logger.getLogger(AppletObjLoader.class.getName()).log(Level.SEVERE, null, ex);
+            Exceptions.printStackTrace(ex);
         }
     }
 
-//    public static void main(String[] args) {
-//        new MainFrame(new AxisDisplay(), 300, 300);
-//    }
 //TOdo    @Override
     public void destroy() {
         System.out.println("AppletObjLoader : destroy");
-
         view.removeAllCanvas3Ds();
         view.attachViewPlatform(null);
-
         vu.removeAllLocales();
-    }
-
-    private void createScene() throws MalformedURLException {
-
-        //
-        // Scene
-        //		
-        // File located at: com.interactivemesh.j3d.sourcecode.applet.scenes.Beethoven.obj
-        Scene fishScene = this.loadScene("scenes/Beethoven.obj");
-
-        BranchGroup rootGroup = null;
-        if (fishScene != null && (rootGroup = fishScene.getSceneGroup()) != null) {
-
-            shapesVec = new Vector<Shape3D>();
-
-            traverseForShape3D(rootGroup.getAllChildren());
-
-            if (!shapesVec.isEmpty()) {
-
-                Appearance appear = new Appearance();
-
-                Material mat = new Material();
-                mat.setDiffuseColor(0.5f, 0.5f, 0.5f);
-                mat.setSpecularColor(1.0f, 0.0f, 0.0f);
-                mat.setShininess(32.0f);
-
-                appear.setMaterial(mat);
-
-                for (Shape3D shape : shapesVec) {
-                    shape.setAppearance(appear);
-                }
-            }
-
-            sceneTG.addChild(rootGroup);
-        }
-        //
-        // Animation
-        //
-        Alpha rotAlpha = new Alpha();
-        rotAlpha.setMode(Alpha.INCREASING_ENABLE | Alpha.DECREASING_ENABLE);
-        rotAlpha.setIncreasingAlphaDuration(1000);
-        rotAlpha.setAlphaAtOneDuration(200);
-        rotAlpha.setDecreasingAlphaDuration(2000);
-        rotAlpha.setDecreasingAlphaRampDuration(200);
-        rotAlpha.setAlphaAtZeroDuration(1000);
-
-        RotationInterpolator rotIntp = new RotationInterpolator(rotAlpha, rotTG);
-        rotIntp.setSchedulingBounds(globalBounds);
-        rotIntp.setMinimumAngle(0.0f);
-        rotIntp.setMaximumAngle((float) Math.PI * 0.50f);
-
-//        sceneTG.addChild(rotIntp);
     }
 
     // Loads *.obj files
     // relativePath: path relative to package of this class
     private Scene loadScene(String relativePath) throws MalformedURLException {
-
         Scene scene = null;
-
-        // Some loader could have problems to handle a url based on jar: protocol
-        // The syntax of the jar: protocol is jar:<url>!/{entry}. "!/" is called the separator.
-        // Examples local/web:
-        // jar:file:/ ... /appletObjLoader.jar!/com/interactivemesh/j3d/sourcecode/applet/scenes/Fish.wrl
-        // jar:http://www.interactivemesh.org/sourcecode/webstart/appletObjLoader.jar!/com/interactivemesh/j3d/sourcecode/applet/scenes/Fish.wrl			
-//        File f = new File("C:\\Users\\Pete\\Desktop\\DAS\\YouTube-tutorials-master\\res\\models\\bunny.obj");
-//        File f = new File("C:\\Users\\Pete\\Desktop\\DAS\\Beethoven.obj");
-//        File f = new File("C:\\Users\\Pete\\Desktop\\Курсовой DAS\\Модели 3D\\test.obj");
         File f = new File(ConfigLoader.load("path", "obj model"));
-
         URL sceneUrl = f.toURI().toURL();
-//        sceneUrl = null;
-//        URL sceneUrl = this.getClass().getResource(relativePath);
         if (sceneUrl == null) {
             System.out.println("sceneUrl = null");
             return null;
@@ -340,16 +214,6 @@ public final class AppletObjLoader {
         }
     }
 
-    // Set live
-    private void setLive() {
-        sceneBranch.compile();
-        viewBranch.compile();
-        enviBranch.compile();
-        locale.addBranchGraph(sceneBranch);
-        locale.addBranchGraph(viewBranch);
-        locale.addBranchGraph(enviBranch);
-    }
-
     private void createUniverse() {
         // Bounds
         globalBounds = new BoundingSphere();
@@ -358,8 +222,6 @@ public final class AppletObjLoader {
         // Viewing
         //
         view = new View();
-//        View v = universe.getViewer().getView();
-//        view = new View();//universe.getViewer().getView();
         view.setPhysicalBody(new PhysicalBody());
         view.setPhysicalEnvironment(new PhysicalEnvironment());
 
@@ -402,16 +264,6 @@ public final class AppletObjLoader {
         ViewPlatform vp = new ViewPlatform();
         //!!
 
-//        ViewingPlatform viewingPlatform = new ViewingPlatform(); // for orbit behavior
-//        viewingPlatform.setViewPlatform(vp);//orbit behavior
-//        viewTG.addChild(viewingPlatform);// orbit behavior
-//        OrbitBehavior orbit = new OrbitBehavior(canvas3D, OrbitBehavior.REVERSE_ALL);
-//        orbit.setCapability(OrbitBehavior.ALLOW_LOCAL_TO_VWORLD_READ);
-//        BoundingSphere allBounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 0.0);
-//        orbit.setSchedulingBounds(allBounds);
-//        orbit.setEnable(true);
-//        orbit.setHomeTransform(new Transform3D());
-//        viewingPlatform.setViewPlatformBehavior(orbit);
         MouseRotate behavior = new MouseRotate();
         behavior.setTransformGroup(viewTG);
         viewTG.addChild(behavior);
@@ -441,9 +293,9 @@ public final class AppletObjLoader {
         // SceneBranch
         rotTG = new TransformGroup();
         rotTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-//
+        
         sceneBranch.addChild(rotTG);
-//
+        
         sceneTG = new TransformGroup();
 //        // Scene positioning 
         Transform3D sceneTransform = new Transform3D();

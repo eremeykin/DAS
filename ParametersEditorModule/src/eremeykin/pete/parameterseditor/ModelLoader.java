@@ -195,7 +195,6 @@ public class ModelLoader {
                         try {
                             Statement st = connection.createStatement();
                             String qString = "select " + r.editorColumn + " from " + masterRow.editorTable + " where " + masterRow.editorColumn + "='" + newValue.toString() + "';";
-//                            System.out.println(qString);
                             ResultSet rs = st.executeQuery(qString);
                             while (rs.next()) {
                                 p.setValue(rs.getString(1));
@@ -206,28 +205,7 @@ public class ModelLoader {
                     }
                     
                 });
-//                slaveParameter = new Parameter(slaveParameter) {
-//
-//                    @Override
-//                    public void masterChangedValue(Object newValue) {
-//                        try {
-//                            Statement st = connection.createStatement();
-//                            String qString = "select " + r.editorColumn + " from " + masterRow.editorTable + " where " + masterRow.editorColumn + "='" + newValue.toString() + "';";
-////                            System.out.println(qString);
-//                            ResultSet rs = st.executeQuery(qString);
-//                            while (rs.next()) {
-//                                this.setValue(rs.getString(1));
-//                            }
-//                        } catch (SQLException ex) {
-//                            JOptionPane.showMessageDialog(null, "Произошла SQL ошибка при обновлении значения подчиненного параметра.");
-//                        }
-//                    }
-//
-//                };
                 masterParameter.addSlaveParameter(slaveParameter);
-//                masterParameter.getEditor().addCellEditorListener((CellEditorListener) slaveParameter.getEditor());
-//                DefaultCellEditor editor = (DefaultCellEditor) masterParameter.getEditor();
-//                ((JComboBox) editor.getComponent()).addActionListener((ActionListener) slaveParameter.getEditor());
             } catch (NoSuchElementException ex) {
                 throw new LoadingException("В таблице найдена неправильная запись авторедактируемой ячейки.");
             }

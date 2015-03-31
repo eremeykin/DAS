@@ -5,12 +5,9 @@
  */
 package eremeykin.pete.viewport;
 
-import java.awt.Window;
-import javax.swing.SwingUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
-import org.openide.util.Exceptions;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 
@@ -26,7 +23,7 @@ import org.openide.util.NbBundle.Messages;
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_ALWAYS
 )
-@TopComponent.Registration(mode = "explorer", openAtStartup = true)
+@TopComponent.Registration(mode = "explorer", openAtStartup = false)
 @ActionID(category = "Window", id = "eremeykin.pete.viewport.ViewportTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(
@@ -44,8 +41,7 @@ public final class ViewportTopComponent extends TopComponent {
         initComponents();
         setName(Bundle.CTL_ViewportTopComponent());
         setToolTipText(Bundle.HINT_ViewportTopComponent());
-        ViewportTopComponent main = this;
-        AppletObjLoader appletObjLoader = new AppletObjLoader(this);
+        ObjLoader appletObjLoader = new ObjLoader(this);
     }
 
     /**
@@ -79,15 +75,6 @@ public final class ViewportTopComponent extends TopComponent {
     public void componentClosed() {
         // TODO add custom code on component closing
     }
-
-//    @Override
-//    public void componentActivated() {
-//        super.componentActivated();
-//        Window window = SwingUtilities.getWindowAncestor(this.getRootPane());
-//        if (window != null) {
-//            window.revalidate();
-//        }
-//    }
 
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
