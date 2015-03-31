@@ -26,6 +26,7 @@ import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
+import org.openide.util.Exceptions;
 
 public class ModelLoader {
 
@@ -165,12 +166,6 @@ public class ModelLoader {
             CellProperties cp = new CellProperties(editor, renderer);
             return cp;
         }
-        if (editorType.equals("auto")) {
-            TableCellEditor editor = new AutoEditor(new JTextField());
-            DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-            CellProperties cp = new CellProperties(editor, renderer);
-            return cp;
-        }
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
         CellProperties cp = new CellProperties(null, renderer);
         return cp;
@@ -190,8 +185,47 @@ public class ModelLoader {
             try {
                 Integer masterParameterId = new Scanner(r.editorTable.substring(1)).nextInt();
                 Parameter slaveParameter = r.parameter;
+                Row masterRow = map.get(masterParameterId);
                 Parameter masterParameter = map.get(masterParameterId).parameter;
-                masterParameter.getEditor().addCellEditorListener((CellEditorListener) slaveParameter.getEditor());
+                slaveParameter.setDecorator(new Parameter.Decorator(slaveParameter){
+
+                    @Override
+                    void perform(Object newValue) {
+
+                        try {
+                            Statement st = connection.createStatement();
+                            String qString = "select " + r.editorColumn + " from " + masterRow.editorTable + " where " + masterRow.editorColumn + "='" + newValue.toString() + "';";
+//                            System.out.println(qString);
+                            ResultSet rs = st.executeQuery(qString);
+                            while (rs.next()) {
+                                p.setValue(rs.getString(1));
+                            }
+                        } catch (SQLException ex) {
+                            JOptionPane.showMessageDialog(null, "Произошла SQL ошибка при обновлении значения подчиненного параметра.");
+                        }
+                    }
+                    
+                });
+//                slaveParameter = new Parameter(slaveParameter) {
+//
+//                    @Override
+//                    public void masterChangedValue(Object newValue) {
+//                        try {
+//                            Statement st = connection.createStatement();
+//                            String qString = "select " + r.editorColumn + " from " + masterRow.editorTable + " where " + masterRow.editorColumn + "='" + newValue.toString() + "';";
+////                            System.out.println(qString);
+//                            ResultSet rs = st.executeQuery(qString);
+//                            while (rs.next()) {
+//                                this.setValue(rs.getString(1));
+//                            }
+//                        } catch (SQLException ex) {
+//                            JOptionPane.showMessageDialog(null, "Произошла SQL ошибка при обновлении значения подчиненного параметра.");
+//                        }
+//                    }
+//
+//                };
+                masterParameter.addSlaveParameter(slaveParameter);
+//                masterParameter.getEditor().addCellEditorListener((CellEditorListener) slaveParameter.getEditor());
 //                DefaultCellEditor editor = (DefaultCellEditor) masterParameter.getEditor();
 //                ((JComboBox) editor.getComponent()).addActionListener((ActionListener) slaveParameter.getEditor());
             } catch (NoSuchElementException ex) {
@@ -216,34 +250,6 @@ public class ModelLoader {
             this.editorTable = eTable;
             this.editorColumn = eColumn;
         }
-    }
-
-    private static class AutoEditor extends DefaultCellEditor implements CellEditorListener {
-
-        @Override
-        public boolean isCellEditable(EventObject anEvent) {
-            return true; //To change body of generated methods, choose Tools | Templates.
-        }
-
-        public AutoEditor(JTextField textField) {
-            super(textField);
-        }
-
-        @Override
-        public void editingStopped(ChangeEvent e) {
-            DefaultCellEditor dce = (DefaultCellEditor)e.getSource();
-            if (dce.getCellEditorValue()!=null){
-                delegate.setValue("!!!!!!!!!!");
-            }
-            System.out.println(dce.getCellEditorValue());
-//            JOptionPane.showConfirmDialog(null, delegate.getCellEditorValue());
-        }
-
-        @Override
-        public void editingCanceled(ChangeEvent e) {
-            JOptionPane.showConfirmDialog(null, "editingCanceled");
-        }
-
     }
 
     public static class LoadingException extends Exception {

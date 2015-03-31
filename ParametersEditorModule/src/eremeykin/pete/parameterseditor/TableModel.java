@@ -11,7 +11,7 @@ import org.netbeans.swing.outline.RowModel;
  *
  * @author Pete
  */
-public class TreeTableRowModel implements RowModel {
+public class TableModel implements RowModel {
 
     @Override
     public Class getColumnClass(int column) {

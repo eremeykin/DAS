@@ -5,12 +5,10 @@
  */
 package eremeykin.pete.parameterseditor;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
@@ -23,11 +21,13 @@ public class Parameter {
     private final Integer id;
     private final String name;
     private Parameter parent;
+    private List<Parameter> slaveParameters = new ArrayList<>();//parameters that will auto edit its content
     private final Integer scriptArg;
     private String value;
     private final String comment;
     private final CellProperties<TableCellEditor, TableCellRenderer> cProperties;
     private List<Parameter> children = new ArrayList<>();
+    private Decorator dec;
 
     public Parameter(Integer id, String name, Integer scriptArg, String comment, CellProperties<TableCellEditor, TableCellRenderer> cProperties) {
         this.id = id;
@@ -35,6 +35,18 @@ public class Parameter {
         this.scriptArg = scriptArg;
         this.comment = comment;
         this.cProperties = cProperties;
+    }
+
+    public Parameter(Parameter p) {
+        this.id = p.id;
+        this.name = p.name;
+        this.parent = p.parent;
+        this.slaveParameters = p.slaveParameters;
+        this.scriptArg = p.scriptArg;
+        this.value = p.value;
+        this.comment = p.comment;
+        this.cProperties = p.cProperties;
+        this.children = p.children;
     }
 
     public String getComment() {
@@ -50,11 +62,21 @@ public class Parameter {
     }
 
     public void setValue(String value) {
+        for (Parameter p : slaveParameters) {
+            p.dec.perform(value);
+        }
         this.value = value;
     }
 
     public List<Parameter> getChildren() {
         return this.children;
+    }
+
+    public void addSlaveParameter(Parameter p) {
+        this.slaveParameters.add(p);
+    }
+
+    public void masterChangedValue(Object newValue) {
     }
 
     public void setChildren(List<Parameter> children) {
@@ -80,6 +102,10 @@ public class Parameter {
 
     TableCellRenderer getRenderer() {
         return cProperties.getRenderer();
+    }
+
+    void setDecorator(Decorator dec) {
+        this.dec = dec;
     }
 
     @Override
@@ -110,6 +136,19 @@ public class Parameter {
             return renderer;
         }
     ;
-}
 
+    }
+
+     static class Decorator {
+
+        Parameter p;
+
+        public Decorator(Parameter p) {
+            this.p = p;
+        }
+
+        void perform(Object newValue) {
+
+        }
+    }
 }
