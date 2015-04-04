@@ -5,6 +5,11 @@
  */
 package eremeykin.pete.rulecalculator;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import org.drools.decisiontable.InputType;
+import org.drools.decisiontable.SpreadsheetCompiler;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
@@ -22,25 +27,20 @@ public class RoolManager {
     public RoolManager() {
 
         KieServices ks = KieServices.Factory.get();
-        // From the kie services, a container is created from the classpath
         KieContainer kc = ks.getKieClasspathContainer();
-        // From the container, a session is created based on  
-        // its definition and configuration in the META-INF/kmodule.xml file 
         ksession = kc.newKieSession("MainSession");
-//        ksession.addEventListener(new DebugAgendaEventListener());
-//        ksession.addEventListener(new DebugRuleRuntimeEventListener());
 
-//        InputStream is = null;
-//        try {
-//            
-//            is = new FileInputStream("C:\\Users\\Pete\\Documents\\NetBeansProjects\\RuleCalculator\\src\\rulecalculator\\res\\RulesTable.xls");
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        SpreadsheetCompiler sc = new SpreadsheetCompiler();
-//        String drl = sc.compile(is, InputType.XLS);
-//        System.out.println("Generate DRL file is –: ");
-//        System.out.println(drl);
+        InputStream is = null;
+        try {
+
+            is = new FileInputStream("C:\\Users\\Pete\\Documents\\NetBeansProjects\\DAS\\RuleCalculator\\src\\eremeykin\\pete\\rulecalculator\\res\\RulesTable.xls");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        SpreadsheetCompiler sc = new SpreadsheetCompiler();
+        String drl = sc.compile(is, InputType.XLS);
+        System.out.println("Generate DRL file is –: ");
+        System.out.println(drl);
     }
 
     public FactHandle insert(Object obj) {

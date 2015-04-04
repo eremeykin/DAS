@@ -134,7 +134,7 @@ public class TurningStepBean {
      * @param v the v to set
      */
     public void setV(double v) {
-        System.out.println("set v " + v);
+        System.out.println("SET V " + v);
         this.v = v;
     }
 
@@ -149,7 +149,7 @@ public class TurningStepBean {
      * @param p the p to set
      */
     public void setP(double p) {
-        System.out.println("set p " + p);
+        System.out.println("SET P " + p);
         this.p = p;
     }
 
@@ -164,7 +164,7 @@ public class TurningStepBean {
      * @param n the n to set
      */
     public void setN(double n) {
-        System.out.println("set n " + n);
+        System.out.println("SET N " + n);
         this.n = n;
     }
 
@@ -179,7 +179,7 @@ public class TurningStepBean {
      * @param f the f to set
      */
     public void setF(double f) {
-        System.out.println("set f " + f);
+        System.out.println("SET F " + f);
         this.f = f;
     }
 
@@ -194,7 +194,7 @@ public class TurningStepBean {
      * @param m the m to set
      */
     public void setM(double m) {
-        System.out.println("set m " + m);
+        System.out.println("SET M " + m);
         this.m = m;
     }
 
