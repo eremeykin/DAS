@@ -9,7 +9,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Vector;
-import javax.media.j3d.*;
 import javax.media.j3d.Appearance;
 import javax.media.j3d.Background;
 import javax.media.j3d.BoundingSphere;
@@ -22,7 +21,6 @@ import javax.media.j3d.Locale;
 import javax.media.j3d.Material;
 import javax.media.j3d.PhysicalBody;
 import javax.media.j3d.PhysicalEnvironment;
-import javax.media.j3d.RotationInterpolator;
 import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
@@ -46,8 +44,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.Reader;
 import javax.media.j3d.AmbientLight;
 import javax.media.j3d.Font3D;
 import javax.media.j3d.FontExtrusion;
@@ -121,8 +118,9 @@ public final class ObjLoader {
     private ClassLoader classLoader;
     private SimpleUniverse universe;
     private TransformGroup objRot;
+    
 
-    public ObjLoader(TopComponent window) {
+    public ObjLoader(TopComponent window, Reader objReader) {
         try {
             BranchGroup bg = new BranchGroup();
             ColorCube cube = new ColorCube(0.9f);
@@ -142,7 +140,7 @@ public final class ObjLoader {
             canvas3D = jCanvas.getOffscreenCanvas3D();
 
             universe = new SimpleUniverse(canvas3D);
-            BranchGroup scene = createSceneGraph();
+            BranchGroup scene = createSceneGraph(objReader);
 
             universe.getViewingPlatform().setNominalViewingTransform();
             universe.addBranchGraph(scene);
@@ -166,7 +164,7 @@ public final class ObjLoader {
 
     // Loads *.obj files
     // relativePath: path relative to package of this class
-    private Scene loadScene(String relativePath) throws MalformedURLException {
+    private Scene loadScene(Reader objReader) throws MalformedURLException {
         Scene scene = null;
         File f = new File(ConfigLoader.load("path", "obj model"));
         URL sceneUrl = f.toURI().toURL();
@@ -193,7 +191,7 @@ public final class ObjLoader {
         System.out.println("Base Url  = " + objLoader.getBaseUrl().toString());
 
         try {
-            scene = objLoader.load(sceneUrl);
+            scene = objLoader.load(objReader);
         } catch (FileNotFoundException e) {
         } catch (IncorrectFormatException e) {
         } catch (ParsingErrorException e) {
@@ -367,7 +365,7 @@ public final class ObjLoader {
         return holdRot;
     }
 
-    public BranchGroup createSceneGraph() throws MalformedURLException {
+    public BranchGroup createSceneGraph(Reader objReader) throws MalformedURLException {
 
         BranchGroup Root = new BranchGroup();
 
@@ -410,7 +408,7 @@ public final class ObjLoader {
         createUniverse();
 
 //        objRot.addChild(sceneTG);
-        Scene fishScene = loadScene("");
+        Scene fishScene = loadScene(objReader);
         BranchGroup rootGroup = null;
 
         if ((rootGroup = fishScene.getSceneGroup()) != null) {

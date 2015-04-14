@@ -3,13 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eremeykin.pete.viewport;
+package eremeykin.pete.parameterseditor;
 
-import eremeykin.pete.*;
 import eremeykin.pete.centrallookupapi.CentralLookup;
 import eremeykin.pete.modelapi.Model;
+import eremeykin.pete.modelapi.Parameter;
+import java.awt.BorderLayout;
 import java.util.Collection;
 import java.util.Iterator;
+import javax.swing.JScrollPane;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -23,39 +25,47 @@ import org.openide.util.NbBundle.Messages;
  * Top component which displays something.
  */
 @ConvertAsProperties(
-        dtd = "-//eremeykin.pete.viewport//Viewport//EN",
+        dtd = "-//eremeykin.pete.parameterseditor//Editor//EN",
         autostore = false
 )
 @TopComponent.Description(
-        preferredID = "ViewportTopComponent",
+        preferredID = "EditorTopComponent",
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_ALWAYS
 )
-@TopComponent.Registration(mode = "explorer", openAtStartup = false)
-@ActionID(category = "Window", id = "eremeykin.pete.viewport.ViewportTopComponent")
+@TopComponent.Registration(mode = "editor", openAtStartup = true)
+@ActionID(category = "Window", id = "eremeykin.pete.parameterseditor.EditorTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(
-        displayName = "#CTL_ViewportAction",
-        preferredID = "ViewportTopComponent"
+        displayName = "#CTL_EditorAction",
+        preferredID = "EditorTopComponent"
 )
 @Messages({
-    "CTL_ViewportAction=Viewport",
-    "CTL_ViewportTopComponent=Viewport Window",
-    "HINT_ViewportTopComponent=This is a Viewport window"
+    "CTL_EditorAction=Parameter Editor",
+    "CTL_EditorTopComponent=Editor Window",
+    "HINT_EditorTopComponent=This is a Editor window"
 })
-public final class ViewportTopComponent extends TopComponent implements LookupListener{
+public final class EditorTopComponent extends TopComponent implements LookupListener {
 
+//    private static final String DEFAULT_MODEL = ConfigLoader.load("path", "default model");
+    private JScrollPane jsPane = new JScrollPane();
     private Lookup.Result userInfoResult = null;
 
-    public ViewportTopComponent() {
+    public EditorTopComponent() {
         initComponents();
         Lookup.Template template = new Lookup.Template(Model.class);
         CentralLookup cl = CentralLookup.getDefault();
         userInfoResult = cl.lookup(template);
         userInfoResult.addLookupListener(this);
-        setName(Bundle.CTL_ViewportTopComponent());
-        setToolTipText(Bundle.HINT_ViewportTopComponent());
-//        ObjLoader appletObjLoader = new ObjLoader(this);
+        try {
+            setName("Parameter Editor");
+            setLayout(new BorderLayout());
+            add(jsPane);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+//            JOptionPane.showMessageDialog(null, e.getStackTrace().toString());
+        }
     }
 
     /**
@@ -77,12 +87,10 @@ public final class ViewportTopComponent extends TopComponent implements LookupLi
             .addGap(0, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
-        // TODO add custom code on component opening
     }
 
     @Override
@@ -116,9 +124,8 @@ public final class ViewportTopComponent extends TopComponent implements LookupLi
                 Iterator<Model> it = infos.iterator();
                 while (it.hasNext()) {
                     Model m = it.next();
-                    this.removeAll();
-                    new ObjLoader(this, m.getObjReader());
-                    this.doLayout();
+                    jsPane.setViewportView(new OutlineCreator(m.getRoot()).getOutline());
+                    add(jsPane);
 //                    EventQueue.invokeLater(new SetterRunnable(info));
                 }
 

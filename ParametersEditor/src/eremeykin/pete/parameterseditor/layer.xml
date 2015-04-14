@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
+                            "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="xml">
+        <folder name="entities">
+            <folder name="eremeykin_pete_parameterseditor">
+                <file name="Editor" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--eremeykin.pete.parameterseditor.EditorTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//eremeykin.pete.parameterseditor//Editor//EN"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="memory">
+            <folder name="eremeykin">
+                <folder name="pete">
+                    <folder name="parameterseditor">
+                        <file name="EditorTopComponent">
+                            <!--eremeykin.pete.parameterseditor.EditorTopComponent-->
+                            <attr name="settings.providerPath" stringvalue="xml/lookups//eremeykin_pete_parameterseditor/Editor.instance"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+        <folder name="lookups">
+            <folder name="eremeykin_pete_parameterseditor">
+                <file name="Editor.instance">
+                    <!--eremeykin.pete.parameterseditor.EditorTopComponent-->
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="eremeykin.pete.parameterseditor.EditorTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="eremeykin.pete.parameterseditor.EditorTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="Window">
+            <file name="eremeykin-pete-parameterseditor-EditorTopComponent.shadow">
+                <!--eremeykin.pete.parameterseditor.EditorTopComponent-->
+                <attr name="originalFile" stringvalue="Actions/Window/eremeykin-pete-parameterseditor-EditorTopComponent.instance"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="EditorTopComponent.settings">
+                <!--eremeykin.pete.parameterseditor.EditorTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="eremeykin.pete.parameterseditor.EditorTopComponent"/>
+</settings>
+]]></file>
+        </folder>
+        <folder name="Modes">
+            <folder name="editor">
+                <file name="EditorTopComponent.wstcref">
+                    <!--eremeykin.pete.parameterseditor.EditorTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="EditorTopComponent"/>
+  <state opened="true"/>
+</tc-ref>
+]]></file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Actions">
+        <folder name="Window">
+            <file name="eremeykin-pete-parameterseditor-EditorTopComponent.instance">
+                <!--eremeykin.pete.parameterseditor.EditorTopComponent-->
+                <attr
+                    methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr name="component" newvalue="eremeykin.pete.parameterseditor.EditorTopComponent"/>
+                <attr name="preferredID" stringvalue="EditorTopComponent"/>
+                <attr
+                    bundlevalue="eremeykin.pete.parameterseditor.Bundle#CTL_EditorAction" name="displayName"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

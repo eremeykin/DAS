@@ -11,3 +11,15 @@
 /ConfigLoader/nbproject/private/
 /Drools/build/
 /ModelManager/build/
+/dist/
+/OpenFile/build/
+/OpenFile/nbproject/private/
+/ParametersEditor/build/
+/ParametersEditor/nbproject/private/
+/ModelLoader/build/
+/ModelLoader/nbproject/private/
+/ModelAPI/nbproject/private/
+/RuleCalculator/build/
+/DASFileType/nbproject/private/
+/CentralLookupAPI/nbproject/private/
+/CentralLookupAPI/build/

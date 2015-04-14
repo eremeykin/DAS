@@ -7,6 +7,6 @@ and open the template in the editor.
 
 
 <root>
-    <path name="default model">C:\Users\Pete\Documents\NetBeansProjects\DAS\ParametersEditorModule\src\res\model1.sqlite</path>
-    <path name="obj model">C:\Users\Pete\Documents\NetBeansProjects\DAS\ParametersEditorModule\src\res\test.obj</path>
+    <path name="default model">C:\Users\Pete\Documents\NetBeansProjects\DAS\ParametersEditor\src\res\model1.sqlite</path>
+    <path name="obj model">C:\Users\Pete\Documents\NetBeansProjects\DAS\ParametersEditor\src\res\test.obj</path>
 </root>
