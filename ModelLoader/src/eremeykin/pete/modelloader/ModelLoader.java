@@ -6,6 +6,7 @@ import eremeykin.pete.modelapi.ModelParameter;
 import eremeykin.pete.modelapi.ModelParameter.CellProperties;
 import java.awt.Component;
 import java.io.File;
+import java.io.Reader;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,26 +27,29 @@ import javax.swing.table.DefaultTableCellRenderer;
 import org.openide.util.lookup.InstanceContent;
 
 public class ModelLoader {
-
+    
     private Connection connection;
     private static final String PARAMETERS_TABLE = "parameters";
     private static final String MODEL_TABLE = "obj_model";
+    private static final String SCRIPT_TABLE = "refresh_script";
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
     private static final String PARENT_COLUMN = "parent";
     private static final String SCRIPTARG_COLUMN = "script_arg";
     private static final String COMMENT_COLUMN = "comment";
+    private static final String VALUE_COLUMN = "value";
     private static final String EDITOR_TYPE_COLUMN = "editor";
     private static final String EDITOR_TABLE_COLUMN = "table";
     private static final String EDITOR_COLUMN_COLUMN = "column";
     private static final String MODEL_COLUMN = "content";
+    private static final String SCRIPT_COLUMN = "content";
     private InstanceContent content = new InstanceContent();
-
+    
     public ModelLoader(File file) throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
         connection = DriverManager.getConnection("jdbc:sqlite:" + file.getPath());
     }
-
+    
     public Model load() throws LoadingException {
         try {
             Map<Integer, Row> map = new HashMap<>();//key is a ID and value is parameter
@@ -60,8 +64,12 @@ public class ModelLoader {
                 String eType = rs.getString(EDITOR_TYPE_COLUMN);
                 String eTable = rs.getString(EDITOR_TABLE_COLUMN);
                 String eColumn = rs.getString(EDITOR_COLUMN_COLUMN);
+                String value = rs.getString(VALUE_COLUMN);
                 CellProperties cProperties = extractEditor(eType, eTable, eColumn);
                 ModelParameter p = new ModelParameter(id, name, scarg, comment, cProperties);
+                if (value != null) {
+                    p.setValue(value);
+                }
                 Row r = new Row(p, parentId, eType, eTable, eColumn);
                 map.put(r.parameter.getId(), r);
             }
@@ -83,10 +91,15 @@ public class ModelLoader {
             }
             // link auto editors
             linkEditors(map);
-            //get Reader
+            //get model Reader
             Statement st2 = connection.createStatement();
             ResultSet rs2 = st2.executeQuery("select * from " + MODEL_TABLE + ";");
-            Model model = new Model(root, rs2.getCharacterStream(MODEL_COLUMN));
+            Reader modelReader = rs2.getCharacterStream(MODEL_COLUMN);
+            //get script Reader
+            Statement st3 = connection.createStatement();
+            ResultSet rs3 = st3.executeQuery("select * from " + SCRIPT_TABLE + ";");
+            Reader scriptReader = rs3.getCharacterStream(SCRIPT_COLUMN);
+            Model model = new Model(root, modelReader, scriptReader);
             return model;
         } catch (SQLException ex) {
             LoadingException lex = new LoadingException();
@@ -94,7 +107,7 @@ public class ModelLoader {
             throw lex;
         }
     }
-
+    
     private Integer getInteger(ResultSet rs, String columnLabel) throws SQLException {
         Integer integer = rs.getInt(columnLabel);
         if (rs.wasNull()) {
@@ -102,7 +115,7 @@ public class ModelLoader {
         }
         return integer;
     }
-
+    
     private ModelParameter findRoot(Collection<Row> rows) throws LoadingException {
         ModelParameter root = null;
         for (Row r : rows) {
@@ -120,9 +133,9 @@ public class ModelLoader {
         } else {
             throw new LoadingException("Нет ни одного корня");
         }
-
+        
     }
-
+    
     private List<Parameter> findChildren(Parameter parent, Collection<Row> rows) {
         Integer parentId = parent.getId();
         List<Parameter> children = new ArrayList<>();
@@ -135,7 +148,7 @@ public class ModelLoader {
         }
         return children;
     }
-
+    
     private CellProperties extractEditor(String editorType, String editorTable, String editorColumn) throws SQLException {
         if (editorType == null) {
             DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
@@ -157,7 +170,7 @@ public class ModelLoader {
             }
             DefaultCellEditor editor = new DefaultCellEditor(new JComboBox(items.toArray()));
             DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
-
+                
                 @Override
                 public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                     value = value == null ? "" : value.toString();
@@ -172,7 +185,7 @@ public class ModelLoader {
         CellProperties cp = new CellProperties(null, renderer);
         return cp;
     }
-
+    
     private void linkEditors(Map<Integer, Row> map) throws LoadingException {
         Set<Row> autoEditable = new HashSet<>();
         for (Row r : map.values()) {
@@ -209,17 +222,17 @@ public class ModelLoader {
                 throw new LoadingException("В таблице найдена неправильная запись авторедактируемой ячейки.");
             }
         }
-
+        
     }
-
+    
     private static class Row {
-
+        
         private ModelParameter parameter;
         private Integer parentId;
         private String editorType;
         private String editorTable;
         private String editorColumn;
-
+        
         Row(ModelParameter parameter, Integer parentId, String eType, String eTable, String eColumn) {
             this.parameter = parameter;
             this.parentId = parentId;
@@ -228,15 +241,15 @@ public class ModelLoader {
             this.editorColumn = eColumn;
         }
     }
-
+    
     public static class LoadingException extends Exception {
-
+        
         public LoadingException(String message) {
             super(message);
         }
-
+        
         public LoadingException() {
         }
-
+        
     }
 }
