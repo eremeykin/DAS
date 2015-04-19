@@ -124,6 +124,11 @@ public class ModelParameter implements Parameter {
         return updater;
     }
 
+    @Override
+    public Integer getScrArg() {
+        return scriptArg;
+    }
+
     public static final class CellProperties<E, R> {
 
         E editor;

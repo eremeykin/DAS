@@ -26,7 +26,7 @@ import org.openide.util.NbBundle.Messages;
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_ALWAYS
 )
-@TopComponent.Registration(mode = "output", openAtStartup = true)
+@TopComponent.Registration(mode = "explorer", openAtStartup = true)
 @ActionID(category = "Window", id = "eremeykin.pete.rulecalculator.MainTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(

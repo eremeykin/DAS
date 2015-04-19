@@ -20,6 +20,8 @@ public interface Parameter {
     public String getValue();
 
     public Integer getId();
+    
+    public Integer getScrArg();
 
     public void setValue(String value);
 

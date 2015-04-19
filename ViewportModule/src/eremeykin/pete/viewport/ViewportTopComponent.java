@@ -5,7 +5,6 @@
  */
 package eremeykin.pete.viewport;
 
-import eremeykin.pete.*;
 import eremeykin.pete.centrallookupapi.CentralLookup;
 import eremeykin.pete.modelapi.Model;
 import java.util.Collection;
@@ -43,7 +42,7 @@ import org.openide.util.NbBundle.Messages;
     "CTL_ViewportTopComponent=Viewport Window",
     "HINT_ViewportTopComponent=This is a Viewport window"
 })
-public final class ViewportTopComponent extends TopComponent implements LookupListener{
+public final class ViewportTopComponent extends TopComponent implements LookupListener {
 
     private Lookup.Result userInfoResult = null;
 

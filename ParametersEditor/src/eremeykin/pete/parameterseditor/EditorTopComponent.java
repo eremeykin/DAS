@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import javax.swing.JScrollPane;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.netbeans.swing.outline.Outline;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.util.Lookup;
@@ -50,6 +51,7 @@ public final class EditorTopComponent extends TopComponent implements LookupList
 //    private static final String DEFAULT_MODEL = ConfigLoader.load("path", "default model");
     private JScrollPane jsPane = new JScrollPane();
     private Lookup.Result userInfoResult = null;
+    private Outline outline;
 
     public EditorTopComponent() {
         initComponents();
@@ -124,9 +126,10 @@ public final class EditorTopComponent extends TopComponent implements LookupList
                 Iterator<Model> it = infos.iterator();
                 while (it.hasNext()) {
                     Model m = it.next();
-                    jsPane.setViewportView(new OutlineCreator(m.getRoot()).getOutline());
+                    outline = new OutlineCreator(m.getRoot()).getOutline();
+                    jsPane.setViewportView(outline);
                     add(jsPane);
-//                    EventQueue.invokeLater(new SetterRunnable(info));
+                    //                    EventQueue.invokeLater(new SetterRunnable(info));
                 }
 
             }
