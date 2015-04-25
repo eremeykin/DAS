@@ -108,8 +108,6 @@ public final class ViewportTopComponent extends TopComponent implements LookupLi
             Lookup.Result r = (Lookup.Result) o;
             Collection infos = r.allInstances();
             if (infos.isEmpty()) {
-                System.out.println("");
-//                EventQueue.invokeLater(new SetterRunnable(new DefaultUserInformation()));
             } else {
                 this.open();
                 Iterator<Model> it = infos.iterator();

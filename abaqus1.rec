@@ -1,0 +1,75 @@
+# -*- coding: mbcs -*-
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.models['Model-1'].ConstrainedSketch(name='__profile__', sheetSize=0.1)
+mdb.models['Model-1'].sketches['__profile__'].sketchOptions.setValues(
+    decimalPlaces=3)
+mdb.models['Model-1'].sketches['__profile__'].CircleByCenterPerimeter(center=(
+    0.0, 0.0), point1=(0.0, 0.28))
+mdb.models['Model-1'].sketches['__profile__'].CircleByCenterPerimeter(center=(
+    0.0, 0.0), point1=(0.0, 0.3))
+mdb.models['Model-1'].Part(dimensionality=THREE_D, name='Part', type=
+    DEFORMABLE_BODY)
+mdb.models['Model-1'].parts['Part'].BaseSolidExtrude(depth=0.6, sketch=
+    mdb.models['Model-1'].sketches['__profile__'])
+del mdb.models['Model-1'].sketches['__profile__']
+mdb.models['Model-1'].parts['Part'].DatumPointByCoordinate(coords=(0.0, 0.0, 
+    0.0))
+mdb.models['Model-1'].parts['Part'].DatumPointByCoordinate(coords=(0.1, 0.0, 
+    0.0))
+mdb.models['Model-1'].parts['Part'].DatumPointByCoordinate(coords=(-0.05, 
+    0.0866025403784439, 0.0))
+mdb.models['Model-1'].parts['Part'].DatumPointByCoordinate(coords=(-0.05, 
+    -0.0866025403784439, 0.0))
+mdb.models['Model-1'].parts['Part'].DatumPointByCoordinate(coords=(0.0, 0.0, 
+    0.1))
+mdb.models['Model-1'].parts['Part'].PartitionCellByPlaneThreePoints(cells=
+    mdb.models['Model-1'].parts['Part'].cells, point1=
+    mdb.models['Model-1'].parts['Part'].datums[2], point2=
+    mdb.models['Model-1'].parts['Part'].datums[3], point3=
+    mdb.models['Model-1'].parts['Part'].datums[6])
+mdb.models['Model-1'].parts['Part'].PartitionCellByPlaneThreePoints(cells=
+    mdb.models['Model-1'].parts['Part'].cells, point1=
+    mdb.models['Model-1'].parts['Part'].datums[2], point2=
+    mdb.models['Model-1'].parts['Part'].datums[4], point3=
+    mdb.models['Model-1'].parts['Part'].datums[6])
+mdb.models['Model-1'].parts['Part'].PartitionCellByPlaneThreePoints(cells=
+    mdb.models['Model-1'].parts['Part'].cells, point1=
+    mdb.models['Model-1'].parts['Part'].datums[2], point2=
+    mdb.models['Model-1'].parts['Part'].datums[5], point3=
+    mdb.models['Model-1'].parts['Part'].datums[6])
+mdb.models['Model-1'].ConstrainedSketch(name='__profile__', sheetSize=0.1)
+mdb.models['Model-1'].sketches['__profile__'].sketchOptions.setValues(
+    decimalPlaces=3)
+mdb.models['Model-1'].sketches['__profile__'].rectangle(point1=(0.0, 0.0), 
+    point2=(0.15, 0.15))
+mdb.models['Model-1'].Part(dimensionality=THREE_D, name='Jaw', type=
+    DEFORMABLE_BODY)
+mdb.models['Model-1'].parts['Jaw'].BaseSolidExtrude(depth=0.15, sketch=
+    mdb.models['Model-1'].sketches['__profile__'])
+del mdb.models['Model-1'].sketches['__profile__']
+mdb.models['Model-1'].parts['Jaw'].DatumPointByCoordinate(coords=(0.075, 0.0, 
+    0.0))
+mdb.models['Model-1'].parts['Jaw'].DatumPointByCoordinate(coords=(0.075, 0.15, 
+    0.15))
+mdb.models['Model-1'].parts['Jaw'].DatumPointByCoordinate(coords=(0.075, 0, 
+    0.15))
+mdb.models['Model-1'].parts['Jaw'].PartitionCellByPlaneThreePoints(cells=
+    mdb.models['Model-1'].parts['Jaw'].cells, point1=
+    mdb.models['Model-1'].parts['Jaw'].datums[2], point2=
+    mdb.models['Model-1'].parts['Jaw'].datums[3], point3=
+    mdb.models['Model-1'].parts['Jaw'].datums[4])
+mdb.models['Model-1'].Material(name='Jaw_material')
+mdb.models['Model-1'].materials['Jaw_material'].Elastic(table=((210000000000.0, 
+    0.29), ))
