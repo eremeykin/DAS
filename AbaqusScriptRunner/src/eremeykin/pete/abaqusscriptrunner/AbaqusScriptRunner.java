@@ -15,12 +15,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -101,7 +95,7 @@ public class AbaqusScriptRunner implements ScriptRunner {
             scriptFile.delete();
             Reader newReader = new FileReader(objFile);
             model.setObjReader(newReader);
-            updateLookup(model);
+//            updateLookup(model);
         } catch (IOException ex) {
             Logger.getLogger(AbaqusScriptRunner.class.getName()).log(Level.SEVERE, null, ex);
         }

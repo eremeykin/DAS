@@ -6,12 +6,9 @@
 package eremeykin.pete.modelapi;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -19,12 +16,14 @@ import java.util.TreeMap;
  *
  * @author Pete
  */
-public class Model {
+public class Model implements ParameterChangedListener {
 
     private Parameter root;
     private Reader objReader;
     private BufferedReader scriptReader;
     private String script;
+    private ArrayList<ReaderChangedListener> readerListeners = new ArrayList<>();
+    private ArrayList<ModelChangedListener> modelListeners = new ArrayList<>();
 
     public Model(Parameter root, Reader objReader, Reader scrReader) {
         this.root = root;
@@ -46,14 +45,18 @@ public class Model {
         }
         String line, result = "";
         while ((line = scriptReader.readLine()) != null) {
-            result += line+"\r\n";
+            result += line + "\r\n";
         }
-        script=result;
+        script = result;
         return result;
     }
 
     public void setObjReader(Reader objReader) {
         this.objReader = objReader;
+        ReaderChangedEvent evt = new ReaderChangedEvent(objReader);
+        for (ReaderChangedListener listener : readerListeners) {
+            listener.readerChanged(evt);
+        }
     }
 
     public TreeMap<Integer, String> getArgs() {
@@ -71,4 +74,43 @@ public class Model {
             getArgsInner(args, p);
         }
     }
+
+    public Parameter getParameterByID(Parameter rootParameter, Integer id) {
+        for (Parameter p : rootParameter.getChildren()) {
+            if (p.getId().equals(id)) {
+                return p;
+            } else {
+                Parameter subParam = getParameterByID(p, id);
+                if (subParam != null) {
+                    return subParam;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void addModelChangedListener(ModelChangedListener listener) {
+        modelListeners.add(listener);
+    }
+
+    public void removeModelChangedListener(ModelChangedListener listener) {
+        modelListeners.remove(listener);
+    }
+
+    public void addReaderChangedListener(ReaderChangedListener listener) {
+        readerListeners.add(listener);
+    }
+
+    public void removeReaderChangedListener(ReaderChangedListener listener) {
+        readerListeners.remove(listener);
+    }
+
+    @Override
+    public void parameterChanged(ParameterChangedEvent evt) {
+        ModelChangedEvent modelEvt = new ModelChangedEvent(evt.getParameterSource());
+        for (ModelChangedListener listener : modelListeners) {
+            listener.modelChanged(modelEvt);
+        }
+    }
+
 }

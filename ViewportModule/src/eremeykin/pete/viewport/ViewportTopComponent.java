@@ -7,6 +7,8 @@ package eremeykin.pete.viewport;
 
 import eremeykin.pete.centrallookupapi.CentralLookup;
 import eremeykin.pete.modelapi.Model;
+import eremeykin.pete.modelapi.ReaderChangedEvent;
+import eremeykin.pete.modelapi.ReaderChangedListener;
 import java.util.Collection;
 import java.util.Iterator;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -113,9 +115,16 @@ public final class ViewportTopComponent extends TopComponent implements LookupLi
                 Iterator<Model> it = infos.iterator();
                 while (it.hasNext()) {
                     Model m = it.next();
-                    this.removeAll();
-                    new ObjLoader(this, m.getObjReader());
-                    this.doLayout();
+                    m.addReaderChangedListener(new ReaderChangedListener() {
+
+                        @Override
+                        public void readerChanged(ReaderChangedEvent evt) {
+                            ViewportTopComponent.this.removeAll();
+                            new ObjLoader(ViewportTopComponent.this, m.getObjReader());
+                            ViewportTopComponent.this.doLayout();
+                        }
+                    });
+
 //                    EventQueue.invokeLater(new SetterRunnable(info));
                 }
 

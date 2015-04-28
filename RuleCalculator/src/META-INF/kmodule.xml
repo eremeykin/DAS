@@ -2,7 +2,7 @@
 <kmodule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://jboss.org/kie/6.0.0/kmodule">
 
-    <kbase name="RulesList" packages="rulecalculator.res">
+    <kbase name="RulesList" packages="res">
         <ksession name="MainSession"/>
     </kbase>
 

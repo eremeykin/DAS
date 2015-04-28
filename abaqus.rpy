@@ -2,7 +2,7 @@
 #
 # Abaqus/CAE Release 6.14-1 replay file
 # Internal Version: 2014_06_05-01.11.02 134264
-# Run by Pete on Sat Apr 25 15:19:15 2015
+# Run by Pete on Tue Apr 28 23:36:44 2015
 #
 
 # from driverUtils import executeOnCaeGraphicsStartup
@@ -15,7 +15,7 @@ session.Viewport(name='Viewport: 1', origin=(1.76563, 1.7627), width=259.9,
 session.viewports['Viewport: 1'].makeCurrent()
 from driverUtils import executeOnCaeStartup
 executeOnCaeStartup()
-execfile('C:/Users/Pete/AppData/Local/Temp/script2159441756116502798.py', 
+execfile('C:/Users/Pete/AppData/Local/Temp/script1391201453094881169.py', 
     __main__.__dict__)
 #: A new model database has been created.
 #: The model "Model-1" has been created.

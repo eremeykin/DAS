@@ -15,17 +15,17 @@ import javax.swing.table.TableCellRenderer;
  *
  * @author eremeykin
  */
-public class ModelParameter implements Parameter {
+public class ModelParameter implements Parameter,ParameterChangedListener {
 
     private final Integer id;
     private final String name;
     private ModelParameter parent;
-    private List<Parameter> slaveParameters = new ArrayList<>();//parameters that will auto edit its content
     private final Integer scriptArg;
     private String value;
     private final String comment;
     private final CellProperties<TableCellEditor, TableCellRenderer> cProperties;
     private List<Parameter> children = new ArrayList<>();
+    private ArrayList<ParameterChangedListener> listeners = new ArrayList<>();
     private Updater updater;
 
     public ModelParameter(Integer id, String name, Integer scriptArg, String comment, CellProperties<TableCellEditor, TableCellRenderer> cProperties) {
@@ -40,7 +40,6 @@ public class ModelParameter implements Parameter {
         this.id = p.id;
         this.name = p.name;
         this.parent = p.parent;
-        this.slaveParameters = p.slaveParameters;
         this.scriptArg = p.scriptArg;
         this.value = p.value;
         this.comment = p.comment;
@@ -65,20 +64,16 @@ public class ModelParameter implements Parameter {
 
     @Override
     public void setValue(String value) {
-        for (Parameter p : slaveParameters) {
-            p.updateValue(value);
-        }
         this.value = value;
+        ParameterChangedEvent evt = new ParameterChangedEvent(this);
+        for (ParameterChangedListener listener : listeners) {
+            listener.parameterChanged(evt);
+        }
     }
 
     @Override
     public List<Parameter> getChildren() {
         return this.children;
-    }
-
-    @Override
-    public void addSlaveParameter(Parameter p) {
-        this.slaveParameters.add(p);
     }
 
     @Override
@@ -115,18 +110,30 @@ public class ModelParameter implements Parameter {
     }
 
     @Override
+    public Integer getScrArg() {
+        return scriptArg;
+    }
+
+    @Override
+    public void addParameterChangedListener(ParameterChangedListener listener) {
+        listeners.add(listener);
+    }
+
+    @Override
+    public void removeParameterChangedListener(ParameterChangedListener listener) {
+        listeners.remove(listener);
+    }
+
+    @Override
     public void setUpdater(Updater updater) {
         this.updater = updater;
     }
 
     @Override
-    public Updater getUpdater() {
-        return updater;
-    }
-
-    @Override
-    public Integer getScrArg() {
-        return scriptArg;
+    public void parameterChanged(ParameterChangedEvent evt) {
+        if (this.updater!=null){
+            updater.update(evt.getParameterSource().getValue());
+        }
     }
 
     public static final class CellProperties<E, R> {

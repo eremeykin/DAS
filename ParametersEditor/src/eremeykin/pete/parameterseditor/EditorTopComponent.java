@@ -7,6 +7,8 @@ package eremeykin.pete.parameterseditor;
 
 import eremeykin.pete.centrallookupapi.CentralLookup;
 import eremeykin.pete.modelapi.Model;
+import eremeykin.pete.modelapi.ModelChangedEvent;
+import eremeykin.pete.modelapi.ModelChangedListener;
 import eremeykin.pete.modelapi.Parameter;
 import java.awt.BorderLayout;
 import java.util.Collection;
@@ -50,15 +52,15 @@ public final class EditorTopComponent extends TopComponent implements LookupList
 
 //    private static final String DEFAULT_MODEL = ConfigLoader.load("path", "default model");
     private JScrollPane jsPane = new JScrollPane();
-    private Lookup.Result userInfoResult = null;
+    private Lookup.Result modelResult = null;
     private Outline outline;
 
     public EditorTopComponent() {
         initComponents();
         Lookup.Template template = new Lookup.Template(Model.class);
         CentralLookup cl = CentralLookup.getDefault();
-        userInfoResult = cl.lookup(template);
-        userInfoResult.addLookupListener(this);
+        modelResult = cl.lookup(template);
+        modelResult.addLookupListener(this);
         try {
             setName("Parameter Editor");
             setLayout(new BorderLayout());
@@ -129,9 +131,15 @@ public final class EditorTopComponent extends TopComponent implements LookupList
                     outline = new OutlineCreator(m.getRoot()).getOutline();
                     jsPane.setViewportView(outline);
                     add(jsPane);
+                    m.addModelChangedListener(new ModelChangedListener() {
+
+                        @Override
+                        public void modelChanged(ModelChangedEvent evt) {
+                            outline.repaint();
+                        }
+                    });
                     //                    EventQueue.invokeLater(new SetterRunnable(info));
                 }
-
             }
         }
     }

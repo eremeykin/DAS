@@ -19,24 +19,16 @@ import org.kie.api.runtime.rule.FactHandle;
  *
  * @author Pete
  */
-public class RoolManager {
+public class RuleManager {
 
     private KieSession ksession;
     private FactHandle fact;
 
-    public RoolManager() {
-
+    public RuleManager() {
         KieServices ks = KieServices.Factory.get();
         KieContainer kc = ks.getKieClasspathContainer();
         ksession = kc.newKieSession("MainSession");
-
-        InputStream is = null;
-        try {
-
-            is = new FileInputStream("C:\\Users\\Pete\\Documents\\NetBeansProjects\\DAS\\RuleCalculator\\src\\eremeykin\\pete\\rulecalculator\\res\\RulesTable.xls");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        InputStream is = RuleManager.class.getClassLoader().getResourceAsStream("res/RulesTable.xls");
         SpreadsheetCompiler sc = new SpreadsheetCompiler();
         String drl = sc.compile(is, InputType.XLS);
         System.out.println("Generate DRL file is –: ");

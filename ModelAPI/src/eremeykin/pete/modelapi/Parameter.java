@@ -14,20 +14,22 @@ import javax.swing.table.TableCellRenderer;
  * @author Pete
  */
 public interface Parameter {
-
+    
+    public static interface Updater {
+        public void update(String value);
+    }
+    
     public String getComment();
 
     public String getValue();
 
     public Integer getId();
-    
+
     public Integer getScrArg();
 
     public void setValue(String value);
 
     public List<Parameter> getChildren();
-
-    public void addSlaveParameter(Parameter p);
 
     public void setChildren(List<Parameter> children);
 
@@ -35,16 +37,9 @@ public interface Parameter {
 
     public TableCellRenderer getRenderer();
 
-    public static interface Updater {
-        public void update(String value);
-    }
+    public void addParameterChangedListener(ParameterChangedListener listener);
 
-    default public void updateValue(String value) {
-        this.getUpdater().update(value);
-    }
-
-    public Updater getUpdater();
-
+    public void removeParameterChangedListener(ParameterChangedListener listener);
+    
     public void setUpdater(Updater updater);
-
 }
