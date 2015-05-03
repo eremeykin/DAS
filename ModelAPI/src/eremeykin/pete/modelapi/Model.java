@@ -6,6 +6,7 @@
 package eremeykin.pete.modelapi;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class Model implements ParameterChangedListener {
     private String script;
     private ArrayList<ReaderChangedListener> readerListeners = new ArrayList<>();
     private ArrayList<ModelChangedListener> modelListeners = new ArrayList<>();
+    private File home;
 
     public Model(Parameter root, Reader objReader, Reader scrReader) {
         this.root = root;
@@ -33,6 +35,14 @@ public class Model implements ParameterChangedListener {
 
     public Parameter getRoot() {
         return root;
+    }
+
+    public void setHome(File home) {
+        this.home = home;
+    }
+
+    public File getHome() {
+        return home;
     }
 
     public Reader getObjReader() {

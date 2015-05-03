@@ -12,9 +12,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.file.Files;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -33,23 +35,30 @@ import org.openide.windows.InputOutput;
 public class AbaqusScriptRunner implements ScriptRunner {
 
     @Override
-    public void runScript(Model model) {
+    public void runScript(Model model, boolean refresh) {
         try {
             String script = model.getScript();
-            File scriptFile = File.createTempFile("script", ".py");
-            scriptFile.deleteOnExit();
-            File objFile = File.createTempFile("tmp_model", ".obj");
-            try (FileWriter fileWriter = new FileWriter(scriptFile)) {
+            File scriptFile = new File(model.getHome(), "refresh_script.py");
+            Files.deleteIfExists(scriptFile.toPath());
+            File objFile = new File(model.getHome(), "tmp_model.obj");
+            Files.deleteIfExists(objFile.toPath());
+
+            try (FileWriter fileWriter = new FileWriter(scriptFile, false)) {
                 fileWriter.write(script + "\r\n");
             }
             TreeMap map = model.getArgs();
             String argString = join(map);
+            // 0 значит refresh=false
+            // 1 значит refresh=true
+            String rStr = refresh ? " true" : " false";
             String command = "abaqus cae noGUI=\"" + scriptFile.getAbsolutePath()
-                    + "\" -- " + argString + " \"" + objFile.getAbsolutePath() + "\"";
+                    + "\" -- " + argString + rStr + " \"" + model.getHome() + "\"";
             if (command.contains("null")) {
                 throw new Error("Параметры содержат null");
             }
+            deleteLockFile(model.getHome());
             ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/C", command);
+            pb.directory(model.getHome());
             Process p = pb.start();
             pb.redirectError(ProcessBuilder.Redirect.PIPE);
             pb.redirectOutput(ProcessBuilder.Redirect.PIPE);
@@ -92,11 +101,13 @@ public class AbaqusScriptRunner implements ScriptRunner {
                     }
                 }
             }.run();
-            scriptFile.delete();
+            p.waitFor();
             Reader newReader = new FileReader(objFile);
             model.setObjReader(newReader);
-//            updateLookup(model);
+            newReader.close();
         } catch (IOException ex) {
+            Logger.getLogger(AbaqusScriptRunner.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
             Logger.getLogger(AbaqusScriptRunner.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -119,5 +130,22 @@ public class AbaqusScriptRunner implements ScriptRunner {
         return result.toString();
     }
 
-;
+    ;
+
+    private void deleteLockFile(File home) {
+        for (File f : home.listFiles(new FilenameFilter() {
+
+            @Override
+            public boolean accept(File dir, String name) {
+                if (name.contains(".lck")) {
+                    return true;
+                }
+                return false;
+            }
+        })) {
+
+            f.delete();
+        }
+    }
+
 }

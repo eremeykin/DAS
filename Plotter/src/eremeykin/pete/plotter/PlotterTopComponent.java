@@ -5,8 +5,24 @@
  */
 package eremeykin.pete.plotter;
 
+import eremeykin.pete.centrallookupapi.CentralLookup;
+import eremeykin.pete.modelapi.Model;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -21,6 +37,8 @@ import org.jfree.data.xy.XYSeriesCollection;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 
@@ -49,6 +67,8 @@ import org.openide.util.NbBundle.Messages;
     "HINT_PlotterTopComponent=This is a Plotter window"
 })
 public final class PlotterTopComponent extends TopComponent {
+
+    private File home;
 
     public PlotterTopComponent() {
         initComponents();
@@ -81,19 +101,29 @@ public final class PlotterTopComponent extends TopComponent {
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
-        // TODO add custom code on component opening
-        final XYDataset dataset = createDataset();
-        final JFreeChart chart = createChart(dataset);
-        ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-//        setContentPane(chartPanel);
-//        JPanel jPanel1 = new JPanel();
-        setLayout(new java.awt.BorderLayout());
-        add(chartPanel, BorderLayout.CENTER);
-        validate();
-//        jPanel1.setVisible(true);
-//        add(jPanel1);
-//        this.setVisible(true);
+        refershData();
+        watchFile();
+    }
+
+    private void refershData() {
+        Lookup.Template template = new Lookup.Template(Model.class);
+        CentralLookup cl = CentralLookup.getDefault();
+        try {
+            removeAll();
+            Model model = (Model) cl.lookup(template).allInstances().iterator().next();
+            this.home = model.getHome();
+            final XYDataset dataset = createDataset(model.getHome());
+            final JFreeChart chart = createChart(dataset);
+            ChartPanel chartPanel = new ChartPanel(chart);
+            chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+            setLayout(new java.awt.BorderLayout());
+            add(chartPanel, BorderLayout.CENTER);
+            validate();
+        } catch (NoSuchElementException ex) {
+//            JOptionPane.showMessageDialog(null, "Нет открытой модели.");
+        } catch (FileNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "Файл с результатами не найден.");
+        }
     }
 
     @Override
@@ -110,74 +140,77 @@ public final class PlotterTopComponent extends TopComponent {
 
     void readProperties(java.util.Properties p) {
         String version = p.getProperty("version");
-        // TODO read your settings according to their version
     }
 
-    private XYDataset createDataset() {
+    private XYDataset createDataset(File home) throws FileNotFoundException {
+        // для первого rpt файла
+        File[] rptFiles = home.listFiles(new FilenameFilter() {
 
-//        final XYSeries series1 = new XYSeries("First");
-//        series1.add(1.0, 1.0);
-//        series1.add(2.0, 4.0);
-//        series1.add(3.0, 3.0);
-//        series1.add(4.0, 5.0);
-//        series1.add(5.0, 5.0);
-//        series1.add(6.0, 7.0);
-//        series1.add(7.0, 7.0);
-//        series1.add(8.0, 8.0);
-
+            @Override
+            public boolean accept(File dir, String name) {
+                if (name.endsWith(".rpt")) {
+                    return true;
+                }
+                return false;
+            }
+        });
+        // Поймать исключение если такого файла нет
+        File firstRPT = rptFiles[0];
         final XYSeries series2 = new XYSeries("Second");
-        series2.add(0.0, 545.516E-06);
-        series2.add(5.26413E-03, 456.574E-06);
-        series2.add(10.5119E-03, 251.08E-06);
-        series2.add(15.7459E-03, 125.884E-06);
-        series2.add(20.9713E-03, 288.566E-06);
-        series2.add(26.1895E-03, 446.961E-06);
-        series2.add(31.4003E-03, 526.576E-06);
-        series2.add(36.6038E-03, 491.13E-06);
-        series2.add(41.807E-03, 316.659E-06);
-        series2.add(47.0312E-03, 134.269E-06);
-        series2.add(52.2851E-03, 330.25E-06);
-        series2.add(57.5441E-03, 485.617E-06);
-        series2.add(62.7959E-03, 515.149E-06);
-        series2.add(68.0428E-03, 442.273E-06);
-        series2.add(73.2877E-03, 294.961E-06);
-        series2.add(78.5313E-03, 129.164E-06);
-        series2.add(83.7708E-03, 238.052E-06);
-        series2.add(88.993E-03, 460.24E-06);
-        series2.add(94.1847E-03, 560.814E-06);
-        series2.add(99.3765E-03, 460.24E-06);
-        series2.add(104.599E-03, 238.052E-06);
-        series2.add(109.838E-03, 129.164E-06);
-        series2.add(115.082E-03, 294.961E-06);
-        series2.add(120.327E-03, 442.273E-06);
-        series2.add(125.574E-03, 515.149E-06);
-        series2.add(130.825E-03, 485.617E-06);
-        series2.add(136.084E-03, 330.25E-06);
-        series2.add(141.338E-03, 134.269E-06);
-        series2.add(146.563E-03, 316.659E-06);
-        series2.add(151.766E-03, 491.13E-06);
-        series2.add(156.969E-03, 526.576E-06);
-        series2.add(162.18E-03, 446.961E-06);
-        series2.add(167.398E-03, 288.566E-06);
-        series2.add(172.624E-03, 125.884E-06);
-        series2.add(177.858E-03, 251.08E-06);
-        series2.add(183.105E-03, 456.574E-06);
+        Scanner scanner = new Scanner(firstRPT);
+        scanner.useDelimiter("\\s+|\n");
+        while (scanner.hasNext()) {
+            String line = scanner.next();
+            try {
+                double x1 = Double.valueOf(line);
+                line = scanner.next();
+                double x2 = Double.valueOf(line);
+                System.out.println("x1=" + x1 + "\nx2=" + x2);
+                series2.add(x1, x2);
+            } catch (NumberFormatException ex) {
+            }
 
-//        final XYSeries series3 = new XYSeries("Third");
-//        series3.add(3.0, 4.0);
-//        series3.add(4.0, 3.0);
-//        series3.add(5.0, 2.0);
-//        series3.add(6.0, 3.0);
-//        series3.add(7.0, 6.0);
-//        series3.add(8.0, 3.0);
-//        series3.add(9.0, 4.0);
-//        series3.add(10.0, 3.0);
+        }
+//        
+//        series2.add(0.000000000, 541.401E-06);
+//        series2.add(5.26413E-03, 449.221E-06);
+//        series2.add(10.5119E-03, 225.722E-06);
+//        series2.add(15.7459E-03, -35.0929E-06);
+//        series2.add(20.9713E-03, -270.799E-06);
+//        series2.add(26.1895E-03, -444.267E-06);
+//        series2.add(31.4003E-03, -526.244E-06);
+//        series2.add(36.6038E-03, -484.232E-06);
+//        series2.add(41.8070E-03, -292.484E-06);
+//        series2.add(47.0312E-03, 12.6708E-06);
+//        series2.add(52.2851E-03, 305.269E-06);
+//        series2.add(57.5441E-03, 476.754E-06);
+//        series2.add(62.7959E-03, 512.287E-06);
+//        series2.add(68.0428E-03, 436.76E-06);
+//        series2.add(73.2877E-03, 275.297E-06);
+//        series2.add(78.5313E-03, 48.1693E-06);
+//        series2.add(83.7708E-03, -216.333E-06);
+//        series2.add(88.9930E-03, -457.335E-06);
+//        series2.add(94.1847E-03, -560.807E-06);
+//        series2.add(99.3765E-03, -457.335E-06);
+//        series2.add(104.599E-03, -216.333E-06);
+//        series2.add(109.838E-03, 48.1693E-06);
+//        series2.add(115.082E-03, 275.297E-06);
+//        series2.add(120.327E-03, 436.76E-06);
+//        series2.add(125.574E-03, 512.287E-06);
+//        series2.add(130.825E-03, 476.754E-06);
+//        series2.add(136.084E-03, 305.269E-06);
+//        series2.add(141.338E-03, 12.6707E-06);
+//        series2.add(146.563E-03, -292.484E-06);
+//        series2.add(151.766E-03, -484.232E-06);
+//        series2.add(156.969E-03, -526.244E-06);
+//        series2.add(162.180E-03, -444.267E-06);
+//        series2.add(167.398E-03, -270.799E-06);
+//        series2.add(172.624E-03, -35.0929E-06);
+//        series2.add(177.858E-03, 225.722E-06);
+//        series2.add(183.105E-03, 449.221E-06);
 
         final XYSeriesCollection dataset = new XYSeriesCollection();
-//        dataset.addSeries(series1);
         dataset.addSeries(series2);
-//        dataset.addSeries(series3);
-
         return dataset;
 
     }
@@ -217,9 +250,48 @@ public final class PlotterTopComponent extends TopComponent {
 //        final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
 //        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         // OPTIONAL CUSTOMISATION COMPLETED.
-
         return chart;
+    }
 
+    private void watchFile() {
+        if (this.home == null) {
+            return;
+        }
+        Thread watchFile = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                Path myDir = PlotterTopComponent.this.home.toPath();
+                while (true) {
+                    try {
+                        WatchService watcher = myDir.getFileSystem().newWatchService();
+                        myDir.register(watcher, StandardWatchEventKinds.ENTRY_CREATE,
+                                StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
+
+                        WatchKey watckKey = watcher.take();
+
+                        List<WatchEvent<?>> events = watckKey.pollEvents();
+                        for (WatchEvent event : events) {
+                            if (event.kind() == StandardWatchEventKinds.ENTRY_CREATE) {
+                                System.out.println("Created: " + event.context().toString());
+                            }
+                            if (event.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
+                                System.out.println("Delete: " + event.context().toString());
+                            }
+                            if (event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
+                                System.out.println("Modify: " + event.context().toString());
+                                refershData();
+                            }
+                        }
+                    } catch (IOException e) {
+                        System.out.println("Error: " + e.toString());
+                    } catch (InterruptedException e) {
+                        System.out.println("Error: " + e.toString());
+                    }
+                }
+            }
+        });
+        watchFile.start();
     }
 
 }

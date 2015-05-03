@@ -7,13 +7,17 @@ package eremeykin.pete.modelloader;
 
 import eremeykin.pete.centrallookupapi.CentralLookup;
 import eremeykin.pete.modelapi.Model;
-import eremeykin.pete.modelapi.Parameter;
+import eremeykin.pete.pathprovider.PathProvider;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+import javax.swing.JOptionPane;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -48,33 +52,47 @@ public final class Load implements ActionListener, Lookup.Provider {
     @Override
     public void actionPerformed(ActionEvent e) {
         //The default dir to use if no value is stored
-        File home = new File(System.getProperty("user.home"));
-        //Now build a file chooser and invoke the dialog in one line of code
-        //"user-dir" is our unique key
-        File toAdd = new FileChooserBuilder("user-dir").setTitle("Open File").
-                setDefaultWorkingDirectory(home).setApproveText("Open").showOpenDialog();
-        //Result will be null if the user clicked cancel or closed the dialog w/o OK
-        if (toAdd != null) {
-            try {
-                ModelLoader modelLoader = new ModelLoader(toAdd);
-                Model m = modelLoader.load();
-                CentralLookup cl = CentralLookup.getDefault();
-                Collection parameters = cl.lookupAll(Model.class);
-                if (!parameters.isEmpty()) {
-                    Iterator<Model> it = parameters.iterator();
-                    while (it.hasNext()) {
-                        Model model = it.next();
-                        cl.remove(model);
+        Collection<? extends PathProvider> allPathProviders = Lookup.getDefault().lookupAll(PathProvider.class);
+        try {
+            PathProvider firstProvider = allPathProviders.iterator().next();
+            File home = firstProvider.getPath();
+            //Now build a file chooser and invoke the dialog in one line of code
+            //"user-dir" is our unique key
+            File toAdd = new FileChooserBuilder("user-dir").setTitle("Open File").
+                    setDefaultWorkingDirectory(home).setApproveText("Open").showOpenDialog();
+            //Result will be null if the user clicked cancel or closed the dialog w/o OK
+            if (toAdd != null) {
+                try {
+                    File newModel =new File(home, toAdd.getName());
+                    Files.deleteIfExists(newModel.toPath());
+                    Files.copy(toAdd.toPath(), newModel.toPath());
+                    ModelLoader modelLoader = new ModelLoader(toAdd);
+                    Model m = modelLoader.load();
+                    m.setHome(home);
+                    CentralLookup cl = CentralLookup.getDefault();
+                    Collection parameters = cl.lookupAll(Model.class);
+                    if (!parameters.isEmpty()) {
+                        Iterator<Model> it = parameters.iterator();
+                        while (it.hasNext()) {
+                            Model model = it.next();
+                            cl.remove(model);
+                        }
                     }
+                    cl.add(m);
+                } catch (ClassNotFoundException ex) {
+                    Exceptions.printStackTrace(ex);// Нельзя открыть модель т.к. отсутствует JDBC
+                } catch (SQLException ex) {
+                    Exceptions.printStackTrace(ex);
+                } catch (ModelLoader.LoadingException ex) {
+                    Exceptions.printStackTrace(ex);
+
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, "Ошибка при копировании исходного файла модели в рабочий каталог.", "Ошибка", JOptionPane.ERROR_MESSAGE);
                 }
-                cl.add(m);
-            } catch (ClassNotFoundException ex) {
-                Exceptions.printStackTrace(ex);// Нельзя открыть модель т.к. отсутствует JDBC
-            } catch (SQLException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (ModelLoader.LoadingException ex) {
-                Exceptions.printStackTrace(ex);
             }
+        } catch (NoSuchElementException ex) {
+            JOptionPane.showMessageDialog(null, "Невозможно определить рабочий каталог.\n"
+                    + "Вероятно, отсутствует модуль выбора каталога.", "Ошибка", JOptionPane.ERROR_MESSAGE);
         }
     }
 

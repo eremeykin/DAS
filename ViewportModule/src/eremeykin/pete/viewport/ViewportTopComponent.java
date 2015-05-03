@@ -115,7 +115,7 @@ public final class ViewportTopComponent extends TopComponent implements LookupLi
                 Iterator<Model> it = infos.iterator();
                 while (it.hasNext()) {
                     Model m = it.next();
-                    m.addReaderChangedListener(new ReaderChangedListener() {
+                    ReaderChangedListener rcl = new ReaderChangedListener() {
 
                         @Override
                         public void readerChanged(ReaderChangedEvent evt) {
@@ -123,7 +123,9 @@ public final class ViewportTopComponent extends TopComponent implements LookupLi
                             new ObjLoader(ViewportTopComponent.this, m.getObjReader());
                             ViewportTopComponent.this.doLayout();
                         }
-                    });
+                    };
+                    rcl.readerChanged(null);
+                    m.addReaderChangedListener(rcl);
 
 //                    EventQueue.invokeLater(new SetterRunnable(info));
                 }

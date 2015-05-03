@@ -43,7 +43,7 @@ public final class RunScript implements ActionListener {
         CentralLookup cl = CentralLookup.getDefault();
         try {
             Model model = (Model) cl.lookup(template).allInstances().iterator().next();
-            runner.runScript(model);
+            runner.runScript(model,false);
         } catch (NoSuchElementException ex) {
             JOptionPane.showMessageDialog(null, "Нет открытой модели.");
         }

@@ -3,15 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eremeykin.pete.scriptrunnerapi;
+package eremeykin.pete.pathprovider;
 
-import eremeykin.pete.modelapi.Model;
+import java.io.File;
 
 /**
  *
  * @author Pete
  */
-public interface ScriptRunner {
-
-    public void runScript(Model model, boolean refresh);
+public interface PathProvider {
+    public File getPath();
 }
