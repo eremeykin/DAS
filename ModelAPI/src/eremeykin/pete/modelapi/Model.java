@@ -26,7 +26,7 @@ public class Model implements ParameterChangedListener {
     private ArrayList<ReaderChangedListener> readerListeners = new ArrayList<>();
     private ArrayList<ModelChangedListener> modelListeners = new ArrayList<>();
     private File home;
-
+//
     public Model(Parameter root, Reader objReader, Reader scrReader) {
         this.root = root;
         this.objReader = objReader;
