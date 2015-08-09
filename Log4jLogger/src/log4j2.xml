@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!-- was: <?xml version='1.0' encoding='ISO-8859-1' ?> -->
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+ 
+<configuration monitorInterval="3">
+    <appenders>
+        <!-- За перезапись отвечает параметр append-->
+        <RollingFile name="FILE_ERROR" fileName="logs/error.log" filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz" append="false"> 
+            <!--            <PatternLayout pattern="%d{ISO8601} [%-5p] - %m - %n    (%t>%F:%L) %n"/>-->
+            <PatternLayout pattern="%d{ISO8601} [%-5p] - %m %n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="250 MB"/>
+            </Policies>
+            <Filters>
+                <ThresholdFilter level="error"  onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </RollingFile>
+        <!-- За перезапись отвечает параметр append-->
+        <RollingFile name="FILE_INFO"  fileName="logs/info.log" filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz" append="false">
+            <PatternLayout pattern="%d{ISO8601} [%-5p] - %m %n"/> 
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="250 MB"/>
+            </Policies>
+            <Filters>
+                <ThresholdFilter level="info"  onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </RollingFile>
+        <File name="FILE" fileName="logs/error.log">
+            <PatternLayout pattern="%d{ISO8601} [%-5p] - %m %n"/>
+        </File>
+        <Console name="STDERR" target="SYSTEM_ERR">
+            <PatternLayout pattern="%d{ABSOLUTE} [%-5p] - %m %n"/>
+            <Filters>
+                <ThresholdFilter level="error"  onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </Console>
+        <Console name="STDINFO" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{ABSOLUTE} [%-5p] - %m %n"/>
+            <Filters>
+                <ThresholdFilter level="debug"  onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </Console>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{ABSOLUTE} [%-5p] - %m %n"/>
+        </Console>
+    </appenders>
+    <loggers>
+        <logger name="LoggerTestTopComponent" level="debug" additivity="false">
+            <appender-ref ref="FILE_ERROR"/>
+            <appender-ref ref="STDERR"/>
+            <appender-ref ref="FILE_INFO"/>
+            <appender-ref ref="STDINFO"/>
+        </logger>
+        <root level="DEBUG">
+            <appender-ref ref="FILE_INFO"/>
+            <appender-ref ref="STDINFO"/>
+        </root>
+    </loggers>
+</configuration>

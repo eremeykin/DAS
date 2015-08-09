@@ -91,10 +91,6 @@ import org.openide.windows.TopComponent;
  */
 public final class ObjLoader {
 
-    static {
-        System.out.println("AppletObjLoader: Copyright (c) 2009 August Lammersdorf, www.InteractiveMesh.com.");
-    }
-
     private boolean isJ3D = false;
     private boolean isJ3DLoader = false;
 
@@ -156,7 +152,6 @@ public final class ObjLoader {
 
 //TOdo    @Override
     public void destroy() {
-        System.out.println("AppletObjLoader : destroy");
         view.removeAllCanvas3Ds();
         view.attachViewPlatform(null);
         vu.removeAllLocales();
@@ -229,11 +224,11 @@ public final class ObjLoader {
         try {
             canvas3D = new Canvas3D(gcfg);
         } catch (NullPointerException e) {
-            System.out.println("AppletObjLoader: Canvas3D failed !!");
+            System.out.println("ObjLoader: Canvas3D failed !!");
             e.printStackTrace();
             System.exit(0);
         } catch (IllegalArgumentException e) {
-            System.out.println("AppletObjLoader: Canvas3D failed !!");
+            System.out.println("ObjLoader: Canvas3D failed !!");
             e.printStackTrace();
             System.exit(0);
         }

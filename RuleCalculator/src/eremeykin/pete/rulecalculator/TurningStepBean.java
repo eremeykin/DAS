@@ -134,7 +134,6 @@ public class TurningStepBean {
      * @param v the v to set
      */
     public void setV(double v) {
-        System.out.println("SET V " + v);
         this.v = v;
     }
 
@@ -149,7 +148,7 @@ public class TurningStepBean {
      * @param p the p to set
      */
     public void setP(double p) {
-        System.out.println("SET P " + p);
+
         this.p = p;
     }
 
@@ -164,7 +163,6 @@ public class TurningStepBean {
      * @param n the n to set
      */
     public void setN(double n) {
-        System.out.println("SET N " + n);
         this.n = n;
     }
 
@@ -179,7 +177,6 @@ public class TurningStepBean {
      * @param f the f to set
      */
     public void setF(double f) {
-        System.out.println("SET F " + f);
         this.f = f;
     }
 
@@ -194,7 +191,6 @@ public class TurningStepBean {
      * @param m the m to set
      */
     public void setM(double m) {
-        System.out.println("SET M " + m);
         this.m = m;
     }
 
@@ -209,8 +205,6 @@ public class TurningStepBean {
      * @param t the t to set
      */
     public void setT(double t) {
-        System.out.println("set t " + t);
-
         this.t = t;
     }
 
@@ -218,7 +212,6 @@ public class TurningStepBean {
      * @return the s
      */
     public double getS() {
-        System.out.println("get s " + s);
         return s;
     }
 
@@ -226,7 +219,6 @@ public class TurningStepBean {
      * @param s the s to set
      */
     public void setS(double s) {
-        System.out.println("set s " + s);
         this.s = s;
     }
 
@@ -241,7 +233,7 @@ public class TurningStepBean {
      * @param kmv the kmv to set
      */
     public void setKmv(double kmv) {
-        System.out.println("set kmv " + kmv);
+
         this.kmv = kmv;
     }
 
@@ -256,7 +248,6 @@ public class TurningStepBean {
      * @param kpv the kpv to set
      */
     public void setKpv(double kpv) {
-        System.out.println("set kpv " + kpv);
         this.kpv = kpv;
     }
 
@@ -264,7 +255,6 @@ public class TurningStepBean {
      * @return the kiv
      */
     public double getKiv() {
-        System.out.println("get kiv " + kiv);
         return kiv;
     }
 
@@ -272,7 +262,6 @@ public class TurningStepBean {
      * @param kiv the kiv to set
      */
     public void setKiv(double kiv) {
-        System.out.println("set kiv " + kiv);
         this.kiv = kiv;
     }
 
@@ -287,7 +276,6 @@ public class TurningStepBean {
      * @param cv the cv to set
      */
     public void setCv(double cv) {
-        System.out.println("set cv " + cv);
         this.cv = cv;
     }
 
@@ -302,7 +290,6 @@ public class TurningStepBean {
      * @param xv the xv to set
      */
     public void setXv(double xv) {
-        System.out.println("set xv " + xv);
         this.xv = xv;
     }
 
@@ -317,7 +304,6 @@ public class TurningStepBean {
      * @param yv the yv to set
      */
     public void setYv(double yv) {
-        System.out.println("set yv " + yv);
         this.yv = yv;
     }
 
@@ -332,7 +318,6 @@ public class TurningStepBean {
      * @param mv the mv to set
      */
     public void setMv(double mv) {
-        System.out.println("set mv " + mv);
         this.mv = mv;
     }
 
@@ -347,7 +332,6 @@ public class TurningStepBean {
      * @param cp the cp to set
      */
     public void setCp(double cp) {
-        System.out.println("set cp " + cp);
         this.cp = cp;
     }
 
@@ -362,7 +346,6 @@ public class TurningStepBean {
      * @param xp the xp to set
      */
     public void setXp(double xp) {
-        System.out.println("set xp " + xp);
         this.xp = xp;
     }
 
@@ -377,7 +360,6 @@ public class TurningStepBean {
      * @param yp the yp to set
      */
     public void setYp(double yp) {
-        System.out.println("set yp " + yp);
         this.yp = yp;
     }
 
@@ -392,7 +374,6 @@ public class TurningStepBean {
      * @param np the np to set
      */
     public void setNp(double np) {
-        System.out.println("set np " + np);
         this.np = np;
     }
 
@@ -407,7 +388,6 @@ public class TurningStepBean {
      * @param kmp the kmp to set
      */
     public void setKmp(double kmp) {
-        System.out.println("set kmp " + kmp);
         this.kmp = kmp;
     }
 

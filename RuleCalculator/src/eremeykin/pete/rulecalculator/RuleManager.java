@@ -31,8 +31,8 @@ public class RuleManager {
         InputStream is = RuleManager.class.getClassLoader().getResourceAsStream("res/RulesTable.xls");
         SpreadsheetCompiler sc = new SpreadsheetCompiler();
         String drl = sc.compile(is, InputType.XLS);
-        System.out.println("Generate DRL file is –: ");
-        System.out.println(drl);
+        //System.out.println("Generate DRL file is –: ");
+        //System.out.println(drl);
     }
 
     public FactHandle insert(Object obj) {
@@ -45,7 +45,6 @@ public class RuleManager {
 
     public void fireAll() {
         ksession.fireAllRules();
-        System.out.println("fired");
     }
 
 }

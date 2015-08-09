@@ -37,3 +37,15 @@
 /PathProviderAPI/build/
 /PathProviderAPI/nbproject/private/
 /PathProviderToolBar/nbproject/private/
+/Apache-Log4j-1.x-Compatibility-API/nbproject/private/
+/Apache-Log4j-1.x-Compatibility-API/build/
+/Log4jLogger/build/
+/LoggerAPI/build/
+/Apache-Log4j/build/
+/Apache-Log4j/nbproject/private/
+/Log4jLogger/nbproject/private/
+/LoggerAPI/nbproject/private/
+/ObjModelImporterJFX/build/
+/ViewportFX/build/
+/ViewportFX/nbproject/private/
+/ObjModelImporterJFX/nbproject/private/

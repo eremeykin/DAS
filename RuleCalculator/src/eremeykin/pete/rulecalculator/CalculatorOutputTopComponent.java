@@ -64,7 +64,7 @@ public final class CalculatorOutputTopComponent extends TopComponent implements 
             Lookup.Result r = (Lookup.Result) o;
             Collection infos = r.allInstances();
             if (infos.isEmpty()) {
-                System.out.println("");
+                //System.out.println("");
             } else {
                 this.open();
                 Iterator<TurningStepBean> it = infos.iterator();

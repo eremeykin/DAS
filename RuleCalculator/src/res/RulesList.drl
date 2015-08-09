@@ -75,20 +75,11 @@ rule "Set Kpv for crustless"
         modify(step){setKpv(1)};
 end
 
-//rule "Set Kiv for crustless"
-//    when
-//        $step : TurningStepBean (workpieceMaterial == TurningStepBean.WorkpieceMaterial.STEEL, instrumentMaterial == TurningStepBean.InstrumentMaterial.T15K10)
-//    then
-//        $step.kpv=1;
-//end
-
 rule "Calculate V" salience -110
     lock-on-active true
     when
         step : TurningStepBean ()
     then
-        System.out.println("!!! set V !!!");
-        System.out.println(step.toStr);
         modify(step){setV((step.cv/(Math.pow(step.durability,step.mv)*Math.pow(step.t,step.xv)*Math.pow(step.s,step.yv)))*step.kmv*step.kpv*step.kiv)}
 end
 
@@ -97,8 +88,6 @@ rule "Calculate Pz" salience -120
     when
         step : TurningStepBean ()
     then
-        System.out.println("!!! set Pz !!!");
-        System.out.println(step.toStr);
         modify(step){setP(10*step.cp*Math.pow(step.t,step.xp)*Math.pow(step.s,step.yp)*Math.pow(step.v,step.np)*step.kmp)}
 end
 
@@ -107,8 +96,6 @@ rule "Calculate M" salience -130
     when
         step : TurningStepBean ()
     then
-        System.out.println("!!! set M !!!");
-        System.out.println(step.toStr);
         modify(step){setM(step.P*step.diameter/200)}
 end
 
@@ -117,8 +104,6 @@ rule "Calculate N" salience -140
     when
         step : TurningStepBean ()
     then
-        System.out.println("!!! set N !!!");
-        System.out.println(step.toStr);
         modify(step){setN(step.P*step.v/(1020*60))}
 end
 
@@ -127,8 +112,6 @@ rule "Calculate f" salience -150
     when
         step : TurningStepBean ()
     then
-        System.out.println("!!! set F !!!");
-        System.out.println(step.toStr);
         modify(step){setF(1000*step.v/(Math.PI*step.diameter))}
 end
 
@@ -136,5 +119,4 @@ rule "Print" salience -160
     when
         step : TurningStepBean ()
     then
-        System.out.println(step.toStr);
 end
