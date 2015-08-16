@@ -5,11 +5,10 @@
  */
 package eremeykin.pete.parameterseditor;
 
-import eremeykin.pete.centrallookupapi.CentralLookup;
+import eremeykin.pete.coreapi.centrallookupapi.CentralLookup;
 import eremeykin.pete.modelapi.Model;
 import eremeykin.pete.modelapi.ModelChangedEvent;
 import eremeykin.pete.modelapi.ModelChangedListener;
-import eremeykin.pete.modelapi.Parameter;
 import java.awt.BorderLayout;
 import java.util.Collection;
 import java.util.Iterator;

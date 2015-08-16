@@ -415,10 +415,9 @@ public class TurningStepBean {
     /**
      * @param errorMessage the errorMessage to set
      */
-    public void setErrorMessage(String errorMessage) throws StepIncorrect {
+    public void setErrorMessage(String errorMessage) {
         incorrect = true;
         this.errorMessage = errorMessage;
-        throw new StepIncorrect();
     }
 
     /**

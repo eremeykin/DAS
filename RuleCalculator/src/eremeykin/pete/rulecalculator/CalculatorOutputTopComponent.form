@@ -28,8 +28,11 @@
   <SubComponents>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
       <Properties>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[10, 10]"/>
+        </Property>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[300, 500]"/>
+          <Dimension value="[200, 500]"/>
         </Property>
       </Properties>
 
@@ -44,21 +47,27 @@
                 </TitledBorder>
               </Border>
             </Property>
+            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[10, 10]"/>
+            </Property>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[200, 253]"/>
+            </Property>
           </Properties>
 
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel9" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="jLabel10" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="jLabel11" alignment="0" max="32767" attributes="0"/>
                                   <Component id="jLabel12" alignment="0" pref="170" max="32767" attributes="0"/>
                                   <Component id="jLabel13" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jLabel11" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jLabel10" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jLabel9" alignment="0" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" max="-2" attributes="0">
@@ -74,7 +83,7 @@
                               <Component id="jButton1" min="-2" pref="101" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -122,6 +131,9 @@
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="eremeykin/pete/rulecalculator/Bundle.properties" key="CalculatorOutputTopComponent.jLabel9.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
+                <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[7, 15]"/>
+                </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel10">
@@ -131,6 +143,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="eremeykin/pete/rulecalculator/Bundle.properties" key="CalculatorOutputTopComponent.jLabel10.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+                <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[7, 15]"/>
                 </Property>
               </Properties>
             </Component>
@@ -142,6 +157,9 @@
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="eremeykin/pete/rulecalculator/Bundle.properties" key="CalculatorOutputTopComponent.jLabel11.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
+                <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[7, 15]"/>
+                </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel12">
@@ -152,6 +170,9 @@
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="eremeykin/pete/rulecalculator/Bundle.properties" key="CalculatorOutputTopComponent.jLabel12.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
+                <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[7, 15]"/>
+                </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel13">
@@ -161,6 +182,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="eremeykin/pete/rulecalculator/Bundle.properties" key="CalculatorOutputTopComponent.jLabel13.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+                <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[7, 15]"/>
                 </Property>
               </Properties>
             </Component>

@@ -4,10 +4,10 @@
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
             <code-name-base>eremeykin.pete.viewport</code-name-base>
-            <suite-component/>
+            <standalone/>
             <module-dependencies>
                 <dependency>
-                    <code-name-base>eremeykin.pete.centrallookupapi</code-name-base>
+                    <code-name-base>eremeykin.pete.configloader</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
@@ -15,7 +15,7 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>eremeykin.pete.configloader</code-name-base>
+                    <code-name-base>eremeykin.pete.coreapi</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>

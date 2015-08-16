@@ -5,9 +5,11 @@
  */
 package eremeykin.pete.rulecalculator;
 
-import eremeykin.pete.centrallookupapi.CentralLookup;
+import eremeykin.pete.coreapi.centrallookupapi.CentralLookup;
 import eremeykin.pete.modelapi.Model;
 import eremeykin.pete.modelapi.Parameter;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Iterator;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -35,11 +37,11 @@ import org.openide.util.NbBundle.Messages;
 @ActionID(category = "Window", id = "eremeykin.pete.rulecalculator.CalculatorOutputTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(
-        displayName = "#CTL_CalculatorOutputAction",
+        displayName = "#CTL_CalculatorOutputActionTopComponent",
         preferredID = "CalculatorOutputTopComponent"
 )
 @Messages({
-    "CTL_CalculatorOutputAction=CalculatorOutput",
+    "CTL_CalculatorOutputActionTopComponent=CalculatorOutput",
     "CTL_CalculatorOutputTopComponent=CalculatorOutput Window",
     "HINT_CalculatorOutputTopComponent=This is a CalculatorOutput window"
 })
@@ -70,11 +72,12 @@ public final class CalculatorOutputTopComponent extends TopComponent implements 
                 Iterator<TurningStepBean> it = infos.iterator();
                 while (it.hasNext()) {
                     TurningStepBean s = it.next();
-                    jFormattedTextField4.setText(String.valueOf(s.getV()));
-                    jFormattedTextField5.setText(String.valueOf(s.getP()));
-                    jFormattedTextField6.setText(String.valueOf(s.getM()));
-                    jFormattedTextField7.setText(String.valueOf(s.getN()));
-                    jFormattedTextField8.setText(String.valueOf(s.getF()));
+                    NumberFormat formatter = new DecimalFormat("#0.000"); 
+                    jFormattedTextField4.setText(formatter.format(s.getV()));
+                    jFormattedTextField5.setText(formatter.format(s.getP()));
+                    jFormattedTextField6.setText(formatter.format(s.getM()));
+                    jFormattedTextField7.setText(new Double(s.getN()).isNaN()? "NaN":formatter.format(s.getN()));
+                    jFormattedTextField8.setText(formatter.format(s.getF()));
                     //                    EventQueue.invokeLater(new SetterRunnable(info));
                 }
 
@@ -104,24 +107,32 @@ public final class CalculatorOutputTopComponent extends TopComponent implements 
         jFormattedTextField8 = new javax.swing.JFormattedTextField();
         jButton1 = new javax.swing.JButton();
 
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(300, 500));
+        jScrollPane1.setMinimumSize(new java.awt.Dimension(10, 10));
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(200, 500));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(CalculatorOutputTopComponent.class, "CalculatorOutputTopComponent.jPanel2.border.title"))); // NOI18N
+        jPanel2.setMinimumSize(new java.awt.Dimension(10, 10));
+        jPanel2.setPreferredSize(new java.awt.Dimension(200, 253));
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel9, org.openide.util.NbBundle.getMessage(CalculatorOutputTopComponent.class, "CalculatorOutputTopComponent.jLabel9.text")); // NOI18N
+        jLabel9.setMinimumSize(new java.awt.Dimension(7, 15));
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel10, org.openide.util.NbBundle.getMessage(CalculatorOutputTopComponent.class, "CalculatorOutputTopComponent.jLabel10.text")); // NOI18N
+        jLabel10.setMinimumSize(new java.awt.Dimension(7, 15));
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel11, org.openide.util.NbBundle.getMessage(CalculatorOutputTopComponent.class, "CalculatorOutputTopComponent.jLabel11.text")); // NOI18N
+        jLabel11.setMinimumSize(new java.awt.Dimension(7, 15));
 
         jLabel12.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel12, org.openide.util.NbBundle.getMessage(CalculatorOutputTopComponent.class, "CalculatorOutputTopComponent.jLabel12.text")); // NOI18N
+        jLabel12.setMinimumSize(new java.awt.Dimension(7, 15));
 
         jLabel13.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel13, org.openide.util.NbBundle.getMessage(CalculatorOutputTopComponent.class, "CalculatorOutputTopComponent.jLabel13.text")); // NOI18N
+        jLabel13.setMinimumSize(new java.awt.Dimension(7, 15));
 
         org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(CalculatorOutputTopComponent.class, "CalculatorOutputTopComponent.jButton1.text")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -139,11 +150,11 @@ public final class CalculatorOutputTopComponent extends TopComponent implements 
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                            .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jFormattedTextField5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
@@ -161,23 +172,23 @@ public final class CalculatorOutputTopComponent extends TopComponent implements 
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jFormattedTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jFormattedTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jFormattedTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel12)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jFormattedTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel13)
+                    .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jFormattedTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)

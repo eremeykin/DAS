@@ -5,9 +5,9 @@
  */
 package eremeykin.pete.modelloader;
 
-import eremeykin.pete.centrallookupapi.CentralLookup;
+import eremeykin.pete.coreapi.centrallookupapi.CentralLookup;
+import eremeykin.pete.coreapi.workspace.WorkspaceManager;
 import eremeykin.pete.modelapi.Model;
-import eremeykin.pete.pathprovider.PathProvider;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -52,14 +52,16 @@ public final class Load implements ActionListener, Lookup.Provider {
     @Override
     public void actionPerformed(ActionEvent e) {
         //The default dir to use if no value is stored
-        Collection<? extends PathProvider> allPathProviders = Lookup.getDefault().lookupAll(PathProvider.class);
+//        Collection<? extends PathProvider> allPathProviders = Lookup.getDefault().lookupAll(PathProvider.class);
         try {
-            PathProvider firstProvider = allPathProviders.iterator().next();
-            File home = firstProvider.getPath();
+//            PathProvider firstProvider = allPathProviders.iterator().next();
+//            File home = firstProvider.getPath();
+            File home = WorkspaceManager.INSTANCE.getWorkspace();
             //Now build a file chooser and invoke the dialog in one line of code
             //"user-dir" is our unique key
+            String windir = System.getenv("WINDIR").substring(0, 1) + ":\\";
             File toAdd = new FileChooserBuilder("user-dir").setTitle("Open File").
-                    setDefaultWorkingDirectory(home).setApproveText("Open").showOpenDialog();
+                    setDefaultWorkingDirectory(new File(windir)).setApproveText("Open").showOpenDialog();
             //Result will be null if the user clicked cancel or closed the dialog w/o OK
             if (toAdd != null) {
                 try {

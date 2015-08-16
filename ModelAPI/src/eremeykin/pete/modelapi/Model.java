@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -20,17 +21,17 @@ import java.util.TreeMap;
 public class Model implements ParameterChangedListener {
 
     private Parameter root;
-    private Reader objReader;
-    private BufferedReader scriptReader;
+    private File modelFile;
+    private File scriptFile;
     private String script;
     private ArrayList<ReaderChangedListener> readerListeners = new ArrayList<>();
     private ArrayList<ModelChangedListener> modelListeners = new ArrayList<>();
     private File home;
 
-    public Model(Parameter root, Reader objReader, Reader scrReader) {
+    public Model(Parameter root, File modelFile, File scriptFile) {
         this.root = root;
-        this.objReader = objReader;
-        this.scriptReader = new BufferedReader(scrReader);
+        this.modelFile = modelFile;
+        this.scriptFile =scriptFile;
     }
 
     public Parameter getRoot() {
@@ -45,25 +46,29 @@ public class Model implements ParameterChangedListener {
         return home;
     }
 
-    public Reader getObjReader() {
-        return objReader;
+    public File getModelFile() {
+        return modelFile;
+    }
+    
+    public File getScriptFile(){
+        return scriptFile;
     }
 
-    public String getScript() throws IOException {
-        if (script != null) {
-            return script;
-        }
-        String line, result = "";
-        while ((line = scriptReader.readLine()) != null) {
-            result += line + "\r\n";
-        }
-        script = result;
-        return result;
-    }
+//    public String getScript() throws IOException {
+//        if (script != null) {
+//            return script;
+//        }
+//        String line, result = "";
+//        while ((line = scriptReader.readLine()) != null) {
+//            result += line + "\r\n";
+//        }
+//        script = result;
+//        return result;
+//    }
 
-    public void setObjReader(Reader objReader) {
-        this.objReader = objReader;
-        ReaderChangedEvent evt = new ReaderChangedEvent(objReader);
+    public void setModelFile(File modelFile) {
+        this.modelFile = modelFile;
+        ModelStringChangedEvent evt = new ModelStringChangedEvent(modelFile);
         for (ReaderChangedListener listener : readerListeners) {
             listener.readerChanged(evt);
         }

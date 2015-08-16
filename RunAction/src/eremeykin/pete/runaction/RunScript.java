@@ -5,7 +5,7 @@
  */
 package eremeykin.pete.runaction;
 
-import eremeykin.pete.centrallookupapi.CentralLookup;
+import eremeykin.pete.coreapi.centrallookupapi.CentralLookup;
 import eremeykin.pete.modelapi.Model;
 import eremeykin.pete.scriptrunnerapi.ScriptRunner;
 import java.awt.event.ActionEvent;

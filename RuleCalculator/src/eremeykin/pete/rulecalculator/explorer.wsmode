@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mode version="2.4">
+    <name unique="explorerWsmode"  />
+    <kind type="view" />
+    <state type="joined"  />
+    <constraints>
+        <path orientation="horizontal" number="20" weight="0.3226059654631083"/>
+        <path orientation="vertical" number="20" weight="0.5296803652968036"/>
+    </constraints>
+    <bounds x="128" y="216" width="500" height="492" />
+    <frame state="0"/>
+    <active-tc  id="CalculatorInputTopComponent" />
+    <empty-behavior permanent="true"/>
+</mode>

@@ -5,13 +5,12 @@
  */
 package eremeykin.pete.rulecalculator;
 
-import eremeykin.pete.*;
-import eremeykin.pete.centrallookupapi.CentralLookup;
-import java.awt.PageAttributes;
+import eremeykin.pete.coreapi.centrallookupapi.CentralLookup;
+import eremeykin.pete.coreapi.loggerapi.Logger;
+import eremeykin.pete.coreapi.loggerapi.LoggerManager;
 import java.util.Collection;
 import java.util.Iterator;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JOptionPane;
 import org.kie.api.runtime.rule.FactHandle;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
@@ -39,12 +38,14 @@ import org.openide.util.NbBundle.Messages;
         preferredID = "CalculatorInputTopComponent"
 )
 @Messages({
-    "CTL_CalculatorInputTopComponentAction=Calculator input",
-    "CTL_CalculatorInputTopComponent=Calculator input Window",
+    "CTL_CalculatorInputTopComponentAction=CalculatorInput",
+    "CTL_CalculatorInputTopComponent=CalculatorInput Window",
     "HINT_CalculatorInputTopComponent=This is a rule calculator window"
 })
 public final class CalculatorInputTopComponent extends TopComponent {
 
+    Logger logger = LoggerManager.getLogger(CalculatorInputTopComponent.class);
+    
     private TurningStepBean step = new TurningStepBean();
     private RuleManager rManager = new RuleManager();
 
@@ -97,41 +98,49 @@ public final class CalculatorInputTopComponent extends TopComponent {
         jScrollPane2.setPreferredSize(new java.awt.Dimension(300, 402));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(CalculatorInputTopComponent.class, "CalculatorInputTopComponent.jPanel1.border.title"))); // NOI18N
-        jPanel1.setPreferredSize(new java.awt.Dimension(250, 200));
+        jPanel1.setPreferredSize(new java.awt.Dimension(200, 200));
 
         jComboBox4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(CalculatorInputTopComponent.class, "CalculatorInputTopComponent.jLabel6.text")); // NOI18N
+        jLabel6.setMinimumSize(new java.awt.Dimension(7, 15));
 
         jComboBox5.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel7, org.openide.util.NbBundle.getMessage(CalculatorInputTopComponent.class, "CalculatorInputTopComponent.jLabel7.text")); // NOI18N
+        jLabel7.setMinimumSize(new java.awt.Dimension(7, 15));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(CalculatorInputTopComponent.class, "CalculatorInputTopComponent.jLabel1.text")); // NOI18N
+        jLabel1.setMinimumSize(new java.awt.Dimension(7, 15));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(CalculatorInputTopComponent.class, "CalculatorInputTopComponent.jLabel2.text")); // NOI18N
+        jLabel2.setMinimumSize(new java.awt.Dimension(7, 15));
 
         jComboBox1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(CalculatorInputTopComponent.class, "CalculatorInputTopComponent.jLabel3.text")); // NOI18N
+        jLabel3.setMinimumSize(new java.awt.Dimension(7, 15));
 
         jComboBox2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(CalculatorInputTopComponent.class, "CalculatorInputTopComponent.jLabel4.text")); // NOI18N
+        jLabel4.setMinimumSize(new java.awt.Dimension(7, 15));
 
         jComboBox3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel8, org.openide.util.NbBundle.getMessage(CalculatorInputTopComponent.class, "CalculatorInputTopComponent.jLabel8.text")); // NOI18N
+        jLabel8.setMinimumSize(new java.awt.Dimension(7, 15));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(CalculatorInputTopComponent.class, "CalculatorInputTopComponent.jLabel5.text")); // NOI18N
+        jLabel5.setMinimumSize(new java.awt.Dimension(7, 15));
 
         jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
         jFormattedTextField1.setToolTipText(org.openide.util.NbBundle.getMessage(CalculatorInputTopComponent.class, "CalculatorInputTopComponent.jFormattedTextField1.toolTipText")); // NOI18N
@@ -140,6 +149,7 @@ public final class CalculatorInputTopComponent extends TopComponent {
 
         jLabel15.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel15, org.openide.util.NbBundle.getMessage(CalculatorInputTopComponent.class, "CalculatorInputTopComponent.jLabel15.text")); // NOI18N
+        jLabel15.setMinimumSize(new java.awt.Dimension(7, 15));
 
         jComboBox6.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
@@ -159,31 +169,15 @@ public final class CalculatorInputTopComponent extends TopComponent {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(43, 43, 43))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(107, 107, 107))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(67, 67, 67))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(101, 101, 101))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(49, 49, 49))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(96, 96, 96))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(40, 40, 40))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(28, 28, 28))
-                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                    .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jFormattedTextField3)
@@ -195,7 +189,7 @@ public final class CalculatorInputTopComponent extends TopComponent {
                     .addComponent(jComboBox4, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jComboBox5, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jFormattedTextField1)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -203,39 +197,39 @@ public final class CalculatorInputTopComponent extends TopComponent {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel15)
+                    .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBox7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jFormattedTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
@@ -259,79 +253,66 @@ public final class CalculatorInputTopComponent extends TopComponent {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         step = new TurningStepBean();
+        logger.fatal("Test MSG");
         try {
-            try {
-                step.setDiameter(Double.parseDouble(jFormattedTextField1.getText().replace(',', '.')));
-            } catch (NumberFormatException ex) {
-                step.setErrorMessage("Ошибка ввода диаметра.");
-            }
-            try {
-                step.setType((TurningStepBean.TurningType) jComboBox1.getSelectedItem());
-            } catch (ClassCastException ex) {
-                step.setErrorMessage("Ошибка ввода типа точения.");
-            }
-            try {
-                step.setKind((TurningStepBean.ProcessKind) jComboBox2.getSelectedItem());
-            } catch (ClassCastException ex) {
-                step.setErrorMessage("Ошибка ввода вида обработки.");
-            }
-            try {
-                step.setWorkpieceMaterial((TurningStepBean.WorkpieceMaterial) jComboBox3.getSelectedItem());
-            } catch (ClassCastException ex) {
-                step.setErrorMessage("Ошибка ввода материала заготовки.");
-            }
-            try {
-                step.setWorkpieceType((TurningStepBean.WorkpieceType) jComboBox4.getSelectedItem());
-            } catch (ClassCastException ex) {
-                step.setErrorMessage("Ошибка ввода вида заготовки.");
-            }
-            try {
-                step.setInstrumentMaterial((TurningStepBean.InstrumentMaterial) jComboBox5.getSelectedItem());
-            } catch (ClassCastException ex) {
-                step.setErrorMessage("Ошибка ввода инструментального материала.");
-            }
-            try {
-                step.setDurability(Double.parseDouble(jComboBox6.getSelectedItem().toString()));
-            } catch (NumberFormatException ex) {
-                step.setErrorMessage("Ошибка ввода стойкости.");
-            }
-            try {
-                step.setRoughness(Double.parseDouble(jComboBox7.getSelectedItem().toString()));
-            } catch (NumberFormatException ex) {
-                step.setErrorMessage("Ошибка ввода шероховатости.");
-            }
-            try {
-                step.setInstrumentRadius(Double.parseDouble(jFormattedTextField3.getText().replace(',', '.')));
-            } catch (Exception ex) {
-                step.setErrorMessage("Ошибка ввода инструментального радиуса.");
-            }
-//            jLabel14.setText(step.getErrorMessage());
-            FactHandle stepFact = rManager.insert(step);
-            rManager.fireAll();
-
-            CentralLookup cl = CentralLookup.getDefault();
-            Collection parameters = cl.lookupAll(TurningStepBean.class);
-            if (!parameters.isEmpty()) {
-                Iterator<TurningStepBean> it = parameters.iterator();
-                while (it.hasNext()) {
-                    TurningStepBean st = it.next();
-                    cl.remove(st);
-                }
-            }
-            cl.add(step);
-
-        } catch (Exception ex) {
-            Throwable t = ex;
-            t.printStackTrace();
-            while (t.getCause() != null) {
-                t = t.getCause();
-            }
-            if (!(t instanceof TurningStepBean.StepIncorrect)) {
-                JOptionPane.showInputDialog(t);
-                System.exit(-1);
-            }
-//            jLabel14.setText(step.getErrorMessage());
+            step.setDiameter(Double.parseDouble(jFormattedTextField1.getText().replace(',', '.')));
+        } catch (NumberFormatException ex) {
+            step.setErrorMessage("Ошибка ввода диаметра.");
         }
+        try {
+            step.setType((TurningStepBean.TurningType) jComboBox1.getSelectedItem());
+        } catch (ClassCastException ex) {
+            step.setErrorMessage("Ошибка ввода типа точения.");
+        }
+        try {
+            step.setKind((TurningStepBean.ProcessKind) jComboBox2.getSelectedItem());
+        } catch (ClassCastException ex) {
+            step.setErrorMessage("Ошибка ввода вида обработки.");
+        }
+        try {
+            step.setWorkpieceMaterial((TurningStepBean.WorkpieceMaterial) jComboBox3.getSelectedItem());
+        } catch (ClassCastException ex) {
+            step.setErrorMessage("Ошибка ввода материала заготовки.");
+        }
+        try {
+            step.setWorkpieceType((TurningStepBean.WorkpieceType) jComboBox4.getSelectedItem());
+        } catch (ClassCastException ex) {
+            step.setErrorMessage("Ошибка ввода вида заготовки.");
+        }
+        try {
+            step.setInstrumentMaterial((TurningStepBean.InstrumentMaterial) jComboBox5.getSelectedItem());
+        } catch (ClassCastException ex) {
+            step.setErrorMessage("Ошибка ввода инструментального материала.");
+        }
+        try {
+            step.setDurability(Double.parseDouble(jComboBox6.getSelectedItem().toString()));
+        } catch (NumberFormatException ex) {
+            step.setErrorMessage("Ошибка ввода стойкости.");
+        }
+        try {
+            step.setRoughness(Double.parseDouble(jComboBox7.getSelectedItem().toString()));
+        } catch (NumberFormatException ex) {
+            step.setErrorMessage("Ошибка ввода шероховатости.");
+        }
+        try {
+            step.setInstrumentRadius(Double.parseDouble(jFormattedTextField3.getText().replace(',', '.')));
+        } catch (Exception ex) {
+            step.setErrorMessage("Ошибка ввода инструментального радиуса.");
+        }
+        FactHandle stepFact = rManager.insert(step);
+        rManager.fireAll();
+
+        CentralLookup cl = CentralLookup.getDefault();
+        Collection parameters = cl.lookupAll(TurningStepBean.class);
+        if (!parameters.isEmpty()) {
+            Iterator<TurningStepBean> it = parameters.iterator();
+            while (it.hasNext()) {
+                TurningStepBean st = it.next();
+                cl.remove(st);
+            }
+        }
+        cl.add(step);
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -1,5 +1,6 @@
 package eremeykin.pete.modelloader;
 
+import eremeykin.pete.coreapi.workspace.WorkspaceManager;
 import eremeykin.pete.modelapi.Model;
 import eremeykin.pete.modelapi.Parameter;
 import eremeykin.pete.modelapi.ModelParameter;
@@ -8,7 +9,10 @@ import eremeykin.pete.modelapi.ParameterChangedEvent;
 import eremeykin.pete.modelapi.ParameterChangedListener;
 import java.awt.Component;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.io.Reader;
+import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,7 +56,7 @@ public class ModelLoader {
         connection = DriverManager.getConnection("jdbc:sqlite:" + file.getPath());
     }
 
-    public Model load() throws LoadingException {
+    public Model load() throws LoadingException, FileNotFoundException {
         try {
             Map<Integer, Row> map = new HashMap<>();//key is a ID and value is parameter
             Statement st = connection.createStatement();
@@ -99,14 +103,20 @@ public class ModelLoader {
             // link auto editors
             linkEditors(map);
             //get model Reader
-            Statement st2 = connection.createStatement();
-            ResultSet rs2 = st2.executeQuery("select * from " + MODEL_TABLE + ";");
-            Reader modelReader = rs2.getCharacterStream(MODEL_COLUMN);
+            File modelFile = unpackColumnToWorkspaceFile(MODEL_TABLE, MODEL_COLUMN, "modelFile.obj");
+            File scriptFile = unpackColumnToWorkspaceFile(MODEL_TABLE, SCRIPT_COLUMN, "script.py");
+//            Statement st2 = connection.createStatement();
+//            ResultSet rs2 = st2.executeQuery("select * from " + MODEL_TABLE + ";");
+//            String modelString = rs2.getString(MODEL_COLUMN);
+//            File modelFile = new File(WorkspaceManager.INSTANCE.getWorkspace().getAbsolutePath() + "\\modelFile.obj");
+//            printStringToFile(modelString, modelFile);
             //get script Reader
-            Statement st3 = connection.createStatement();
-            ResultSet rs3 = st3.executeQuery("select * from " + SCRIPT_TABLE + ";");
-            Reader scriptReader = rs3.getCharacterStream(SCRIPT_COLUMN);
-            Model model = new Model(root, modelReader, scriptReader);
+//            Statement st3 = connection.createStatement();
+//            ResultSet rs3 = st3.executeQuery("select * from " + SCRIPT_TABLE + ";");
+//            String scriptString = rs3.getString(SCRIPT_COLUMN);
+//            File modelFile = new File(WorkspaceManager.INSTANCE.getWorkspace().getAbsolutePath() + "\\modelFile.obj");
+//            printStringToFile(scriptString, scriptFile);
+            Model model = new Model(root, modelFile, scriptFile);
             // добавляем для каждого параметра модель в слушатели
             // чтоб она потом могла узнать что её параметры изменились
             for (Row r : map.values()) {
@@ -118,6 +128,21 @@ public class ModelLoader {
             lex.initCause(ex);
             throw lex;
         }
+    }
+
+    private void printStringToFile(String str, File file) throws FileNotFoundException {
+        PrintWriter out = new PrintWriter(file);
+        out.print(str);
+        out.close();
+    }
+
+    private File unpackColumnToWorkspaceFile(String table, String column, String fileName) throws SQLException, FileNotFoundException {
+        Statement st = connection.createStatement();
+        ResultSet resSet = st.executeQuery("select * from " + table + ";");
+        String modelString = resSet.getString(column);
+        File resultFile = new File(WorkspaceManager.INSTANCE.getWorkspace().getAbsolutePath() + "\\" + fileName);
+        printStringToFile(modelString, resultFile);
+        return resultFile;
     }
 
     private Integer getInteger(ResultSet rs, String columnLabel) throws SQLException {

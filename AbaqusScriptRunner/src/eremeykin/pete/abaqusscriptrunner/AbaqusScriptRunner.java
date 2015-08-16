@@ -5,7 +5,7 @@
  */
 package eremeykin.pete.abaqusscriptrunner;
 
-import eremeykin.pete.centrallookupapi.CentralLookup;
+import eremeykin.pete.coreapi.centrallookupapi.CentralLookup;
 import eremeykin.pete.modelapi.Model;
 import eremeykin.pete.scriptrunnerapi.ScriptRunner;
 import java.io.BufferedReader;
@@ -16,6 +16,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.URL;
 import java.nio.file.Files;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -37,15 +38,15 @@ public class AbaqusScriptRunner implements ScriptRunner {
     @Override
     public void runScript(Model model, boolean refresh) {
         try {
-            String script = model.getScript();
-            File scriptFile = new File(model.getHome(), "refresh_script.py");
-            Files.deleteIfExists(scriptFile.toPath());
+//            String script = model.getScript();
+            File scriptFile = model.getScriptFile(); //new File(model.getHome(), "refresh_script.py");
+//            Files.deleteIfExists(scriptFile.toPath());
             File objFile = new File(model.getHome(), "tmp_model.obj");
             Files.deleteIfExists(objFile.toPath());
 
-            try (FileWriter fileWriter = new FileWriter(scriptFile, false)) {
-                fileWriter.write(script + "\r\n");
-            }
+//            try (FileWriter fileWriter = new FileWriter(scriptFile, false)) {
+//                fileWriter.write(script + "\r\n");
+//            }
             TreeMap map = model.getArgs();
             String argString = join(map);
             // 0 значит refresh=false
@@ -103,8 +104,13 @@ public class AbaqusScriptRunner implements ScriptRunner {
             }.run();
             p.waitFor();
             Reader newReader = new FileReader(objFile);
-            model.setObjReader(newReader);
+            String targetString = "";
+            int ch;
+            while ((ch = newReader.read()) != -1) {
+                targetString += (char) ch;
+            }
             newReader.close();
+            model.setModelFile(objFile);
         } catch (IOException ex) {
             Logger.getLogger(AbaqusScriptRunner.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {

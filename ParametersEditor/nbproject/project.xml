@@ -7,15 +7,7 @@
             <suite-component/>
             <module-dependencies>
                 <dependency>
-                    <code-name-base>eremeykin.pete.centrallookupapi</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>1.0</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>eremeykin.pete.configloader</code-name-base>
+                    <code-name-base>eremeykin.pete.coreapi</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>

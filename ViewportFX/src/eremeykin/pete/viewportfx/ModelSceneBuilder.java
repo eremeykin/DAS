@@ -1,47 +1,22 @@
-/*
- * Copyright (c) 2013, 2014 Oracle and/or its affiliates.
- * All rights reserved. Use is subject to license terms.
- *
- * This file is available and licensed under the following license:
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- *  - Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *  - Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the distribution.
- *  - Neither the name of Oracle nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 package eremeykin.pete.viewportfx;
 
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
+import java.io.File;
 import java.net.URL;
+import javafx.application.ConditionalFeature;
+import javafx.application.Platform;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Cylinder;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.shape.Cylinder;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.MeshView;
-import javafx.scene.shape.Shape3D;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 
 /**
  *
@@ -57,12 +32,12 @@ public class ModelSceneBuilder extends SceneBuilder {
     final Xform cameraXform = new Xform();
     final Xform cameraXform2 = new Xform();
     final Xform cameraXform3 = new Xform();
-    private static final double CAMERA_INITIAL_DISTANCE = -450;
+    private static final double CAMERA_INITIAL_DISTANCE = -500;
     private static final double CAMERA_INITIAL_X_ANGLE = 70.0;
     private static final double CAMERA_INITIAL_Y_ANGLE = 320.0;
-    private static final double CAMERA_NEAR_CLIP = 0.1;
+    private static final double CAMERA_NEAR_CLIP = 0.01;
     private static final double CAMERA_FAR_CLIP = 10000.0;
-    private static final double AXIS_LENGTH = 350.0;
+    private static final double AXIS_LENGTH = 200.0;
     private static final double CONTROL_MULTIPLIER = 0.1;
     private static final double SHIFT_MULTIPLIER = 10.0;
     private static final double MOUSE_SPEED = 0.1;
@@ -77,14 +52,21 @@ public class ModelSceneBuilder extends SceneBuilder {
     double mouseDeltaY;
 
     @Override
-    public void buildModel() {
+    public void buildModel(File modelFile) {
+        MeshView[] meshViews;
+        if (modelFile!=null){
         ObjModelImporter objImporter = new ObjModelImporter();
-        try {
-            URL modelUrl = this.getClass().getClassLoader().getResource("resources/test.obj");
-            objImporter.read(modelUrl);
-        } catch (Exception e) {
+            try {
+//                URL modelUrl = this.getClass().getClassLoader().getResource("resources/test.obj");
+                objImporter.read(modelFile);
+            } catch (Exception e) {
+            }
+            meshViews = objImporter.getImport();
         }
-        MeshView[] meshViews = objImporter.getImport();
+        else{
+            meshViews = new MeshView[1];
+            meshViews[0]= new MeshView();
+        }
         final PhongMaterial modelMaterial = new PhongMaterial();
         modelMaterial.setDiffuseColor(Color.LIGHTGRAY);
         modelMaterial.setSpecularColor(Color.LIGHTGREY);
@@ -124,17 +106,17 @@ public class ModelSceneBuilder extends SceneBuilder {
         blueMaterial.setDiffuseColor(Color.DARKBLUE);
         blueMaterial.setSpecularColor(Color.BLUE);
 
-        final Shape3D xAxis = new Cylinder(0.5, AXIS_LENGTH);
-        final Shape3D yAxis = new Cylinder(0.5, AXIS_LENGTH);
-//        final Shape3D zAxis = new Cylinder(0.5, 0.5, AXIS_LENGTH);
+        Cylinder cx = new Cylinder(0.25, AXIS_LENGTH, 20);
+        Cylinder cy = new Cylinder(0.25, AXIS_LENGTH, 20);
+        Cylinder cz = new Cylinder(0.25, AXIS_LENGTH, 20);
+        cx.setMaterial(greenMaterial);
+        cy.setMaterial(blueMaterial);
+        cz.setMaterial(redMaterial);
+        cy.setRotate(90);
+        cz.setRotationAxis(Rotate.X_AXIS);
+        cz.setRotate(90);
 
-        xAxis.setMaterial(redMaterial);
-        yAxis.setMaterial(greenMaterial);
-//        zAxis.setMaterial(blueMaterial);
-
-        axisGroup.getChildren().addAll(xAxis, yAxis);
-        axisGroup.setTranslate(0, 0, 0);
-        axisGroup.setVisible(true);
+        axisGroup.getChildren().addAll(cx, cy, cz);
         world.getChildren().addAll(axisGroup);
     }
 
@@ -159,25 +141,28 @@ public class ModelSceneBuilder extends SceneBuilder {
                 mouseDeltaX = (mousePosX - mouseOldX);
                 mouseDeltaY = (mousePosY - mouseOldY);
 
-                double modifier = 1.0;
+                double modifier = SHIFT_MULTIPLIER;;
 
                 if (me.isControlDown()) {
                     modifier = CONTROL_MULTIPLIER;
                 }
-                if (me.isShiftDown()) {
-                    modifier = SHIFT_MULTIPLIER;
-                }
+
                 if (me.isPrimaryButtonDown()) {
-                    cameraXform.ry.setAngle(cameraXform.ry.getAngle() - mouseDeltaX * MOUSE_SPEED * modifier * ROTATION_SPEED);
-                    cameraXform.rx.setAngle(cameraXform.rx.getAngle() + mouseDeltaY * MOUSE_SPEED * modifier * ROTATION_SPEED);
-                } else if (me.isSecondaryButtonDown()) {
-                    double z = camera.getTranslateZ();
-                    double newZ = z + mouseDeltaX * MOUSE_SPEED * modifier;
-                    camera.setTranslateZ(newZ);
+                    cameraXform.ry.setAngle(cameraXform.ry.getAngle() - mouseDeltaX * MOUSE_SPEED * ROTATION_SPEED);
+                    cameraXform.rx.setAngle(cameraXform.rx.getAngle() + mouseDeltaY * MOUSE_SPEED * ROTATION_SPEED);
                 } else if (me.isMiddleButtonDown()) {
                     cameraXform2.t.setX(cameraXform2.t.getX() + mouseDeltaX * MOUSE_SPEED * modifier * TRACK_SPEED);
                     cameraXform2.t.setY(cameraXform2.t.getY() + mouseDeltaY * MOUSE_SPEED * modifier * TRACK_SPEED);
                 }
+            }
+        });
+
+        scene.setOnScroll(new EventHandler<ScrollEvent>() {
+            @Override
+            public void handle(ScrollEvent event) {
+                double z = camera.getTranslateZ();
+                double newZ = z + event.getDeltaY() / 2;
+                camera.setTranslateZ(newZ);
             }
         });
     }
@@ -197,9 +182,6 @@ public class ModelSceneBuilder extends SceneBuilder {
                     case X:
                         axisGroup.setVisible(!axisGroup.isVisible());
                         break;
-                    case V:
-                        //model.setVisible(!model.isVisible());
-                        break;
                 }
             }
         });
@@ -208,12 +190,18 @@ public class ModelSceneBuilder extends SceneBuilder {
     // </editor-fold>
     @Override
     public void buildScene() {
+        buildScene(true);
+    }
+
+    @Override
+    public void buildScene(boolean antialiasing) {
         root.getChildren().add(world);
-        root.setDepthTest(DepthTest.ENABLE);
-        scene = new Scene(root, 1024, 768, true);
+        System.out.println(Platform.isSupported(ConditionalFeature.SCENE3D));
+        scene = new Scene(root, 1024, 1024, true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.LIGHTBLUE);
         setHandleKeyboard(scene);
         setHandleMouse(scene);
         scene.setCamera(camera);
     }
+
 }

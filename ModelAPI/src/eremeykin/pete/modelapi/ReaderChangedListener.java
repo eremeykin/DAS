@@ -11,5 +11,5 @@ package eremeykin.pete.modelapi;
  */
 public interface ReaderChangedListener {
 
-    public void readerChanged(ReaderChangedEvent evt);
+    public void readerChanged(ModelStringChangedEvent evt);
 }

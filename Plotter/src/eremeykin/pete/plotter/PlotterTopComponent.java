@@ -5,7 +5,7 @@
  */
 package eremeykin.pete.plotter;
 
-import eremeykin.pete.centrallookupapi.CentralLookup;
+import eremeykin.pete.coreapi.centrallookupapi.CentralLookup;
 import eremeykin.pete.modelapi.Model;
 import java.awt.BorderLayout;
 import java.awt.Color;

@@ -60,6 +60,7 @@ public class OutlineCreator {
         outline.setModel(mdl);
         outline.setDefaultRenderer(String.class, new RendererForChangeable());
         outline.getTableHeader().setVisible(true);
+        outline.setRowSorter(null);
     }
 
     public Outline getOutline() {
