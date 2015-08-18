@@ -5,7 +5,10 @@
  */
 package eremeykin.pete.abaqusscriptrunner;
 
+import eremeykin.pete.*;
 import eremeykin.pete.coreapi.centrallookupapi.CentralLookup;
+import eremeykin.pete.coreapi.loggerapi.Logger;
+import eremeykin.pete.coreapi.loggerapi.LoggerManager;
 import eremeykin.pete.modelapi.Model;
 import eremeykin.pete.scriptrunnerapi.ScriptRunner;
 import java.io.BufferedReader;
@@ -20,8 +23,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
@@ -35,6 +36,8 @@ import org.openide.windows.InputOutput;
 @ServiceProvider(service = ScriptRunner.class)
 public class AbaqusScriptRunner implements ScriptRunner {
 
+    private static final Logger LOGGER = LoggerManager.getLogger(AbaqusScriptRunner.class);
+    
     @Override
     public void runScript(Model model, boolean refresh) {
         try {
@@ -112,9 +115,9 @@ public class AbaqusScriptRunner implements ScriptRunner {
             newReader.close();
             model.setModelFile(objFile);
         } catch (IOException ex) {
-            Logger.getLogger(AbaqusScriptRunner.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error(ex);
         } catch (InterruptedException ex) {
-            Logger.getLogger(AbaqusScriptRunner.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error(ex);
         }
     }
 

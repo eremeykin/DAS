@@ -1,6 +1,8 @@
 package eremeykin.pete.viewportfx;
 
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
+import eremeykin.pete.coreapi.loggerapi.Logger;
+import eremeykin.pete.coreapi.loggerapi.LoggerManager;
 import java.io.File;
 import java.net.URL;
 import javafx.application.ConditionalFeature;
@@ -32,6 +34,7 @@ public class ModelSceneBuilder extends SceneBuilder {
     final Xform cameraXform = new Xform();
     final Xform cameraXform2 = new Xform();
     final Xform cameraXform3 = new Xform();
+    private static final Logger LOGGER = LoggerManager.getLogger(ModelSceneBuilder.class);
     private static final double CAMERA_INITIAL_DISTANCE = -500;
     private static final double CAMERA_INITIAL_X_ANGLE = 70.0;
     private static final double CAMERA_INITIAL_Y_ANGLE = 320.0;
@@ -188,15 +191,11 @@ public class ModelSceneBuilder extends SceneBuilder {
     }
 
     // </editor-fold>
-    @Override
-    public void buildScene() {
-        buildScene(true);
-    }
 
     @Override
-    public void buildScene(boolean antialiasing) {
+    public void buildScene() {
+        LOGGER.info("Antialiasing is supported: "+Platform.isSupported(ConditionalFeature.SCENE3D));
         root.getChildren().add(world);
-        System.out.println(Platform.isSupported(ConditionalFeature.SCENE3D));
         scene = new Scene(root, 1024, 1024, true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.LIGHTBLUE);
         setHandleKeyboard(scene);

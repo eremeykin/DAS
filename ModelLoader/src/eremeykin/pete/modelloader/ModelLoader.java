@@ -1,5 +1,7 @@
 package eremeykin.pete.modelloader;
 
+import eremeykin.pete.coreapi.loggerapi.Logger;
+import eremeykin.pete.coreapi.loggerapi.LoggerManager;
 import eremeykin.pete.coreapi.workspace.WorkspaceManager;
 import eremeykin.pete.modelapi.Model;
 import eremeykin.pete.modelapi.Parameter;
@@ -34,7 +36,9 @@ import org.openide.util.lookup.InstanceContent;
 
 public class ModelLoader {
 
+    private static final Logger LOGGER = LoggerManager.getLogger(ModelLoader.class);
     private Connection connection;
+    private final File mFile;
     private static final String PARAMETERS_TABLE = "parameters";
     private static final String MODEL_TABLE = "obj_model";
     private static final String SCRIPT_TABLE = "refresh_script";
@@ -49,10 +53,10 @@ public class ModelLoader {
     private static final String EDITOR_COLUMN_COLUMN = "column";
     private static final String MODEL_COLUMN = "content";
     private static final String SCRIPT_COLUMN = "content";
-    private InstanceContent content = new InstanceContent();
 
     public ModelLoader(File file) throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
+        mFile = file;
         connection = DriverManager.getConnection("jdbc:sqlite:" + file.getPath());
     }
 
@@ -104,7 +108,7 @@ public class ModelLoader {
             linkEditors(map);
             //get model Reader
             File modelFile = unpackColumnToWorkspaceFile(MODEL_TABLE, MODEL_COLUMN, "modelFile.obj");
-            File scriptFile = unpackColumnToWorkspaceFile(MODEL_TABLE, SCRIPT_COLUMN, "script.py");
+            File scriptFile = unpackColumnToWorkspaceFile(SCRIPT_TABLE, SCRIPT_COLUMN, "script.py");
 //            Statement st2 = connection.createStatement();
 //            ResultSet rs2 = st2.executeQuery("select * from " + MODEL_TABLE + ";");
 //            String modelString = rs2.getString(MODEL_COLUMN);
@@ -122,6 +126,7 @@ public class ModelLoader {
             for (Row r : map.values()) {
                 r.parameter.addParameterChangedListener(model);
             }
+            LOGGER.info("Model " + mFile.getAbsolutePath() +" has been successfully loaded. ");
             return model;
         } catch (SQLException ex) {
             LoadingException lex = new LoadingException();
@@ -139,9 +144,9 @@ public class ModelLoader {
     private File unpackColumnToWorkspaceFile(String table, String column, String fileName) throws SQLException, FileNotFoundException {
         Statement st = connection.createStatement();
         ResultSet resSet = st.executeQuery("select * from " + table + ";");
-        String modelString = resSet.getString(column);
+        String str = resSet.getString(column);
         File resultFile = new File(WorkspaceManager.INSTANCE.getWorkspace().getAbsolutePath() + "\\" + fileName);
-        printStringToFile(modelString, resultFile);
+        printStringToFile(str, resultFile);
         return resultFile;
     }
 

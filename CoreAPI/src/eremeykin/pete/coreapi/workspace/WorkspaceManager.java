@@ -5,6 +5,8 @@
  */
 package eremeykin.pete.coreapi.workspace;
 
+import eremeykin.pete.coreapi.loggerapi.Logger;
+import eremeykin.pete.coreapi.loggerapi.LoggerManager;
 import java.io.File;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -14,7 +16,8 @@ import org.openide.util.lookup.ServiceProvider;
  */
 public class WorkspaceManager {
 
-    private File rootDirectory;
+    private  File rootDirectory;
+    private static final Logger LOGGER = LoggerManager.getLogger(WorkspaceManager.class);
 
     public static final WorkspaceManager INSTANCE = new WorkspaceManager();
 
@@ -23,6 +26,7 @@ public class WorkspaceManager {
 
     public void setWorkspace(File rootDirectory) {
         this.rootDirectory = rootDirectory;
+        LOGGER.info("The directory \""+rootDirectory+"\" has been successfully set as a workspace.");
     }
 
     public File getWorkspace() {

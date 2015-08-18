@@ -24,9 +24,6 @@ public abstract class SceneBuilder {
     public abstract void buildAxes();
 
     public abstract void buildScene();
-    
-    
-    public abstract void buildScene(boolean antialiasing);
 
     public Scene getScene() {
         return scene;
