@@ -194,17 +194,15 @@ public class ModelLoader {
     private CellProperties extractEditor(String editorType, String editorTable, String editorColumn) throws SQLException {
         if (editorType == null) {
 //            DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-            CellProperties.Renderer renderer = new CellProperties.Renderer(CellProperties.Renderer.Type.DEFAULT);
             CellProperties.Editor editor = new CellProperties.Editor(CellProperties.Editor.Type.DEFAULT);
-            CellProperties cp = new CellProperties(null, renderer);
+            CellProperties cp = new CellProperties(editor);
             return cp;
         }
         if (editorType.equals("text")) {
 //            DefaultCellEditor editor = new DefaultCellEditor(new JTextField());
 //            DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
             CellProperties.Editor editor = new CellProperties.Editor(CellProperties.Editor.Type.TEXT_BOX);
-            CellProperties.Renderer renderer = new CellProperties.Renderer(CellProperties.Renderer.Type.DEFAULT);
-            CellProperties cp = new CellProperties(editor, renderer);
+            CellProperties cp = new CellProperties(editor);
             return cp;
         }
         if (editorType.equals("cbox")) {
@@ -216,7 +214,6 @@ public class ModelLoader {
             }
 //            this.renderer=null;
             CellProperties.Editor editor = new CellProperties.Editor(CellProperties.Editor.Type.COMBO_BOX, items.toArray());
-            CellProperties.Renderer renderer = new CellProperties.Renderer(CellProperties.Renderer.Type.COMBO_BOX);
 
 //            DefaultCellEditor editor = new DefaultCellEditor(new JComboBox(items.toArray()));
 //            DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
@@ -231,13 +228,12 @@ public class ModelLoader {
 //                return c;
 //            }
 //        };
-            CellProperties cp = new CellProperties(editor, renderer);
+            CellProperties cp = new CellProperties(editor);
             return cp;
         }
         CellProperties.Editor editor = new CellProperties.Editor(CellProperties.Editor.Type.DEFAULT);
-        CellProperties.Renderer renderer = new CellProperties.Renderer(CellProperties.Renderer.Type.DEFAULT);
 //        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-        CellProperties cp = new CellProperties(editor, renderer);
+        CellProperties cp = new CellProperties(editor);
         return cp;
     }
 

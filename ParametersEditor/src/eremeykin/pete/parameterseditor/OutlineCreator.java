@@ -7,7 +7,6 @@ package eremeykin.pete.parameterseditor;
 
 import eremeykin.pete.modelapi.ModelParameter;
 import eremeykin.pete.modelapi.ModelParameter.CellProperties.Editor;
-import eremeykin.pete.modelapi.ModelParameter.CellProperties.Renderer;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JComboBox;
@@ -75,9 +74,10 @@ public class OutlineCreator {
                 int modelRow = convertRowIndexToModel(row);
                 int modelColumn = convertColumnIndexToModel(column);
                 ModelParameter selected = (ModelParameter) (this.getModel().getValueAt(modelRow, 0));
-                Renderer selectedRenderer = selected.getRenderer();
+                Editor selectedEditor = selected.getEditor();
                 if (modelColumn == 2) {
-                    switch (selectedRenderer.getType()) {
+                    switch (selectedEditor.getType()) {
+                        case TEXT_BOX:
                         case DEFAULT:
                             return new DefaultOutlineCellRenderer();
                         case COMBO_BOX: {
@@ -95,7 +95,7 @@ public class OutlineCreator {
                             return dtcr;
                         }
                         default:
-                            throw new AssertionError(selectedRenderer.getType().name());
+                            throw new AssertionError(selectedEditor.getType().name());
                     }
                 }
                 return renderer;

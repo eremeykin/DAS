@@ -101,10 +101,6 @@ public class ModelParameter implements ModelParameterChangedListener {
         return cProperties.getEditor();
     }
 
-    public CellProperties.Renderer getRenderer() {
-        return cProperties.getRenderer();
-    }
-
     @Override
     public String toString() {
         return name; //To change body of generated methods, choose Tools | Templates.
@@ -161,31 +157,10 @@ public class ModelParameter implements ModelParameterChangedListener {
             }
         }
 
-        public static class Renderer {
-
-            private final Type type;
-
-            public Renderer(Type type) {
-                this.type = type;
-            }
-
-            public Type getType() {
-                return type;
-            }
-
-            public enum Type {
-
-                DEFAULT,
-                COMBO_BOX
-            }
-
-        }
         Editor editor;
-        Renderer renderer;
 
-        public CellProperties(Editor e, Renderer r) {
+        public CellProperties(Editor e) {
             this.editor = e;
-            this.renderer = r;
         }
 
 //        public CellProperties() {
@@ -194,10 +169,6 @@ public class ModelParameter implements ModelParameterChangedListener {
 //        }
         private Editor getEditor() {
             return editor;
-        }
-
-        private Renderer getRenderer() {
-            return renderer;
         }
     ;
 
