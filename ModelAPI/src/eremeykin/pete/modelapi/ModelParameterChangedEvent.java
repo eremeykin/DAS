@@ -11,17 +11,17 @@ import java.util.EventObject;
  *
  * @author Pete
  */
-public class ParameterChangedEvent extends EventObject {
+public class ModelParameterChangedEvent extends EventObject {
    
-    private Parameter parameterSource;
+    private ModelParameter parameterSource;
 
     
-    public ParameterChangedEvent(Parameter p){
+    public ModelParameterChangedEvent(ModelParameter p){
         super(p);
         this.parameterSource=p;
     }
     
-    public Parameter getParameterSource() {
+    public ModelParameter getParameterSource() {
         return parameterSource;
     }
     

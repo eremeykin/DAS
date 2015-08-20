@@ -5,14 +5,22 @@
  */
 package eremeykin.pete.parameterseditorfx;
 
+import eremeykin.pete.coreapi.centrallookupapi.CentralLookup;
+import eremeykin.pete.modelapi.Model;
+import eremeykin.pete.modelapi.ModelChangedEvent;
+import eremeykin.pete.modelapi.ModelChangedListener;
 import eremeykin.pete.modelapi.ModelParameter;
 import eremeykin.pete.modelapi.Parameter;
 import java.awt.BorderLayout;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ObservableValue;
+import javafx.embed.swing.JFXPanel;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.TreeItem;
@@ -21,9 +29,17 @@ import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.util.Lookup;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 
@@ -51,74 +67,96 @@ import org.openide.util.NbBundle.Messages;
     "CTL_EditorFXTopComponent=EditorFX Window",
     "HINT_EditorFXTopComponent=This is a EditorFX window"
 })
-public final class EditorFXTopComponent extends TopComponent {
-//
-//    List<Parameter> employees = Arrays.<Parameter>asList(new ModelParameter("1","test",1,"comment", new ModelParameter.CellProperties<Object, Object>), new Employee(
-//                    "Emma Jones", "emma.jones@example.com"), new Employee("Michael Brown",
-//                    "michael.brown@example.com"), new Employee("Anna Black",
-//                    "anna.black@example.com"), new Employee("Rodger York",
-//                    "roger.york@example.com"), new Employee("Susan Collins",
-//                    "susan.collins@example.com"));
-//
-//    final TreeItem<Employee> root = new TreeItem<>(new Employee(
-//            "Sales Department", ""));
+public final class EditorFXTopComponent extends TopComponent implements LookupListener {
+
+    private Lookup.Result modelResult = null;
+    List<Parameter> employees = Arrays.<Parameter>asList(new ModelParameter(1, "test", 1, "comment", new ModelParameter.CellProperties<TableCellEditor, TableCellRenderer>()),
+            new ModelParameter(1, "test1", 1, "comment1", new ModelParameter.CellProperties<TableCellEditor, TableCellRenderer>()),
+            new ModelParameter(1, "test2", 1, "comment2", new ModelParameter.CellProperties<TableCellEditor, TableCellRenderer>()),
+            new ModelParameter(1, "test3", 1, "comment3", new ModelParameter.CellProperties<TableCellEditor, TableCellRenderer>()));
+
+    final TreeItem<Parameter> root = new TreeItem<>(new ModelParameter(1, "test", 1, "comment", new ModelParameter.CellProperties<>()));
+
+    final JFXPanel fxPanel = new JFXPanel();
 
     public EditorFXTopComponent() {
         initComponents();
         setName(Bundle.CTL_EditorFXTopComponent());
         setToolTipText(Bundle.HINT_EditorFXTopComponent());
-//
-//        jPanel1.setLayout(new BorderLayout());
-//
-//        root.setExpanded(true);
-//        employees.stream().forEach((employee) -> {
-//            root.getChildren().add(new TreeItem<>(employee));
-//        });
-//
-//        TreeTableColumn<Employee, String> empColumn = new TreeTableColumn<>(
-//                "Employee");
-//        empColumn
-//                .setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<Employee, String>, ObservableValue<String>>() {
-//
-//                    public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<Employee, String> param) {
-//                        return new ReadOnlyStringWrapper(
-//                                param.getValue().getValue().getName());
-//                    }
-//                });
-//
-//        TreeTableColumn<Employee, String> emailColumn = new TreeTableColumn<>(
-//                "Email");
-//        emailColumn
-//                .setCellValueFactory((
-//                                TreeTableColumn.CellDataFeatures<Employee, String> param) -> new ReadOnlyStringWrapper(
-//                                param.getValue().getValue().getEmail()));
-//
-//        TreeTableView<Employee> treeTableView = new TreeTableView<>(root);
-//        treeTableView.getColumns().setAll(empColumn, emailColumn);
-//        treeTableView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
-//        for (int i = 0; i < 2; i++) {
-//            treeTableView.getColumns().get(i).setStyle("-fx-border-color: lightblue;\n"
-//                    + "    -fx-border-style: solid;"
-//                    + "    -fx-background-insets: 1, 0 0 1 0;\n"
-//                    + "    -fx-padding: 0.5em;\n"
-//                    + "    -fx-text-fill: -fx-text-inner-color;");
-//        }
-//        final VBox vbox = new VBox();
-//        vbox.setSpacing(5);
-//        vbox.setPadding(new Insets(10, 10, 10, 10));
-//        vbox.getChildren().addAll(treeTableView);
-//        VBox.setVgrow(treeTableView, Priority.ALWAYS);
-//        Scene scene = new Scene(vbox, 800, 800);
-//
-//        Platform.setImplicitExit(false);
-//        jPanel1.add(fxPanel);
-//        fxPanel.setVisible(true);
-//        Platform.runLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                fxPanel.setScene(scene);
-//            }
-//        });
+
+        Lookup.Template template = new Lookup.Template(Model.class);
+        CentralLookup cl = CentralLookup.getDefault();
+        modelResult = cl.lookup(template);
+        modelResult.addLookupListener(this);
+
+        jPanel1.setLayout(new BorderLayout());
+
+        root.setExpanded(true);
+        employees.stream().forEach(new Consumer<Parameter>() {
+
+            @Override
+            public void accept(Parameter employee) {
+                root.getChildren().add(new TreeItem<>(employee));
+            }
+        });
+
+//<editor-fold defaultstate="collapsed" desc="columns">
+        TreeTableColumn<Parameter, String> empColumn = new TreeTableColumn<>(
+                "Employee");
+        empColumn
+                .setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<Parameter, String>, ObservableValue<String>>() {
+
+                    public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<Parameter, String> param) {
+                        return new ReadOnlyStringWrapper(
+                                param.getValue().getValue().toString());
+                    }
+                });
+
+        TreeTableColumn<Parameter, String> emailColumn = new TreeTableColumn<>(
+                "Email");
+        emailColumn
+                .setCellValueFactory((
+                                TreeTableColumn.CellDataFeatures<Parameter, String> param) -> new ReadOnlyStringWrapper(
+                                param.getValue().getValue().getComment()));
+
+        TreeTableColumn<Parameter, String> valColumn = new TreeTableColumn<>(
+                "Employee");
+        valColumn
+                .setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<Parameter, String>, ObservableValue<String>>() {
+
+                    public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<Parameter, String> param) {
+                        return new ReadOnlyStringWrapper(
+                                param.getValue().getValue().getValue());
+                    }
+                });
+//</editor-fold>
+
+        TreeTableView<Parameter> treeTableView = new TreeTableView<>(root);
+        treeTableView.getColumns().setAll(empColumn, emailColumn, valColumn);
+        treeTableView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
+        for (int i = 0; i < 3; i++) {
+            treeTableView.getColumns().get(i).setStyle("-fx-border-color: lightblue;\n"
+                    + "    -fx-border-style: solid;"
+                    + "    -fx-background-insets: 1, 0 0 1 0;\n"
+                    + "    -fx-padding: 0.5em;\n"
+                    + "    -fx-text-fill: -fx-text-inner-color;");
+        }
+        final VBox vbox = new VBox();
+        vbox.setSpacing(5);
+        vbox.setPadding(new Insets(10, 10, 10, 10));
+        vbox.getChildren().addAll(treeTableView);
+        VBox.setVgrow(treeTableView, Priority.ALWAYS);
+        Scene scene = new Scene(vbox, 800, 800);
+
+        Platform.setImplicitExit(false);
+        jPanel1.add(fxPanel);
+        fxPanel.setVisible(true);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                fxPanel.setScene(scene);
+            }
+        });
     }
 
     /**
@@ -177,5 +215,36 @@ public final class EditorFXTopComponent extends TopComponent {
     void readProperties(java.util.Properties p) {
         String version = p.getProperty("version");
         // TODO read your settings according to their version
+    }
+    
+    
+    @Override
+    public void resultChanged(LookupEvent evt) {
+        Object o = evt.getSource();
+        if (o != null) {
+            Lookup.Result r = (Lookup.Result) o;
+            Collection infos = r.allInstances();
+            if (infos.isEmpty()) {
+                System.out.println("");
+//                EventQueue.invokeLater(new SetterRunnable(new DefaultUserInformation()));
+            } else {
+                this.open();
+                Iterator<Model> it = infos.iterator();
+                while (it.hasNext()) {
+                    Model m = it.next();
+//                    outline = new OutlineCreator(m.getRoot()).getOutline();
+//                    jsPane.setViewportView(outline);
+//                    add(jsPane);
+//                    m.addModelChangedListener(new ModelChangedListener() {
+//
+//                        @Override
+//                        public void modelChanged(ModelChangedEvent evt) {
+//                            outline.repaint();
+//                        }
+//                    });
+                    //                    EventQueue.invokeLater(new SetterRunnable(info));
+                }
+            }
+        }
     }
 }

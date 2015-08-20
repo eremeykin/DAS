@@ -9,7 +9,7 @@ package eremeykin.pete.modelapi;
  *
  * @author Pete
  */
-public interface ParameterChangedListener {
+public interface ModelParameterChangedListener {
 
-    public void parameterChanged(ParameterChangedEvent evt);
+    public void parameterChanged(ModelParameterChangedEvent evt);
 }

@@ -18,9 +18,9 @@ import java.util.TreeMap;
  *
  * @author Pete
  */
-public class Model implements ParameterChangedListener {
+public class Model implements ModelParameterChangedListener {
 
-    private Parameter root;
+    private ModelParameter root;
     private File modelFile;
     private File scriptFile;
     private String script;
@@ -28,13 +28,13 @@ public class Model implements ParameterChangedListener {
     private ArrayList<ModelChangedListener> modelListeners = new ArrayList<>();
     private File home;
 
-    public Model(Parameter root, File modelFile, File scriptFile) {
+    public Model(ModelParameter root, File modelFile, File scriptFile) {
         this.root = root;
         this.modelFile = modelFile;
         this.scriptFile =scriptFile;
     }
 
-    public Parameter getRoot() {
+    public ModelParameter getRoot() {
         return root;
     }
 
@@ -80,22 +80,22 @@ public class Model implements ParameterChangedListener {
         return args;
     }
 
-    private void getArgsInner(Map<Integer, String> args, Parameter param) {
+    private void getArgsInner(Map<Integer, String> args, ModelParameter param) {
         Integer argN = param.getScrArg();
         if (argN != null) {
             args.put(param.getScrArg(), param.getValue());
         }
-        for (Parameter p : param.getChildren()) {
+        for (ModelParameter p : param.getChildren()) {
             getArgsInner(args, p);
         }
     }
 
-    public Parameter getParameterByID(Parameter rootParameter, Integer id) {
-        for (Parameter p : rootParameter.getChildren()) {
+    public ModelParameter getParameterByID(ModelParameter rootParameter, Integer id) {
+        for (ModelParameter p : rootParameter.getChildren()) {
             if (p.getId().equals(id)) {
                 return p;
             } else {
-                Parameter subParam = getParameterByID(p, id);
+                ModelParameter subParam = getParameterByID(p, id);
                 if (subParam != null) {
                     return subParam;
                 }
@@ -121,7 +121,7 @@ public class Model implements ParameterChangedListener {
     }
 
     @Override
-    public void parameterChanged(ParameterChangedEvent evt) {
+    public void parameterChanged(ModelParameterChangedEvent evt) {
         ModelChangedEvent modelEvt = new ModelChangedEvent(evt.getParameterSource());
         for (ModelChangedListener listener : modelListeners) {
             listener.modelChanged(modelEvt);

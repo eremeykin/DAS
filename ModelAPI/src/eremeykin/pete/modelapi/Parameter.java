@@ -37,9 +37,9 @@ public interface Parameter {
 
     public TableCellRenderer getRenderer();
 
-    public void addParameterChangedListener(ParameterChangedListener listener);
+    public void addParameterChangedListener(ModelParameterChangedListener listener);
 
-    public void removeParameterChangedListener(ParameterChangedListener listener);
+    public void removeParameterChangedListener(ModelParameterChangedListener listener);
     
     public void setUpdater(Updater updater);
 }

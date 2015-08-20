@@ -7,8 +7,8 @@ import eremeykin.pete.modelapi.Model;
 import eremeykin.pete.modelapi.Parameter;
 import eremeykin.pete.modelapi.ModelParameter;
 import eremeykin.pete.modelapi.ModelParameter.CellProperties;
-import eremeykin.pete.modelapi.ParameterChangedEvent;
-import eremeykin.pete.modelapi.ParameterChangedListener;
+import eremeykin.pete.modelapi.ModelParameter.Updater;
+import eremeykin.pete.modelapi.ModelParameterChangedListener;
 import java.awt.Component;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -88,18 +88,18 @@ public class ModelLoader {
             // root параметр который не имеет родителей, т.е. 
             // parent == null
             // ищем root
-            Parameter root = findRoot(map.values());
-            List<Parameter> parentList = new ArrayList<>();
+            ModelParameter root = findRoot(map.values());
+            List<ModelParameter> parentList = new ArrayList<>();
             parentList.add(root);
             //accord parents with children
             while (!parentList.isEmpty()) {
-                List<Parameter> childrenList;
-                for (ListIterator<Parameter> iterator = parentList.listIterator(); iterator.hasNext();) {
-                    Parameter currParent = iterator.next();
+                List<ModelParameter> childrenList;
+                for (ListIterator<ModelParameter> iterator = parentList.listIterator(); iterator.hasNext();) {
+                    ModelParameter currParent = iterator.next();
                     childrenList = findChildren(currParent, map.values());
                     currParent.setChildren(childrenList);
                     iterator.remove();
-                    for (Parameter child : childrenList) {
+                    for (ModelParameter child : childrenList) {
                         iterator.add(child);
                     }
                 }
@@ -126,7 +126,7 @@ public class ModelLoader {
             for (Row r : map.values()) {
                 r.parameter.addParameterChangedListener(model);
             }
-            LOGGER.info("Model " + mFile.getAbsolutePath() +" has been successfully loaded. ");
+            LOGGER.info("Model " + mFile.getAbsolutePath() + " has been successfully loaded. ");
             return model;
         } catch (SQLException ex) {
             LoadingException lex = new LoadingException();
@@ -178,9 +178,9 @@ public class ModelLoader {
 
     }
 
-    private List<Parameter> findChildren(Parameter parent, Collection<Row> rows) {
+    private List<ModelParameter> findChildren(ModelParameter parent, Collection<Row> rows) {
         Integer parentId = parent.getId();
-        List<Parameter> children = new ArrayList<>();
+        List<ModelParameter> children = new ArrayList<>();
         for (Row r : rows) {
             ModelParameter currParameter = r.parameter;
             Integer currParentId = r.parentId;
@@ -193,13 +193,17 @@ public class ModelLoader {
 
     private CellProperties extractEditor(String editorType, String editorTable, String editorColumn) throws SQLException {
         if (editorType == null) {
-            DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+//            DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+            CellProperties.Renderer renderer = new CellProperties.Renderer(CellProperties.Renderer.Type.DEFAULT);
+            CellProperties.Editor editor = new CellProperties.Editor(CellProperties.Editor.Type.DEFAULT);
             CellProperties cp = new CellProperties(null, renderer);
             return cp;
         }
         if (editorType.equals("text")) {
-            DefaultCellEditor editor = new DefaultCellEditor(new JTextField());
-            DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+//            DefaultCellEditor editor = new DefaultCellEditor(new JTextField());
+//            DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+            CellProperties.Editor editor = new CellProperties.Editor(CellProperties.Editor.Type.TEXT_BOX);
+            CellProperties.Renderer renderer = new CellProperties.Renderer(CellProperties.Renderer.Type.DEFAULT);
             CellProperties cp = new CellProperties(editor, renderer);
             return cp;
         }
@@ -210,21 +214,30 @@ public class ModelLoader {
             while (rs.next()) {
                 items.add(rs.getString(editorColumn));
             }
-            DefaultCellEditor editor = new DefaultCellEditor(new JComboBox(items.toArray()));
-            DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
+//            this.renderer=null;
+            CellProperties.Editor editor = new CellProperties.Editor(CellProperties.Editor.Type.COMBO_BOX, items.toArray());
+            CellProperties.Renderer renderer = new CellProperties.Renderer(CellProperties.Renderer.Type.COMBO_BOX);
 
-                @Override
-                public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                    value = value == null ? "" : value.toString();
-                    Component c = new JComboBox(new String[]{value.toString()});
-                    return c;
-                }
-            };
+//            DefaultCellEditor editor = new DefaultCellEditor(new JComboBox(items.toArray()));
+//            DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
+//            @Override
+//            public Component getTableCellRendererComponent
+//            (JTable table, Object value
+//            , boolean isSelected, boolean hasFocus, int row, int column
+//            
+//                ) {
+//                    value = value == null ? "" : value.toString();
+//                Component c = new JComboBox(new String[]{value.toString()});
+//                return c;
+//            }
+//        };
             CellProperties cp = new CellProperties(editor, renderer);
             return cp;
         }
-        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-        CellProperties cp = new CellProperties(null, renderer);
+        CellProperties.Editor editor = new CellProperties.Editor(CellProperties.Editor.Type.DEFAULT);
+        CellProperties.Renderer renderer = new CellProperties.Renderer(CellProperties.Renderer.Type.DEFAULT);
+//        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+        CellProperties cp = new CellProperties(editor, renderer);
         return cp;
     }
 
@@ -244,7 +257,7 @@ public class ModelLoader {
                 ModelParameter slaveParameter = r.parameter;
                 Row masterRow = map.get(masterParameterId);
                 ModelParameter masterParameter = map.get(masterParameterId).parameter;
-                slaveParameter.setUpdater(new Parameter.Updater() {
+                slaveParameter.setUpdater(new Updater() {
                     @Override
                     public void update(String value) {
                         try {
@@ -262,6 +275,7 @@ public class ModelLoader {
                 masterParameter.addParameterChangedListener(slaveParameter);
             } catch (NoSuchElementException ex) {
                 throw new LoadingException("В таблице найдена неправильная запись авторедактируемой ячейки.");
+
             }
         }
 

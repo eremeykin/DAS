@@ -5,7 +5,9 @@
  */
 package eremeykin.pete.parameterseditor;
 
-import eremeykin.pete.modelapi.Parameter;
+import eremeykin.pete.modelapi.ModelParameter;
+import eremeykin.pete.modelapi.ModelParameter.CellProperties.Editor;
+import eremeykin.pete.modelapi.ModelParameter.CellProperties.Renderer;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JComboBox;
@@ -18,6 +20,9 @@ import org.netbeans.swing.outline.DefaultOutlineModel;
 import org.netbeans.swing.outline.Outline;
 import org.netbeans.swing.outline.OutlineModel;
 import org.netbeans.swing.outline.RowModel;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JTextField;
+import org.netbeans.swing.outline.DefaultOutlineCellRenderer;
 
 /**
  *
@@ -27,7 +32,7 @@ public class OutlineCreator {
 
     private Outline outline;
 
-    public OutlineCreator(Parameter root) {
+    public OutlineCreator(ModelParameter root) {
 
         TreeModel treeMdl = new TreeModel(root);
         OutlineModel mdl = DefaultOutlineModel.createOutlineModel(treeMdl, new TableModel(), true, "Название");
@@ -40,8 +45,28 @@ public class OutlineCreator {
                 if (modelColumn != 2) {
                     return null;
                 }
-                Parameter selected = (Parameter) (this.getModel().getValueAt(modelRow, 0));
-                return selected.getEditor();
+                ModelParameter selected = (ModelParameter) (this.getModel().getValueAt(modelRow, 0));
+                Editor editor = selected.getEditor();
+                if (editor == null) {
+                    return null;
+                }
+                switch (editor.getType()) {
+                    case DEFAULT:
+                        return null;
+                    case COMBO_BOX: {
+                        JComboBox jcb = new JComboBox(editor.getAvailableValues());
+                        jcb.setSelectedIndex(0);
+                        DefaultCellEditor e = new DefaultCellEditor(jcb);
+                        return e;
+                    }
+                    case TEXT_BOX: {
+                        DefaultCellEditor e = new DefaultCellEditor(new JTextField());
+                        return e;
+                    }
+                    default:
+                        throw new AssertionError(editor.getType().name());
+                }
+//                return null;
             }
 
             @Override
@@ -49,9 +74,29 @@ public class OutlineCreator {
                 TableCellRenderer renderer = super.getCellRenderer(row, column);
                 int modelRow = convertRowIndexToModel(row);
                 int modelColumn = convertColumnIndexToModel(column);
-                Parameter selected = (Parameter) (this.getModel().getValueAt(modelRow, 0));
+                ModelParameter selected = (ModelParameter) (this.getModel().getValueAt(modelRow, 0));
+                Renderer selectedRenderer = selected.getRenderer();
                 if (modelColumn == 2) {
-                    renderer = selected.getRenderer();
+                    switch (selectedRenderer.getType()) {
+                        case DEFAULT:
+                            return new DefaultOutlineCellRenderer();
+                        case COMBO_BOX: {
+
+                            DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer() {
+                                @Override
+                                public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column
+                                ) {
+                                    value = value == null ? "" : value.toString();
+                                    JComboBox c = new JComboBox(new String[]{value.toString()});
+                                    c.setSelectedIndex(0);
+                                    return c;
+                                }
+                            };
+                            return dtcr;
+                        }
+                        default:
+                            throw new AssertionError(selectedRenderer.getType().name());
+                    }
                 }
                 return renderer;
             }
@@ -67,11 +112,11 @@ public class OutlineCreator {
         return outline;
     }
 
-    private static class TreeModel  implements javax.swing.tree.TreeModel {
+    private static class TreeModel implements javax.swing.tree.TreeModel {
 
-        private Parameter root;
+        private ModelParameter root;
 
-        public TreeModel(Parameter root) {
+        public TreeModel(ModelParameter root) {
             this.root = root;
         }
 
@@ -82,20 +127,20 @@ public class OutlineCreator {
 
         @Override
         public Object getChild(Object parent, int index) {
-            Parameter p = (Parameter) parent;
+            ModelParameter p = (ModelParameter) parent;
             return p.getChildren().get(index);
         }
 
         @Override
         public int getChildCount(Object parent) {
-            Parameter p = (Parameter) parent;
+            ModelParameter p = (ModelParameter) parent;
             return p.getChildren().size();
         }
 
         @Override
         public int getIndexOfChild(Object parent, Object child) {
-            Parameter p = (Parameter) parent;
-            Parameter ch = (Parameter) child;
+            ModelParameter p = (ModelParameter) parent;
+            ModelParameter ch = (ModelParameter) child;
             return p.getChildren().indexOf(ch);
         }
 
@@ -106,7 +151,7 @@ public class OutlineCreator {
 
         @Override
         public boolean isLeaf(Object object) {
-            return ((Parameter) object).getChildren().isEmpty();
+            return ((ModelParameter) object).getChildren().isEmpty();
         }
 
         @Override
@@ -147,7 +192,7 @@ public class OutlineCreator {
 
         @Override
         public Object getValueFor(Object object, int column) {
-            Parameter parameter = (Parameter) object;
+            ModelParameter parameter = (ModelParameter) object;
             switch (column) {
                 case 0:
                     return parameter.getComment();
@@ -166,29 +211,29 @@ public class OutlineCreator {
 
         @Override
         public void setValueFor(Object object, int column, Object value) {
-            Parameter parameter = (Parameter) object;
+            ModelParameter parameter = (ModelParameter) object;
             parameter.setValue(value.toString());
             outline.repaint();
         }
     }
-    
+
     private static class RendererForChangeable extends DefaultTableCellRenderer {
 
-    Color backgroundColor = getBackground();
+        Color backgroundColor = getBackground();
 
-    @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        int column2 = table.convertColumnIndexToModel(column);
-            if (!isSelected && column2 == 2 && table.getCellEditor(row, column) !=null) {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            int column2 = table.convertColumnIndexToModel(column);
+            if (!isSelected && column2 == 2 && table.getCellEditor(row, column) != null) {
                 Color col = new Color(230, 230, 250);
                 c.setBackground(col);
-            }else if(!isSelected) {
+            } else if (!isSelected) {
                 c.setBackground(backgroundColor);
             }
-        
-        return c;
+
+            return c;
+        }
     }
-}
 
 }

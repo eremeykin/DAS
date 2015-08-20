@@ -7,6 +7,7 @@ package eremeykin.pete.rulecalculator;
 
 import eremeykin.pete.coreapi.centrallookupapi.CentralLookup;
 import eremeykin.pete.modelapi.Model;
+import eremeykin.pete.modelapi.ModelParameter;
 import eremeykin.pete.modelapi.Parameter;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -219,7 +220,7 @@ public final class CalculatorOutputTopComponent extends TopComponent implements 
                 Model model = it.next();
                 // получить параметр с id=21 (сила)
                 // и установить для него соответствующий текст
-                Parameter p = model.getParameterByID(model.getRoot(), 21);
+                ModelParameter p = model.getParameterByID(model.getRoot(), 21);
                 if(p!=null){
                  p.setValue(jFormattedTextField5.getText());
                 }
