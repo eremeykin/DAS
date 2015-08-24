@@ -5,6 +5,8 @@
  */
 package eremeykin.pete.modelapi;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -69,7 +71,19 @@ public class ModelParameter implements ModelParameterChangedListener {
     }
 
     public void setValue(String value) {
-        this.value = value;
+        NumberFormat formatter = new DecimalFormat("#0.0###");
+        Double d = null;
+        String res = null;
+        try {
+            d =Double.valueOf(value);
+            if (d>1000){
+                formatter = new DecimalFormat("0.0##E0");
+            }
+            res = formatter.format(d);
+        } catch (IllegalArgumentException ex2) {
+        }
+
+        this.value = res == null ? value : res;
         ModelParameterChangedEvent evt = new ModelParameterChangedEvent(this);
         for (ModelParameterChangedListener listener : listeners) {
             listener.parameterChanged(evt);

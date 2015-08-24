@@ -42,9 +42,9 @@ public class Model implements ModelParameterChangedListener {
         this.home = home;
     }
 
-    public File getHome() {
-        return home;
-    }
+//    public File getHome() {
+//        return home;
+//    }
 
     public File getModelFile() {
         return modelFile;

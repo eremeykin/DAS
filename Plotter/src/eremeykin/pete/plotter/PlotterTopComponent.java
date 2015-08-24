@@ -6,6 +6,7 @@
 package eremeykin.pete.plotter;
 
 import eremeykin.pete.coreapi.centrallookupapi.CentralLookup;
+import eremeykin.pete.coreapi.workspace.WorkspaceManager;
 import eremeykin.pete.modelapi.Model;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -111,8 +112,10 @@ public final class PlotterTopComponent extends TopComponent {
         try {
             removeAll();
             Model model = (Model) cl.lookup(template).allInstances().iterator().next();
-            this.home = model.getHome();
-            final XYDataset dataset = createDataset(model.getHome());
+//            this.home = model.getHome();
+            this.home = WorkspaceManager.INSTANCE.getWorkspace();
+//            final XYDataset dataset = createDataset(model.getHome());
+            final XYDataset dataset = createDataset(home);
             final JFreeChart chart = createChart(dataset);
             ChartPanel chartPanel = new ChartPanel(chart);
             chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));

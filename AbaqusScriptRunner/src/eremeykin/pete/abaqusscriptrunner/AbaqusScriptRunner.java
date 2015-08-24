@@ -9,6 +9,7 @@ import eremeykin.pete.*;
 import eremeykin.pete.coreapi.centrallookupapi.CentralLookup;
 import eremeykin.pete.coreapi.loggerapi.Logger;
 import eremeykin.pete.coreapi.loggerapi.LoggerManager;
+import eremeykin.pete.coreapi.workspace.WorkspaceManager;
 import eremeykin.pete.modelapi.Model;
 import eremeykin.pete.scriptrunnerapi.ScriptRunner;
 import java.io.BufferedReader;
@@ -41,10 +42,12 @@ public class AbaqusScriptRunner implements ScriptRunner {
     @Override
     public void runScript(Model model, boolean refresh) {
         try {
+//            C:\SIMULIA\Abaqus\Commands;
 //            String script = model.getScript();
             File scriptFile = model.getScriptFile(); //new File(model.getHome(), "refresh_script.py");
 //            Files.deleteIfExists(scriptFile.toPath());
-            File objFile = new File(model.getHome(), "tmp_model.obj");
+            File home = WorkspaceManager.INSTANCE.getWorkspace();
+            File objFile = new File(home, "tmp_model.obj");
             Files.deleteIfExists(objFile.toPath());
 
 //            try (FileWriter fileWriter = new FileWriter(scriptFile, false)) {
@@ -56,13 +59,13 @@ public class AbaqusScriptRunner implements ScriptRunner {
             // 1 значит refresh=true
             String rStr = refresh ? " true" : " false";
             String command = "abaqus cae noGUI=\"" + scriptFile.getAbsolutePath()
-                    + "\" -- " + argString + rStr + " \"" + model.getHome() + "\"";
+                    + "\" -- " + argString + rStr + " \"" + home + "\"";
             if (command.contains("null")) {
                 throw new Error("Параметры содержат null");
             }
-            deleteLockFile(model.getHome());
+            deleteLockFile(home);
             ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/C", command);
-            pb.directory(model.getHome());
+            pb.directory(home);
             Process p = pb.start();
             pb.redirectError(ProcessBuilder.Redirect.PIPE);
             pb.redirectOutput(ProcessBuilder.Redirect.PIPE);

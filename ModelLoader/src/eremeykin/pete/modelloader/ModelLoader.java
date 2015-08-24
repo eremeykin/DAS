@@ -4,17 +4,12 @@ import eremeykin.pete.coreapi.loggerapi.Logger;
 import eremeykin.pete.coreapi.loggerapi.LoggerManager;
 import eremeykin.pete.coreapi.workspace.WorkspaceManager;
 import eremeykin.pete.modelapi.Model;
-import eremeykin.pete.modelapi.Parameter;
 import eremeykin.pete.modelapi.ModelParameter;
 import eremeykin.pete.modelapi.ModelParameter.CellProperties;
 import eremeykin.pete.modelapi.ModelParameter.Updater;
-import eremeykin.pete.modelapi.ModelParameterChangedListener;
-import java.awt.Component;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.io.Reader;
-import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,13 +21,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Set;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableCellRenderer;
-import org.openide.util.lookup.InstanceContent;
 
 public class ModelLoader {
 
@@ -109,17 +98,6 @@ public class ModelLoader {
             //get model Reader
             File modelFile = unpackColumnToWorkspaceFile(MODEL_TABLE, MODEL_COLUMN, "modelFile.obj");
             File scriptFile = unpackColumnToWorkspaceFile(SCRIPT_TABLE, SCRIPT_COLUMN, "script.py");
-//            Statement st2 = connection.createStatement();
-//            ResultSet rs2 = st2.executeQuery("select * from " + MODEL_TABLE + ";");
-//            String modelString = rs2.getString(MODEL_COLUMN);
-//            File modelFile = new File(WorkspaceManager.INSTANCE.getWorkspace().getAbsolutePath() + "\\modelFile.obj");
-//            printStringToFile(modelString, modelFile);
-            //get script Reader
-//            Statement st3 = connection.createStatement();
-//            ResultSet rs3 = st3.executeQuery("select * from " + SCRIPT_TABLE + ";");
-//            String scriptString = rs3.getString(SCRIPT_COLUMN);
-//            File modelFile = new File(WorkspaceManager.INSTANCE.getWorkspace().getAbsolutePath() + "\\modelFile.obj");
-//            printStringToFile(scriptString, scriptFile);
             Model model = new Model(root, modelFile, scriptFile);
             // добавляем для каждого параметра модель в слушатели
             // чтоб она потом могла узнать что её параметры изменились
@@ -193,14 +171,11 @@ public class ModelLoader {
 
     private CellProperties extractEditor(String editorType, String editorTable, String editorColumn) throws SQLException {
         if (editorType == null) {
-//            DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
             CellProperties.Editor editor = new CellProperties.Editor(CellProperties.Editor.Type.DEFAULT);
             CellProperties cp = new CellProperties(editor);
             return cp;
         }
         if (editorType.equals("text")) {
-//            DefaultCellEditor editor = new DefaultCellEditor(new JTextField());
-//            DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
             CellProperties.Editor editor = new CellProperties.Editor(CellProperties.Editor.Type.TEXT_BOX);
             CellProperties cp = new CellProperties(editor);
             return cp;
@@ -212,27 +187,11 @@ public class ModelLoader {
             while (rs.next()) {
                 items.add(rs.getString(editorColumn));
             }
-//            this.renderer=null;
             CellProperties.Editor editor = new CellProperties.Editor(CellProperties.Editor.Type.COMBO_BOX, items.toArray());
-
-//            DefaultCellEditor editor = new DefaultCellEditor(new JComboBox(items.toArray()));
-//            DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
-//            @Override
-//            public Component getTableCellRendererComponent
-//            (JTable table, Object value
-//            , boolean isSelected, boolean hasFocus, int row, int column
-//            
-//                ) {
-//                    value = value == null ? "" : value.toString();
-//                Component c = new JComboBox(new String[]{value.toString()});
-//                return c;
-//            }
-//        };
             CellProperties cp = new CellProperties(editor);
             return cp;
         }
         CellProperties.Editor editor = new CellProperties.Editor(CellProperties.Editor.Type.DEFAULT);
-//        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
         CellProperties cp = new CellProperties(editor);
         return cp;
     }

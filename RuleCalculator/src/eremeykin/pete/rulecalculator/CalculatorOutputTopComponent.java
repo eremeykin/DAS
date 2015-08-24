@@ -8,7 +8,6 @@ package eremeykin.pete.rulecalculator;
 import eremeykin.pete.coreapi.centrallookupapi.CentralLookup;
 import eremeykin.pete.modelapi.Model;
 import eremeykin.pete.modelapi.ModelParameter;
-import eremeykin.pete.modelapi.Parameter;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Collection;
@@ -79,7 +78,6 @@ public final class CalculatorOutputTopComponent extends TopComponent implements 
                     jFormattedTextField6.setText(formatter.format(s.getM()));
                     jFormattedTextField7.setText(new Double(s.getN()).isNaN()? "NaN":formatter.format(s.getN()));
                     jFormattedTextField8.setText(formatter.format(s.getF()));
-                    //                    EventQueue.invokeLater(new SetterRunnable(info));
                 }
 
             }
