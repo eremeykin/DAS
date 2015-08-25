@@ -21,7 +21,7 @@ import java.util.Arrays;
 public class VersionChecker {
 
     private final String command;
-    private  String path;
+    private String path;
     private final String args;
     private final StringBuffer version = new StringBuffer();
     private static final Logger LOGGER = LoggerManager.getLogger(WorkspaceManager.class);
@@ -49,9 +49,12 @@ public class VersionChecker {
     public StringBuffer check() throws IOException, InterruptedException {
         File home = WorkspaceManager.INSTANCE.getWorkspace();
         ProcessBuilder pBuilder = new ProcessBuilder("cmd.exe", "/C", command + args);
+        if (path == null) {
+            path = "";
+        }
         File file = new File(path);
-        if (!file.isDirectory()){
-            path=file.getParent();
+        if (!file.isDirectory() && file.exists()) {
+            path = file.getParent();
         }
         pBuilder.environment().put("Path", path);
         pBuilder.directory(home);

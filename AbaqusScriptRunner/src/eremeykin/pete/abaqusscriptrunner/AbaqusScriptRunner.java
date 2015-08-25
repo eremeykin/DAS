@@ -25,7 +25,10 @@ import java.nio.file.Files;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import javax.swing.JOptionPane;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.NbPreferences;
+import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;
@@ -38,77 +41,32 @@ import org.openide.windows.InputOutput;
 public class AbaqusScriptRunner implements ScriptRunner {
 
     private static final Logger LOGGER = LoggerManager.getLogger(AbaqusScriptRunner.class);
-    
+
     @Override
     public void runScript(Model model, boolean refresh) {
         try {
-//            C:\SIMULIA\Abaqus\Commands;
-//            String script = model.getScript();
             File scriptFile = model.getScriptFile(); //new File(model.getHome(), "refresh_script.py");
-//            Files.deleteIfExists(scriptFile.toPath());
             File home = WorkspaceManager.INSTANCE.getWorkspace();
             File objFile = new File(home, "tmp_model.obj");
             Files.deleteIfExists(objFile.toPath());
 
-//            try (FileWriter fileWriter = new FileWriter(scriptFile, false)) {
-//                fileWriter.write(script + "\r\n");
-//            }
             TreeMap map = model.getArgs();
             String argString = join(map);
             // 0 значит refresh=false
             // 1 значит refresh=true
-            String rStr = refresh ? " true" : " false";
-            String command = "abaqus cae noGUI=\"" + scriptFile.getAbsolutePath()
-                    + "\" -- " + argString + rStr + " \"" + home + "\"";
-            if (command.contains("null")) {
-                throw new Error("Параметры содержат null");
-            }
+//            String rStr = refresh ? " true" : " false";
+//            String command = "abaqus cae noGUI=\"" + scriptFile.getAbsolutePath()
+//                    + "\" -- " + argString + rStr + " \"" + home + "\"";
+//            if (command.contains("null")) {
+//                throw new Error("Parameters contain null value");
+//            }
+            String pathEnvVar = NbPreferences.forModule(AbaqusPanel.class).get("ABAQUS_PATH", "");
+            Thread abaqusThread = new AbaqusThread(scriptFile, argString, refresh, pathEnvVar);
+            RequestProcessor rProcessor = RequestProcessor.getDefault();
+            rProcessor.post(abaqusThread);
+//            abaqusThread.start();
             deleteLockFile(home);
-            ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/C", command);
-            pb.directory(home);
-            Process p = pb.start();
-            pb.redirectError(ProcessBuilder.Redirect.PIPE);
-            pb.redirectOutput(ProcessBuilder.Redirect.PIPE);
-            pb.redirectInput(ProcessBuilder.Redirect.PIPE);
-            new Runnable() {
 
-                @Override
-                public void run() {
-                    String line;
-                    try (BufferedReader bre = new BufferedReader(new InputStreamReader(p.getErrorStream()));) {
-                        InputOutput io = IOProvider.getDefault().getIO("Abaqus", false);
-                        while ((line = bre.readLine()) != null) {
-                            io.getErr().println(line);
-                            io.select();
-                            if (line.contains("FLEXnet Licensing error:")) {
-                                JOptionPane.showMessageDialog(null, "Не удается запустить Abaqus. Ошибка лицензии. ", "Error", JOptionPane.ERROR_MESSAGE);
-                                return;
-                            }
-                        }
-                    } catch (IOException ex) {
-                    }
-                }
-            }.run();
-            new Runnable() {
-
-                @Override
-                public void run() {
-                    String line;
-                    try (BufferedReader bri = new BufferedReader(new InputStreamReader(p.getInputStream()));) {
-                        InputOutput io = IOProvider.getDefault().getIO("Abaqus", false);
-                        while ((line = bri.readLine()) != null) {
-                            io.getOut().println(line);
-                            io.select();
-                            if (line.contains("FLEXnet Licensing error:")) {
-                                JOptionPane.showMessageDialog(null, "Не удается запустить Abaqus. Ошибка лицензии. ", "Error", JOptionPane.ERROR_MESSAGE);
-                                return;
-                            }
-                        }
-                    } catch (IOException ex) {
-                    }
-                }
-            }.run();
-            p.waitFor();
             Reader newReader = new FileReader(objFile);
             String targetString = "";
             int ch;
@@ -118,8 +76,6 @@ public class AbaqusScriptRunner implements ScriptRunner {
             newReader.close();
             model.setModelFile(objFile);
         } catch (IOException ex) {
-            LOGGER.error(ex);
-        } catch (InterruptedException ex) {
             LOGGER.error(ex);
         }
     }
@@ -158,6 +114,63 @@ public class AbaqusScriptRunner implements ScriptRunner {
 
             f.delete();
         }
+    }
+
+    private class AbaqusThread extends Thread {
+
+        private final String command = "abaqus cae ";
+        private final StringBuilder args = new StringBuilder();
+        private final File home;
+        private final String path;
+
+        public AbaqusThread(File scriptFile, String argString, boolean refresh, String path) {
+            home = WorkspaceManager.INSTANCE.getWorkspace();
+            args.append(" noGUI=\"");
+            args.append(scriptFile.getAbsolutePath());
+            args.append("\" -- ");
+            args.append(argString);
+            args.append(refresh ? " true " : " false ");
+            args.append(" \"");
+            args.append(home.getAbsolutePath());
+            args.append("\"");
+            this.path = path;
+        }
+
+        @Override
+        public void run() {
+            try {
+                if (args.toString().contains("null")) {
+                    throw new Error("Parameters contain null value");
+                }
+                ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/C", command+args.toString());
+                pb.directory(home);
+                pb.redirectErrorStream(true);
+                pb.environment().put("Path", path);
+                Process p = pb.start();
+                String line;
+                try (BufferedReader bre = new BufferedReader(new InputStreamReader(p.getInputStream(), "Cp866"));) {
+                    InputOutput io = IOProvider.getDefault().getIO("Abaqus", false);
+                    while ((line = bre.readLine()) != null) {
+                        io.getErr().println(line);
+                        io.select();
+                        if (line.contains("FLEXnet Licensing error:")) {
+                            JOptionPane.showMessageDialog(null, "It is impossible to run Abaqus. License error. ", "Error", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                    }
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                p.waitFor();
+
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (InterruptedException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+
+        }
+
     }
 
 }

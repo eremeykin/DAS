@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import static java.lang.Thread.sleep;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +22,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.openide.util.Exceptions;
 import org.openide.util.NbPreferences;
+import org.openide.util.RequestProcessor;
 import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;
 
@@ -55,6 +57,7 @@ final class AbaqusPanel extends javax.swing.JPanel {
         jButton2 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(AbaqusPanel.class, "AbaqusPanel.jLabel1.text")); // NOI18N
@@ -85,9 +88,6 @@ final class AbaqusPanel extends javax.swing.JPanel {
         jButton4.setBorder(null);
         jButton4.setBorderPainted(false);
         jButton4.setContentAreaFilled(false);
-        jButton4.setMaximumSize(new java.awt.Dimension(23, 23));
-        jButton4.setMinimumSize(new java.awt.Dimension(23, 23));
-        jButton4.setPreferredSize(new java.awt.Dimension(23, 23));
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 AbaqusCheckActionPerformed(evt);
@@ -105,6 +105,13 @@ final class AbaqusPanel extends javax.swing.JPanel {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(jButton3, org.openide.util.NbBundle.getMessage(AbaqusPanel.class, "AbaqusPanel.jButton3.text")); // NOI18N
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -112,22 +119,27 @@ final class AbaqusPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
-                    .addComponent(jTextField2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton5)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+                            .addComponent(jTextField2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton2))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton1))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton3)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -138,16 +150,18 @@ final class AbaqusPanel extends javax.swing.JPanel {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1)
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton4))
                     .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel2)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton2))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jButton5))
-                .addContainerGap(199, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton3)
+                .addContainerGap(170, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -220,7 +234,7 @@ final class AbaqusPanel extends javax.swing.JPanel {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             try {
                 String lmgrdPath = jTextField2.getText();
-                String[] args = {"-z","-v"};
+                String[] args = {"-z", "-v"};
                 VersionChecker vChecker = new VersionChecker("lmgrd", args, lmgrdPath, "lmgrd v");
                 lmgrdVersion = vChecker.check();
             } catch (IOException ex) {
@@ -241,6 +255,20 @@ final class AbaqusPanel extends javax.swing.JPanel {
 
     }//GEN-LAST:event_LmgrdCheckActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        RequestProcessor rProcessor = RequestProcessor.getDefault();
+        LmgrdThread lmgrdThread = new LmgrdThread();
+        rProcessor.post(lmgrdThread);
+//        Thread closeChildThread = new Thread() {
+//            @Override
+//            public void run() {
+//                stopLmgrd();
+//            }
+//        };
+//        Runtime.getRuntime().addShutdownHook(closeChildThread);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     void load() {
         String abaqusPath = NbPreferences.forModule(AbaqusPanel.class).get("ABAQUS_PATH", "");
         String lmgrdPath = NbPreferences.forModule(AbaqusPanel.class).get("LMGRD_PATH", "");
@@ -258,9 +286,76 @@ final class AbaqusPanel extends javax.swing.JPanel {
         return true;
     }
 
+//    private void stopLmgrd() {
+//        try {
+//            File home = WorkspaceManager.INSTANCE.getWorkspace();
+//            ProcessBuilder pBuilder = new ProcessBuilder("cmd.exe", "/C", "lmgrd -x lmdown");
+//            String lmgrdPath = jTextField2.getText();
+//            if (lmgrdPath == null) {
+//                lmgrdPath = "";
+//            }
+//            File file = new File(lmgrdPath);
+//            if (!file.isDirectory() && file.exists()) {
+//                lmgrdPath = file.getParent();
+//            }
+//            pBuilder.environment().put("Path", lmgrdPath);
+//            pBuilder.directory(home);
+//            pBuilder.redirectErrorStream(true);
+//            Process process = pBuilder.start();
+//        } catch (IOException ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
+//    }
+
+    private class LmgrdThread extends Thread {
+
+        Process process = null;
+
+        public Process getProcess() {
+            return process;
+        }
+
+        @Override
+        public void run() {
+            try {
+                File home = WorkspaceManager.INSTANCE.getWorkspace();
+                ProcessBuilder pBuilder = new ProcessBuilder("cmd.exe", "/C", "lmgrd -z");
+                String lmgrdPath = jTextField2.getText();
+                if (lmgrdPath == null) {
+                    lmgrdPath = "";
+                }
+                File file = new File(lmgrdPath);
+                if (!file.isDirectory() && file.exists()) {
+                    lmgrdPath = file.getParent();
+                }
+                pBuilder.environment().put("Path", lmgrdPath);
+                pBuilder.directory(home);
+                pBuilder.redirectErrorStream(true);
+                process = pBuilder.start();
+                InputOutput io = IOProvider.getDefault().getIO("lmgrd", false);
+                String line;
+                try (BufferedReader bri = new BufferedReader(new InputStreamReader(process.getInputStream(), "Cp866"));) {
+                    while ((line = bri.readLine()) != null) {
+                        io.getOut().println(line);
+                        io.select();
+                        if (line.contains("is already in use")) {
+                            process.destroyForcibly();
+//                            stopLmgrd();
+                            return;
+                        }
+                    }
+                } catch (IOException ex) {
+                }
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
