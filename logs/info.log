@@ -1,5 +1,4 @@
-2015-08-25T23:27:56,695 [INFO ] - The directory "C:\DASworkspace" has been successfully set as a workspace. 
-2015-08-25T23:28:01,560 [INFO ] - Antialiasing is supported: true 
-2015-08-25T23:28:06,385 [INFO ] - Model C:\Users\Pete\Documents\NetBeansProjects\DAS\Test model\model7.sqlite has been successfully loaded.  
-2015-08-25T23:28:06,553 [INFO ] - Antialiasing is supported: true 
-2015-08-25T23:28:18,451 [ERROR] - java.io.FileNotFoundException: C:\DASworkspace\tmp_model.obj (Не удается найти указанный файл) 
+2015-08-29T23:22:43,050 [INFO ] - The directory "C:\DASworkspace" has been successfully set as a workspace. 
+2015-08-29T23:22:46,973 [INFO ] - Antialiasing is supported: true 
+2015-08-29T23:22:52,584 [INFO ] - Model C:\Users\Pete\Documents\NetBeansProjects\DAS\Test model\model7.sqlite has been successfully loaded.  
+2015-08-29T23:22:52,690 [INFO ] - Antialiasing is supported: true 
