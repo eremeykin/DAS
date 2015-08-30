@@ -24,6 +24,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JOptionPane;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
@@ -44,13 +46,14 @@ import org.openide.windows.InputOutput;
 public class AbaqusScriptRunner implements ScriptRunner {
 
     private static final Logger LOGGER = LoggerManager.getLogger(AbaqusScriptRunner.class);
+    private static final String TMP_MODEL_FILE = "tmp_model.obj";
 
     @Override
     public void runScript(Model model, boolean refresh) {
         try {
             File scriptFile = model.getScriptFile(); //new File(model.getHome(), "refresh_script.py");
             File home = WorkspaceManager.INSTANCE.getWorkspace();
-            File objFile = new File(home, "tmp_model.obj");
+            File objFile = new File(home, TMP_MODEL_FILE);
             Files.deleteIfExists(objFile.toPath());
 
             TreeMap map = model.getArgs();
@@ -58,19 +61,25 @@ public class AbaqusScriptRunner implements ScriptRunner {
             // 0 значит refresh=false
             // 1 значит refresh=true
             String pathEnvVar = NbPreferences.forModule(AbaqusPanel.class).get("ABAQUS_PATH", "");
-            Thread abaqusThread = new AbaqusThread(scriptFile, argString, refresh, pathEnvVar);
+            AbaqusThread abaqusThread = new AbaqusThread(scriptFile, argString, refresh, pathEnvVar);
             RequestProcessor rProcessor = RequestProcessor.getDefault();
-            rProcessor.post(abaqusThread);
-            deleteLockFile(home);
+            RequestProcessor.Task abaqus = rProcessor.post(abaqusThread);
+            Thread modelRefresher = new Thread(new Runnable() {
 
-            Reader newReader = new FileReader(objFile);
-            String targetString = "";
-            int ch;
-            while ((ch = newReader.read()) != -1) {
-                targetString += (char) ch;
-            }
-            newReader.close();
-            model.setModelFile(objFile);
+                @Override
+                public void run() {
+                    try {
+                        boolean finished = abaqus.waitFinished(30 * 60 * 1000);
+                        if (abaqusThread.getSuccess().get() && finished) {
+                            model.setModelFile(objFile);
+                        }
+                    } catch (InterruptedException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+            });
+            modelRefresher.start();
+//            deleteLockFile(home);
         } catch (IOException ex) {
             LOGGER.error(ex);
         }
@@ -113,14 +122,19 @@ public class AbaqusScriptRunner implements ScriptRunner {
     }
 
     private class AbaqusThread extends Thread implements Cancellable {
-        
+
         private final static String KILL_COMMAND = "taskkill /F /IM ABQcaeK.exe";
-        private final String command = "abaqus cae ";
+        private final static String COMMAND = "abaqus cae ";
         private final StringBuilder args = new StringBuilder();
         private final File home;
         private final String path;
         private Process p;
         private boolean refresh;
+        private AtomicBoolean success = new AtomicBoolean(false);
+
+        public AtomicBoolean getSuccess() {
+            return success;
+        }
 
         public AbaqusThread(File scriptFile, String argString, boolean refresh, String path) {
             home = WorkspaceManager.INSTANCE.getWorkspace();
@@ -146,7 +160,7 @@ public class AbaqusScriptRunner implements ScriptRunner {
                 if (args.toString().contains("null")) {
                     throw new Error("Parameters contain null value");
                 }
-                ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/C", command + args.toString());
+                ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/C", COMMAND + args.toString());
                 pb.directory(home);
                 pb.redirectErrorStream(true);
                 pb.environment().put("Path", path);
@@ -163,15 +177,13 @@ public class AbaqusScriptRunner implements ScriptRunner {
                         }
                     }
                 } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
+                    LOGGER.error(ex);
                 }
                 p.waitFor();
-
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (InterruptedException ex) {
-                Exceptions.printStackTrace(ex);
+            } catch (IOException | InterruptedException ex) {
+                LOGGER.error(ex);
             }
+            success.set(true);
             progr.finish();
         }
 

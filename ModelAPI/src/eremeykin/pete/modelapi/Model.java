@@ -24,7 +24,7 @@ public class Model implements ModelParameterChangedListener {
     private File modelFile;
     private File scriptFile;
     private String script;
-    private ArrayList<ReaderChangedListener> readerListeners = new ArrayList<>();
+    private ArrayList<ModelFileChangedListener> modelFileListeners = new ArrayList<>();
     private ArrayList<ModelChangedListener> modelListeners = new ArrayList<>();
     private File home;
 
@@ -68,9 +68,9 @@ public class Model implements ModelParameterChangedListener {
 
     public void setModelFile(File modelFile) {
         this.modelFile = modelFile;
-        ModelStringChangedEvent evt = new ModelStringChangedEvent(modelFile);
-        for (ReaderChangedListener listener : readerListeners) {
-            listener.readerChanged(evt);
+        ModelFileChangedEvent evt = new ModelFileChangedEvent(modelFile);
+        for (ModelFileChangedListener listener : modelFileListeners) {
+            listener.fileChanged(evt);
         }
     }
 
@@ -112,12 +112,12 @@ public class Model implements ModelParameterChangedListener {
         modelListeners.remove(listener);
     }
 
-    public void addReaderChangedListener(ReaderChangedListener listener) {
-        readerListeners.add(listener);
+    public void addModelFileChangedListener(ModelFileChangedListener listener) {
+        modelFileListeners.add(listener);
     }
 
-    public void removeReaderChangedListener(ReaderChangedListener listener) {
-        readerListeners.remove(listener);
+    public void removeModelFileChangedListener(ModelFileChangedListener listener) {
+        modelFileListeners.remove(listener);
     }
 
     @Override

@@ -7,6 +7,7 @@ import java.io.File;
 import java.net.URL;
 import javafx.application.ConditionalFeature;
 import javafx.application.Platform;
+import javafx.collections.ObservableFloatArray;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -17,8 +18,10 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.MeshView;
+import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -56,28 +59,53 @@ public class ModelSceneBuilder extends SceneBuilder {
 
     @Override
     public void buildModel(File modelFile) {
-        MeshView[] meshViews;
-        if (modelFile!=null){
-        ObjModelImporter objImporter = new ObjModelImporter();
-            try {
-//                URL modelUrl = this.getClass().getClassLoader().getResource("resources/test.obj");
+        try {
+            MeshView[] meshViews;
+            if (modelFile != null) {
+                ObjModelImporter objImporter = new ObjModelImporter();
                 objImporter.read(modelFile);
-            } catch (Exception e) {
+                meshViews = objImporter.getImport();
+            } else {
+                meshViews = new MeshView[1];
+                meshViews[0] = new MeshView();
             }
-            meshViews = objImporter.getImport();
-        }
-        else{
-            meshViews = new MeshView[1];
-            meshViews[0]= new MeshView();
-        }
-        final PhongMaterial modelMaterial = new PhongMaterial();
-        modelMaterial.setDiffuseColor(Color.LIGHTGRAY);
-        modelMaterial.setSpecularColor(Color.LIGHTGREY);
+            final PhongMaterial modelMaterial = new PhongMaterial();
+            modelMaterial.setDiffuseColor(Color.LIGHTGRAY);
+            modelMaterial.setSpecularColor(Color.LIGHTGREY);
+            double scale = 1;
+            if (meshViews[0] != null) {
+                MeshView meshView = meshViews[0];
+                meshView.setMaterial(modelMaterial);
+                if (meshView.getMesh() instanceof TriangleMesh) {
+                    TriangleMesh tMesh = (TriangleMesh) meshView.getMesh();
+                    ObservableFloatArray points = tMesh.getPoints();
+                    float maxX = 0, maxY = 0, maxZ = 0;
+                    for (int p = 0; p < points.size(); p += 3) {
+                        float x = points.get(p);
+                        float y = points.get(p);
+                        float z = points.get(p);
+                        if (maxX < x) {
+                            maxX = x;
+                        }
+                        if (maxY < y) {
+                            maxY = y;
+                        }
+                        if (maxZ < z) {
+                            maxZ = z;
+                        }
+                    }
+                    float max = Math.max(Math.max(maxX, maxY), maxZ);
+                    scale = AXIS_LENGTH / max / 3;
+                }
 
-        meshViews[0].setMaterial(modelMaterial);
-        modelGroup.getChildren().addAll(meshViews);
-        modelGroup.setScale(200);
-        world.getChildren().add(modelGroup);
+                modelGroup.getChildren().addAll(meshViews);
+            }
+            modelGroup.setScale(scale);
+            world.getChildren().add(modelGroup);
+        } catch (com.interactivemesh.jfx.importer.ImportException ex) {
+            LOGGER.error(ex);
+            JOptionPane.showMessageDialog(null, "Can not refresh viewport. There is no \"" + modelFile + "\" file", "No model file error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     @Override
@@ -191,10 +219,9 @@ public class ModelSceneBuilder extends SceneBuilder {
     }
 
     // </editor-fold>
-
     @Override
     public void buildScene() {
-        LOGGER.info("Antialiasing is supported: "+Platform.isSupported(ConditionalFeature.SCENE3D));
+        LOGGER.info("Antialiasing is supported: " + Platform.isSupported(ConditionalFeature.SCENE3D));
         root.getChildren().add(world);
         scene = new Scene(root, 1024, 1024, true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.LIGHTBLUE);

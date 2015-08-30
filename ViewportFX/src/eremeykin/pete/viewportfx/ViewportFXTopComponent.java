@@ -5,19 +5,15 @@
  */
 package eremeykin.pete.viewportfx;
 
+import eremeykin.pete.*;
 import eremeykin.pete.coreapi.centrallookupapi.CentralLookup;
+import eremeykin.pete.modelapi.*;
 import eremeykin.pete.modelapi.Model;
-import eremeykin.pete.modelapi.ModelStringChangedEvent;
-import eremeykin.pete.modelapi.ReaderChangedListener;
 import java.awt.BorderLayout;
-import java.awt.Button;
-import java.awt.FlowLayout;
 import java.util.Collection;
 import java.util.Iterator;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
-import javafx.scene.Camera;
-import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
@@ -56,7 +52,7 @@ public final class ViewportFXTopComponent extends TopComponent implements Lookup
 
     final JFXPanel fxPanel = new JFXPanel();
     private Lookup.Result<Model> modelResult = null;
-    
+
     public ViewportFXTopComponent() {
         initComponents();
         setName(Bundle.CTL_ViewportFXTopComponent());
@@ -159,10 +155,10 @@ public final class ViewportFXTopComponent extends TopComponent implements Lookup
                 Iterator<Model> it = infos.iterator();
                 if (it.hasNext()) {
                     final Model m = it.next();
-                    ReaderChangedListener rcl = new ReaderChangedListener() {
+                    ModelFileChangedListener readerChangedListener = new ModelFileChangedListener() {
 
                         @Override
-                        public void readerChanged(ModelStringChangedEvent evt) {
+                        public void fileChanged(ModelFileChangedEvent evt) {
                             ViewportFXTopComponent.this.fxPanel.removeAll();
                             Platform.runLater(new Runnable() {
                                 @Override
@@ -178,8 +174,8 @@ public final class ViewportFXTopComponent extends TopComponent implements Lookup
                         }
 
                     };
-                    rcl.readerChanged(null);
-                    m.addReaderChangedListener(rcl);
+                    readerChangedListener.fileChanged(null);
+                    m.addModelFileChangedListener(readerChangedListener);
 
                 }
             }

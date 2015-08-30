@@ -5,17 +5,11 @@
  */
 package eremeykin.pete.modelapi;
 
-import java.io.Reader;
-import java.net.URL;
-import java.util.EventObject;
-
 /**
  *
  * @author Pete
  */
-public class ModelStringChangedEvent extends EventObject {
+public interface ModelFileChangedListener {
 
-    public ModelStringChangedEvent(Object source) {
-        super(source);
-    }
+    public void fileChanged(ModelFileChangedEvent evt);
 }

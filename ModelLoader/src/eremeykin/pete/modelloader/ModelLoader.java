@@ -28,9 +28,11 @@ public class ModelLoader {
     private static final Logger LOGGER = LoggerManager.getLogger(ModelLoader.class);
     private Connection connection;
     private final File mFile;
+    private static final String SCRIPT_FILE_NAME = "script.py";
+    private static final String MODEL_FILE_NAME = "model.obj";
     private static final String PARAMETERS_TABLE = "parameters";
-    private static final String MODEL_TABLE = "obj_model";
-    private static final String SCRIPT_TABLE = "refresh_script";
+    private static final String MODEL_TABLE = "model";
+    private static final String SCRIPT_TABLE = "script";
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
     private static final String PARENT_COLUMN = "parent";
@@ -96,8 +98,8 @@ public class ModelLoader {
             // link auto editors
             linkEditors(map);
             //get model Reader
-            File modelFile = unpackColumnToWorkspaceFile(MODEL_TABLE, MODEL_COLUMN, "modelFile.obj");
-            File scriptFile = unpackColumnToWorkspaceFile(SCRIPT_TABLE, SCRIPT_COLUMN, "script.py");
+            File modelFile = unpackColumnToWorkspaceFile(MODEL_TABLE, MODEL_COLUMN, MODEL_FILE_NAME);
+            File scriptFile = unpackColumnToWorkspaceFile(SCRIPT_TABLE, SCRIPT_COLUMN, SCRIPT_FILE_NAME);
             Model model = new Model(root, modelFile, scriptFile);
             // добавляем для каждого параметра модель в слушатели
             // чтоб она потом могла узнать что её параметры изменились
