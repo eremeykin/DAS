@@ -69,8 +69,9 @@ public final class RefreshModelAction extends CallableSystemAction implements Lo
         CentralLookup cl = CentralLookup.getDefault();
         try {
             Model model = (Model) cl.lookup(templateModel).allInstances().iterator().next();
-            runner.runScript(model, false);
+            runner.runScript(model, true);
         } catch (NoSuchElementException ex) {
+            LOGGER.warn("There is no opened model.");
             JOptionPane.showMessageDialog(null, "There is no opened model.", "Error", JOptionPane.ERROR_MESSAGE);
         }
 

@@ -31,7 +31,7 @@ public class Model implements ModelParameterChangedListener {
     public Model(ModelParameter root, File modelFile, File scriptFile) {
         this.root = root;
         this.modelFile = modelFile;
-        this.scriptFile =scriptFile;
+        this.scriptFile = scriptFile;
     }
 
     public ModelParameter getRoot() {
@@ -45,12 +45,11 @@ public class Model implements ModelParameterChangedListener {
 //    public File getHome() {
 //        return home;
 //    }
-
     public File getModelFile() {
         return modelFile;
     }
-    
-    public File getScriptFile(){
+
+    public File getScriptFile() {
         return scriptFile;
     }
 
@@ -65,7 +64,6 @@ public class Model implements ModelParameterChangedListener {
 //        script = result;
 //        return result;
 //    }
-
     public void setModelFile(File modelFile) {
         this.modelFile = modelFile;
         ModelFileChangedEvent evt = new ModelFileChangedEvent(modelFile);
@@ -74,14 +72,20 @@ public class Model implements ModelParameterChangedListener {
         }
     }
 
-    public TreeMap<Integer, String> getArgs() {
-        TreeMap<Integer, String> args = new TreeMap<>();
+    public String getArgs() {
+        TreeMap<String, String> args = new TreeMap<>();
         getArgsInner(args, root);
-        return args;
+        StringBuilder result = new StringBuilder();
+        for (Map.Entry<String, String> entry : args.entrySet()) {
+            if (entry.getValue() != null) {
+                result.append(" ").append(entry.getKey()).append("=").append(entry.getValue());
+            }
+        }
+        return result.toString();
     }
 
-    private void getArgsInner(Map<Integer, String> args, ModelParameter param) {
-        Integer argN = param.getScrArg();
+    private void getArgsInner(Map<String, String> args, ModelParameter param) {
+        String argN = param.getScrArg();
         if (argN != null) {
             args.put(param.getScrArg(), param.getValue());
         }

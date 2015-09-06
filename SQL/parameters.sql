@@ -1,0 +1,28 @@
+DROP TABLE IF EXISTS "parameters";
+CREATE TABLE "parameters" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , "name" VARCHAR, "parent" INTEGER, "script_arg" VARCHAR UNIQUE , "value" VARCHAR, "comment" VARCHAR, "editor" VARCHAR, "table" VARCHAR, "column" VARCHAR);
+INSERT INTO parameters (id, name, parent, script_arg, value, comment, editor, "table", "column") VALUES (0,  'Модель', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(1,  'Деталь', 0, NULL, NULL, NULL, NULL, NULL, NULL),
+(2,  'Внутренний радиус', 1, "--inner", '0.028', 'Внутренний радиус', 'text', NULL, NULL),
+(3,  'Внешний радиус', 1, "--outer", '0.030', 'Внешний радиус', 'text', NULL, NULL),
+(4,  'Длина', 1, "--length", '0.06', 'Длина', 'text', NULL, NULL),
+(5,  'Материал', 1, NULL, NULL, 'Материал', NULL, NULL, NULL),
+(6,  'Название', 5, NULL, NULL, 'Название', 'cbox', 'materials', 'name'),
+(7,  'Модуль упругости', 5, "--workpiece_young", "210000000000", 'Модуль упругости', 'auto', '$6', 'young'),
+(8,  'Коэффициент Пуассона', 5, "--workpiece_poisson", "0.29", 'Коэффициент Пуассона', 'auto', '$6', 'poisson'),
+(9,  'Кулачки', 0, NULL, NULL, 'Кулачки', NULL, NULL, NULL),
+(10, 'Величина смещения', 9, "--displ", "0.001", 'Величина смещения', 'text', NULL, NULL),
+(11, 'Размеры', 9, NULL, NULL, 'Размеры', NULL, NULL, NULL),
+(12, 'Длина', 11, "--jaw_length", '0.015', 'Длина', 'text', NULL, NULL),
+(13, 'Высота', 11, "--jaw_height", '0.015', 'Высота', 'text', NULL, NULL),
+(14, 'Ширина', 11, "--jaw_width", '0.015', 'Ширина', 'text', NULL, NULL),
+(15, 'Материал', 9, NULL, NULL, 'Материал', NULL, NULL, NULL),
+(16, 'Название', 15, NULL, NULL, 'Название', 'cbox', 'materials', 'name'),
+(17, 'Модуль упругости', 15, "--jaw_young", "210000000000", 'Модуль упругости', 'auto', '$16', 'young'),
+(18, 'Коэффициент Пуассона', 15, "--jaw_poisson", "0.29", 'Коэффициент Пуассона', 'auto', '$16', 'poisson'),
+(19, 'Сила резания', 0, NULL, NULL, 'Сила резания', NULL, NULL, NULL),
+(20, 'Проекции', 19, NULL, NULL, 'Проекции', NULL, NULL, NULL),
+(21, 'Касательная', 20, "--tanf", NULL, 'Касательная', 'text', NULL, NULL),
+(22, 'Радиальная', 20, "--radf", NULL, 'Радиальная', 'text', NULL, NULL),
+(23, 'Осевая', 20, "--axlf", NULL, 'Осевая', 'text', NULL, NULL),
+(24, 'Угловое положение', 19, "--anglef", NULL, 'Угловое положение', 'text', NULL, NULL);
+SELECT * FROM parameters;

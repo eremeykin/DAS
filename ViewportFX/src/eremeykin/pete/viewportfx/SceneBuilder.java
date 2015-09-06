@@ -7,6 +7,7 @@ package eremeykin.pete.viewportfx;
 
 import java.io.File;
 import java.net.URL;
+import javafx.scene.Camera;
 import javafx.scene.Scene;
 
 /**
@@ -24,7 +25,7 @@ public abstract class SceneBuilder {
     public abstract void buildAxes();
 
     public abstract void buildScene();
-
+    
     public Scene getScene() {
         return scene;
     }

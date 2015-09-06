@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
@@ -34,6 +35,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbPreferences;
 import org.openide.util.RequestProcessor;
+import org.openide.util.TaskListener;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;
@@ -56,14 +58,25 @@ public class AbaqusScriptRunner implements ScriptRunner {
             File objFile = new File(home, TMP_MODEL_FILE);
             Files.deleteIfExists(objFile.toPath());
 
-            TreeMap map = model.getArgs();
-            String argString = join(map);
+            String argString =" param "+ model.getArgs();
             // 0 значит refresh=false
             // 1 значит refresh=true
             String pathEnvVar = NbPreferences.forModule(AbaqusPanel.class).get("ABAQUS_PATH", "");
             AbaqusThread abaqusThread = new AbaqusThread(scriptFile, argString, refresh, pathEnvVar);
             RequestProcessor rProcessor = RequestProcessor.getDefault();
             RequestProcessor.Task abaqus = rProcessor.post(abaqusThread);
+
+            // add TaskListener
+            Lookup.Template template = new Lookup.Template(TaskListener.class);
+            CentralLookup cl = CentralLookup.getDefault();
+            cl.add(abaqus);
+//            Lookup.Result TLResult = cl.lookup(template);
+//            Iterator<TaskListener> it =TLResult.allInstances().iterator();
+//            while(it.hasNext()){
+//                TaskListener next = it.next();
+//                abaqus.addTaskListener(next);
+//            }
+            
             Thread modelRefresher = new Thread(new Runnable() {
 
                 @Override
@@ -142,8 +155,8 @@ public class AbaqusScriptRunner implements ScriptRunner {
             args.append(scriptFile.getAbsolutePath());
             args.append("\" -- ");
             args.append(argString);
-            args.append(refresh ? " true " : " false ");
-            args.append(" \"");
+            args.append(refresh ? " refresh=true " : " refresh=false ");
+            args.append(" dir=\"");
             args.append(home.getAbsolutePath());
             args.append("\"");
             this.path = path;

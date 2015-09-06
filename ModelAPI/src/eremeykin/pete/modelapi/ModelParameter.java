@@ -23,7 +23,7 @@ public class ModelParameter implements ModelParameterChangedListener {
     private final Integer id;
     private final String name;
     private ModelParameter parent;
-    private final Integer scriptArg;
+    private final String scriptArg;
     private String value;
     private final String comment;
     private final CellProperties cProperties;
@@ -36,7 +36,7 @@ public class ModelParameter implements ModelParameterChangedListener {
         public void update(String value);
     }
 
-    public ModelParameter(Integer id, String name, Integer scriptArg, String comment, CellProperties cProperties) {
+    public ModelParameter(Integer id, String name, String scriptArg, String comment, CellProperties cProperties) {
         this.id = id;
         this.name = name;
         this.scriptArg = scriptArg;
@@ -120,7 +120,7 @@ public class ModelParameter implements ModelParameterChangedListener {
         return name; //To change body of generated methods, choose Tools | Templates.
     }
 
-    public Integer getScrArg() {
+    public String getScrArg() {
         return scriptArg;
     }
 

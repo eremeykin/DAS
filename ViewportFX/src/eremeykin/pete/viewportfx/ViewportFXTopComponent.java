@@ -5,16 +5,27 @@
  */
 package eremeykin.pete.viewportfx;
 
+import com.sun.prism.paint.Color;
 import eremeykin.pete.*;
 import eremeykin.pete.coreapi.centrallookupapi.CentralLookup;
 import eremeykin.pete.modelapi.*;
 import eremeykin.pete.modelapi.Model;
 import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.util.Collection;
 import java.util.Iterator;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
+import javafx.scene.Camera;
+import javafx.scene.Group;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
+import javafx.scene.control.ProgressIndicator;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -23,6 +34,10 @@ import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.RequestProcessor;
+import org.openide.util.Task;
+import org.openide.util.TaskListener;
+import org.openide.util.lookup.AbstractLookup;
 
 /**
  * Top component which displays something.
@@ -48,10 +63,12 @@ import org.openide.util.NbBundle.Messages;
     "CTL_ViewportFXTopComponent=ViewportFX Window",
     "HINT_ViewportFXTopComponent=This is a ViewportFX window"
 })
-public final class ViewportFXTopComponent extends TopComponent implements LookupListener {
+public final class ViewportFXTopComponent extends TopComponent implements LookupListener, TaskListener {
 
     final JFXPanel fxPanel = new JFXPanel();
     private Lookup.Result<Model> modelResult = null;
+    private Lookup.Result taskResult = null;
+    private JFXPanel indPanel = new JFXPanel();
 
     public ViewportFXTopComponent() {
         initComponents();
@@ -62,6 +79,10 @@ public final class ViewportFXTopComponent extends TopComponent implements Lookup
         CentralLookup cl = CentralLookup.getDefault();
         modelResult = cl.lookup(template);
         modelResult.addLookupListener(this);
+
+        template = new Lookup.Template(Task.class);
+        taskResult = cl.lookup(template);
+        taskResult.addLookupListener(this);
 
         Platform.setImplicitExit(false);
         //setLayout(new BorderLayout());
@@ -79,6 +100,19 @@ public final class ViewportFXTopComponent extends TopComponent implements Lookup
                 fxPanel.setScene(scene);
             }
         });
+
+        ProgressIndicator pin = new ProgressIndicator();
+        pin.setProgress(-1.0f);
+        Group root = new Group();
+        root.getChildren().add(pin);
+        Scene s = new Scene(root);
+        s.setFill(javafx.scene.paint.Color.TRANSPARENT);
+        indPanel.setScene(s);
+        indPanel.setMaximumSize(new Dimension(60, 120));
+
+        fxPanel.setLayout(new BoxLayout(fxPanel, BoxLayout.X_AXIS));
+        indPanel.setVisible(false);
+        fxPanel.add(indPanel);
     }
 
     /**
@@ -149,36 +183,55 @@ public final class ViewportFXTopComponent extends TopComponent implements Lookup
         if (o != null) {
             Lookup.Result r = (Lookup.Result) o;
             Collection infos = r.allInstances();
-            if (infos.isEmpty()) {
-            } else {
+            if (!infos.isEmpty()) {
                 this.open();
-                Iterator<Model> it = infos.iterator();
+                Iterator it = infos.iterator();
                 if (it.hasNext()) {
-                    final Model m = it.next();
-                    ModelFileChangedListener readerChangedListener = new ModelFileChangedListener() {
-
-                        @Override
-                        public void fileChanged(ModelFileChangedEvent evt) {
-                            ViewportFXTopComponent.this.fxPanel.removeAll();
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    SceneBuilder builder = new ModelSceneBuilder();
-                                    Director director = new Director();
-                                    director.setSceneBuilder(builder);
-                                    director.buildScene(m.getModelFile());
-                                    Scene scene = director.getScene();
-                                    fxPanel.setScene(scene);
-                                }
-                            });
+                    Object obj = it.next();
+                    if (obj instanceof Task) {
+                        Task task = (Task) obj;
+                        while (task.isFinished()) {
+                            if (it.hasNext()) {
+                                task = (Task) it.next();
+                            }
                         }
+                        if (task.isFinished()) {
+                            return;
+                        }
+                        task.addTaskListener(this);
+                        indPanel.setVisible(true);
+                    }
+                    if (obj instanceof Model) {
+                        final Model m = (Model) obj;
+                        ModelFileChangedListener readerChangedListener = new ModelFileChangedListener() {
 
-                    };
-                    readerChangedListener.fileChanged(null);
-                    m.addModelFileChangedListener(readerChangedListener);
+                            @Override
+                            public void fileChanged(ModelFileChangedEvent evt) {
+//                            ViewportFXTopComponent.this.fxPanel.removeAll();
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        SceneBuilder builder = new ModelSceneBuilder();
+                                        Director director = new Director();
+                                        director.setSceneBuilder(builder);
+                                        director.buildScene(m.getModelFile());
+                                        Scene scene = director.getScene();
+                                        fxPanel.setScene(scene);
+                                    }
+                                });
+                            }
 
+                        };
+                        readerChangedListener.fileChanged(null);
+                        m.addModelFileChangedListener(readerChangedListener);
+                    }
                 }
             }
         }
+    }
+
+    @Override
+    public void taskFinished(Task task) {
+        indPanel.setVisible(false);
     }
 }

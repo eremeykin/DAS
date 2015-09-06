@@ -7,7 +7,9 @@ package eremeykin.pete.viewportfx;
 
 import java.io.File;
 import java.net.URL;
+import javafx.scene.Camera;
 import javafx.scene.Scene;
+import javafx.scene.control.Control;
 
 /**
  *
@@ -28,10 +30,17 @@ public class Director {
         sceneBuilder.buildScene();
     }
     
+    public void buildScene(File modelFile, Camera camera) {
+        sceneBuilder.buildCamera();
+        sceneBuilder.buildModel(modelFile);
+        sceneBuilder.buildAxes();
+        sceneBuilder.buildScene();
+    }
+    
     public  void buildScene(){
         buildScene(null);
     }
-
+    
     public Scene getScene() {
         return sceneBuilder.getScene();
     }

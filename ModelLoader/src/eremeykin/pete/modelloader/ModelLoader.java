@@ -62,7 +62,7 @@ public class ModelLoader {
                 Integer id = getInteger(rs, ID_COLUMN);
                 String name = rs.getString(NAME_COLUMN);
                 Integer parentId = getInteger(rs, PARENT_COLUMN);
-                Integer scarg = getInteger(rs, SCRIPTARG_COLUMN);
+                String scarg = rs.getString(SCRIPTARG_COLUMN);
                 String comment = rs.getString(COMMENT_COLUMN);
                 String eType = rs.getString(EDITOR_TYPE_COLUMN);
                 String eTable = rs.getString(EDITOR_TABLE_COLUMN);
