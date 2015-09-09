@@ -37,7 +37,7 @@ import org.openide.util.actions.CallableSystemAction;
     @ActionReference(path = "Shortcuts", name = "DS-R")
 })
 @Messages("CTL_RunScriptAction=RunScript")
-public final class RunScriptAction extends CallableSystemAction implements LookupListener {
+public final class RunScriptAction extends AbstractAction {
 
     private Lookup.Result modelResult = null;
 
@@ -54,40 +54,12 @@ public final class RunScriptAction extends CallableSystemAction implements Looku
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO implement action body
-    }
-
-    @Override
-    public boolean isEnabled() {
-        Lookup.Template templateModel = new Lookup.Template(Model.class);
-        CentralLookup cl = CentralLookup.getDefault();
-        return cl.lookup(templateModel).allInstances().iterator().hasNext(); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void performAction() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        setRefresh(false);
+        super.actionPerformed(e);
     }
 
     @Override
     public String getName() {
         return "Run script";
     }
-
-    @Override
-    public HelpCtx getHelpCtx() {
-        return HelpCtx.DEFAULT_HELP;
-    }
-
-    @Override
-    public void resultChanged(LookupEvent le) {
-        Lookup.Template templateModel = new Lookup.Template(Model.class);
-        CentralLookup cl = CentralLookup.getDefault();
-        if (cl.lookup(templateModel).allInstances().iterator().hasNext()) {
-            setEnabled(true);
-        } else {
-            setEnabled(false);
-        }
-    }
-
 }

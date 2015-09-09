@@ -40,7 +40,7 @@ import org.openide.util.actions.CallableSystemAction;
     @ActionReference(path = "Shortcuts", name = "D-R")
 })
 @Messages("CTL_RefreshScript=Run model")
-public final class RefreshModelAction extends CallableSystemAction implements LookupListener {
+public final class RefreshModelAction extends AbstractAction {
 
     private Lookup.Result modelResult = null;
     private static final Logger LOGGER = LoggerManager.getLogger(RefreshModelAction.class);
@@ -58,55 +58,12 @@ public final class RefreshModelAction extends CallableSystemAction implements Lo
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ScriptRunner runner
-                = Lookup.getDefault().lookup(ScriptRunner.class);
-        if (runner == null) {
-            LOGGER.warn("There is no launcher module!");
-            JOptionPane.showMessageDialog(null, "There is no launcher module.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        Lookup.Template templateModel = new Lookup.Template(Model.class);
-        CentralLookup cl = CentralLookup.getDefault();
-        try {
-            Model model = (Model) cl.lookup(templateModel).allInstances().iterator().next();
-            runner.runScript(model, true);
-        } catch (NoSuchElementException ex) {
-            LOGGER.warn("There is no opened model.");
-            JOptionPane.showMessageDialog(null, "There is no opened model.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-
-    }
-
-    @Override
-    public boolean isEnabled() {
-        Lookup.Template templateModel = new Lookup.Template(Model.class);
-        CentralLookup cl = CentralLookup.getDefault();
-        return cl.lookup(templateModel).allInstances().iterator().hasNext(); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void performAction() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        setRefresh(true);
+        super.actionPerformed(e);
     }
 
     @Override
     public String getName() {
         return "Refresh model";
-    }
-
-    @Override
-    public HelpCtx getHelpCtx() {
-        return HelpCtx.DEFAULT_HELP;
-    }
-
-    @Override
-    public void resultChanged(LookupEvent le) {
-        Lookup.Template templateModel = new Lookup.Template(Model.class);
-        CentralLookup cl = CentralLookup.getDefault();
-        if (cl.lookup(templateModel).allInstances().iterator().hasNext()) {
-            setEnabled(true);
-        } else {
-            setEnabled(false);
-        }
     }
 }
