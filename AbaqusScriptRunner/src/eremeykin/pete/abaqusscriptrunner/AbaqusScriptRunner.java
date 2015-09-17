@@ -5,7 +5,6 @@
  */
 package eremeykin.pete.abaqusscriptrunner;
 
-import eremeykin.pete.*;
 import eremeykin.pete.coreapi.centrallookupapi.CentralLookup;
 import eremeykin.pete.coreapi.loggerapi.Logger;
 import eremeykin.pete.coreapi.loggerapi.LoggerManager;
@@ -14,18 +13,12 @@ import eremeykin.pete.modelapi.Model;
 import eremeykin.pete.scriptrunnerapi.ScriptRunner;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URL;
 import java.nio.file.Files;
-import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JOptionPane;
 import org.netbeans.api.progress.ProgressHandle;
@@ -58,25 +51,17 @@ public class AbaqusScriptRunner implements ScriptRunner {
             File objFile = new File(home, TMP_MODEL_FILE);
             Files.deleteIfExists(objFile.toPath());
 
-            String argString =" param "+ model.getArgs();
-            // 0 значит refresh=false
-            // 1 значит refresh=true
+            String argString = " param " + model.getArgs();
             String pathEnvVar = NbPreferences.forModule(AbaqusPanel.class).get("ABAQUS_PATH", "");
             AbaqusThread abaqusThread = new AbaqusThread(scriptFile, argString, refresh, pathEnvVar);
             RequestProcessor rProcessor = RequestProcessor.getDefault();
             RequestProcessor.Task abaqus = rProcessor.post(abaqusThread);
 
-            // add TaskListener
+            // add Task to Lookup
             Lookup.Template template = new Lookup.Template(TaskListener.class);
             CentralLookup cl = CentralLookup.getDefault();
             cl.add(abaqus);
-//            Lookup.Result TLResult = cl.lookup(template);
-//            Iterator<TaskListener> it =TLResult.allInstances().iterator();
-//            while(it.hasNext()){
-//                TaskListener next = it.next();
-//                abaqus.addTaskListener(next);
-//            }
-            
+
             Thread modelRefresher = new Thread(new Runnable() {
 
                 @Override
@@ -87,7 +72,9 @@ public class AbaqusScriptRunner implements ScriptRunner {
                             model.setModelFile(objFile);
                         }
                     } catch (InterruptedException ex) {
-                        Exceptions.printStackTrace(ex);
+                        String message = "Can't refresh model. Thread was interrupted.";
+                        LOGGER.error(message + ex);
+                        JOptionPane.showMessageDialog(null, message, "InterruptedException", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
@@ -95,42 +82,6 @@ public class AbaqusScriptRunner implements ScriptRunner {
 //            deleteLockFile(home);
         } catch (IOException ex) {
             LOGGER.error(ex);
-        }
-    }
-
-    private void updateLookup(Model model) {
-        Lookup.Template template = new Lookup.Template(Model.class);
-        CentralLookup cl = CentralLookup.getDefault();
-        Object modelResult = cl.lookup(template).allInstances().iterator().next();
-        cl.remove(modelResult);
-        cl.add(model);
-    }
-
-    private String join(TreeMap<Integer, String> map) {
-        StringBuilder result = new StringBuilder();
-        for (Entry<Integer, String> entry : map.entrySet()) {
-            Integer key = entry.getKey();
-            String value = entry.getValue();
-            result.append(" ").append(value);
-        }
-        return result.toString();
-    }
-
-    ;
-
-    private void deleteLockFile(File home) {
-        for (File f : home.listFiles(new FilenameFilter() {
-
-            @Override
-            public boolean accept(File dir, String name) {
-                if (name.contains(".lck")) {
-                    return true;
-                }
-                return false;
-            }
-        })) {
-
-            f.delete();
         }
     }
 
@@ -151,14 +102,14 @@ public class AbaqusScriptRunner implements ScriptRunner {
 
         public AbaqusThread(File scriptFile, String argString, boolean refresh, String path) {
             home = WorkspaceManager.INSTANCE.getWorkspace();
-            args.append(" noGUI=\"");
-            args.append(scriptFile.getAbsolutePath());
-            args.append("\" -- ");
-            args.append(argString);
-            args.append(refresh ? " refresh=true " : " refresh=false ");
-            args.append(" dir=\"");
-            args.append(home.getAbsolutePath());
-            args.append("\"");
+            args.append(" noGUI=\"")
+                    .append(scriptFile.getAbsolutePath())
+                    .append("\" -- ")
+                    .append(argString)
+                    .append(refresh ? " refresh=true " : " refresh=false ")
+                    .append(" dir=\"")
+                    .append(home.getAbsolutePath())
+                    .append("\"");
             this.path = path;
             this.refresh = refresh;
         }
@@ -166,9 +117,6 @@ public class AbaqusScriptRunner implements ScriptRunner {
         @Override
         public void run() {
             String name = refresh ? "Abaqus refresh" : "Abaqus run";
-            final ProgressHandle progr
-                    = ProgressHandleFactory.createHandle(name, this);
-            progr.start();
             try {
                 if (args.toString().contains("null")) {
                     throw new Error("Parameters contain null value");
@@ -190,14 +138,17 @@ public class AbaqusScriptRunner implements ScriptRunner {
                         }
                     }
                 } catch (IOException ex) {
-                    LOGGER.error(ex);
+                    String message = "Exception while reading abaqus output.";
+                    LOGGER.error(message + ex);
+                    JOptionPane.showMessageDialog(null, message, "IOException", JOptionPane.ERROR_MESSAGE);
                 }
                 p.waitFor();
             } catch (IOException | InterruptedException ex) {
-                LOGGER.error(ex);
+                String message = "Exception while processing abaqus.";
+                LOGGER.error(message + ex);
+                JOptionPane.showMessageDialog(null, message, "IOException | InterruptedException", JOptionPane.ERROR_MESSAGE);
             }
             success.set(true);
-            progr.finish();
         }
 
         @Override

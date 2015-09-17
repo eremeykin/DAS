@@ -46,7 +46,6 @@ public class ModelLoader {
     private static final String SCRIPT_COLUMN = "content";
 
     public ModelLoader(File file) throws ClassNotFoundException, SQLException {
-        Class.forName("org.sqlite.JDBC");
         mFile = file;
         connection = DriverManager.getConnection("jdbc:sqlite:" + file.getPath());
     }
@@ -128,6 +127,16 @@ public class ModelLoader {
         File resultFile = new File(WorkspaceManager.INSTANCE.getWorkspace().getAbsolutePath() + "\\" + fileName);
         printStringToFile(str, resultFile);
         return resultFile;
+    }
+
+    private Integer getIntegerAsString(ResultSet rs, String columnLabel) throws SQLException {
+        Integer i = null;
+        try {
+            i = Integer.parseInt(rs.getString(columnLabel));
+        } catch (NumberFormatException ex) {
+        }
+        return i;
+
     }
 
     private Integer getInteger(ResultSet rs, String columnLabel) throws SQLException {

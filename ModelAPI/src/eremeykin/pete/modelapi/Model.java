@@ -64,7 +64,7 @@ public class Model implements ModelParameterChangedListener {
 //        script = result;
 //        return result;
 //    }
-    public void setModelFile(File modelFile) {
+    synchronized public void setModelFile(File modelFile) {
         this.modelFile = modelFile;
         ModelFileChangedEvent evt = new ModelFileChangedEvent(modelFile);
         for (ModelFileChangedListener listener : modelFileListeners) {

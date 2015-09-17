@@ -6,6 +6,8 @@
 package eremeykin.pete.plotter;
 
 import eremeykin.pete.coreapi.centrallookupapi.CentralLookup;
+import eremeykin.pete.coreapi.loggerapi.Logger;
+import eremeykin.pete.coreapi.loggerapi.LoggerManager;
 import eremeykin.pete.coreapi.workspace.WorkspaceManager;
 import eremeykin.pete.modelapi.Model;
 import java.awt.BorderLayout;
@@ -69,13 +71,25 @@ import org.openide.util.NbBundle.Messages;
 })
 public final class PlotterTopComponent extends TopComponent {
 
+    private static final Logger LOGGER = LoggerManager.getLogger(PlotterTopComponent.class);
     private File home;
 
     public PlotterTopComponent() {
         initComponents();
         setName(Bundle.CTL_PlotterTopComponent());
         setToolTipText(Bundle.HINT_PlotterTopComponent());
-
+        refershData();
+        watchFile();
+        home = WorkspaceManager.INSTANCE.getWorkspace();
+        final XYDataset dataset = createDataset(home);
+        if (dataset != null) {
+            final JFreeChart chart = createChart(dataset);
+            ChartPanel chartPanel = new ChartPanel(chart);
+//            chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+            setLayout(new java.awt.BorderLayout());
+            add(chartPanel, BorderLayout.CENTER);
+            validate();
+        }
     }
 
     /**
@@ -86,19 +100,31 @@ public final class PlotterTopComponent extends TopComponent {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(PlotterTopComponent.class, "PlotterTopComponent.jLabel1.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(275, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(274, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
@@ -112,10 +138,11 @@ public final class PlotterTopComponent extends TopComponent {
         try {
             removeAll();
             Model model = (Model) cl.lookup(template).allInstances().iterator().next();
-//            this.home = model.getHome();
             this.home = WorkspaceManager.INSTANCE.getWorkspace();
-//            final XYDataset dataset = createDataset(model.getHome());
             final XYDataset dataset = createDataset(home);
+            if (dataset == null) {
+                return;
+            }
             final JFreeChart chart = createChart(dataset);
             ChartPanel chartPanel = new ChartPanel(chart);
             chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
@@ -124,8 +151,6 @@ public final class PlotterTopComponent extends TopComponent {
             validate();
         } catch (NoSuchElementException ex) {
 //            JOptionPane.showMessageDialog(null, "Нет открытой модели.");
-        } catch (FileNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "Файл с результатами не найден.");
         }
     }
 
@@ -145,8 +170,8 @@ public final class PlotterTopComponent extends TopComponent {
         String version = p.getProperty("version");
     }
 
-    private XYDataset createDataset(File home) throws FileNotFoundException {
-        // для первого rpt файла
+    private XYDataset createDataset(File home) {
+        // for first rpt file
         File[] rptFiles = home.listFiles(new FilenameFilter() {
 
             @Override
@@ -157,12 +182,20 @@ public final class PlotterTopComponent extends TopComponent {
                 return false;
             }
         });
-        // Поймать исключение если такого файла нет
+        // catch if there is no such file
+        if (rptFiles.length == 0) {
+            return null;
+        }
         File firstRPT = rptFiles[0];
         final XYSeries series2 = new XYSeries("Second");
-        Scanner scanner = new Scanner(firstRPT);
+        Scanner scanner;
+        try {
+            scanner = new Scanner(firstRPT);
+        } catch (FileNotFoundException ex) {
+            return null;
+        }
         scanner.useDelimiter("\\s+|\n");
-        while (scanner.hasNext()) {
+        for (int i = 0; scanner.hasNext(); i++) {
             String line = scanner.next();
             try {
                 double x1 = Double.valueOf(line);
@@ -171,46 +204,14 @@ public final class PlotterTopComponent extends TopComponent {
                 System.out.println("x1=" + x1 + "\nx2=" + x2);
                 series2.add(x1, x2);
             } catch (NumberFormatException ex) {
+                // only if it is the third or following line
+                if (i > 1) {
+                    LOGGER.error("Error while parsing double from file: " + firstRPT.getAbsolutePath());
+                    JOptionPane.showMessageDialog(this, "Error while parsing result file.", "Parsing error", JOptionPane.ERROR_MESSAGE);
+                }
             }
 
         }
-//        
-//        series2.add(0.000000000, 541.401E-06);
-//        series2.add(5.26413E-03, 449.221E-06);
-//        series2.add(10.5119E-03, 225.722E-06);
-//        series2.add(15.7459E-03, -35.0929E-06);
-//        series2.add(20.9713E-03, -270.799E-06);
-//        series2.add(26.1895E-03, -444.267E-06);
-//        series2.add(31.4003E-03, -526.244E-06);
-//        series2.add(36.6038E-03, -484.232E-06);
-//        series2.add(41.8070E-03, -292.484E-06);
-//        series2.add(47.0312E-03, 12.6708E-06);
-//        series2.add(52.2851E-03, 305.269E-06);
-//        series2.add(57.5441E-03, 476.754E-06);
-//        series2.add(62.7959E-03, 512.287E-06);
-//        series2.add(68.0428E-03, 436.76E-06);
-//        series2.add(73.2877E-03, 275.297E-06);
-//        series2.add(78.5313E-03, 48.1693E-06);
-//        series2.add(83.7708E-03, -216.333E-06);
-//        series2.add(88.9930E-03, -457.335E-06);
-//        series2.add(94.1847E-03, -560.807E-06);
-//        series2.add(99.3765E-03, -457.335E-06);
-//        series2.add(104.599E-03, -216.333E-06);
-//        series2.add(109.838E-03, 48.1693E-06);
-//        series2.add(115.082E-03, 275.297E-06);
-//        series2.add(120.327E-03, 436.76E-06);
-//        series2.add(125.574E-03, 512.287E-06);
-//        series2.add(130.825E-03, 476.754E-06);
-//        series2.add(136.084E-03, 305.269E-06);
-//        series2.add(141.338E-03, 12.6707E-06);
-//        series2.add(146.563E-03, -292.484E-06);
-//        series2.add(151.766E-03, -484.232E-06);
-//        series2.add(156.969E-03, -526.244E-06);
-//        series2.add(162.180E-03, -444.267E-06);
-//        series2.add(167.398E-03, -270.799E-06);
-//        series2.add(172.624E-03, -35.0929E-06);
-//        series2.add(177.858E-03, 225.722E-06);
-//        series2.add(183.105E-03, 449.221E-06);
 
         final XYSeriesCollection dataset = new XYSeriesCollection();
         dataset.addSeries(series2);
@@ -268,28 +269,22 @@ public final class PlotterTopComponent extends TopComponent {
                 while (true) {
                     try {
                         WatchService watcher = myDir.getFileSystem().newWatchService();
-                        myDir.register(watcher, StandardWatchEventKinds.ENTRY_CREATE,
-                                StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
+                        myDir.register(watcher, StandardWatchEventKinds.ENTRY_MODIFY);
 
                         WatchKey watckKey = watcher.take();
 
                         List<WatchEvent<?>> events = watckKey.pollEvents();
                         for (WatchEvent event : events) {
-                            if (event.kind() == StandardWatchEventKinds.ENTRY_CREATE) {
-                                System.out.println("Created: " + event.context().toString());
-                            }
-                            if (event.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
-                                System.out.println("Delete: " + event.context().toString());
-                            }
                             if (event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
-                                System.out.println("Modify: " + event.context().toString());
                                 refershData();
                             }
                         }
                     } catch (IOException e) {
-                        System.out.println("Error: " + e.toString());
+                        LOGGER.error("IO Error while watching file: " + home);
+                        JOptionPane.showMessageDialog(PlotterTopComponent.this, "Error while watching the result file.", "Error", JOptionPane.ERROR_MESSAGE);
                     } catch (InterruptedException e) {
-                        System.out.println("Error: " + e.toString());
+                        LOGGER.error("Watching file thread was interrupted. " + home);
+                        JOptionPane.showMessageDialog(PlotterTopComponent.this, "Watching file thread was interrupted.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
