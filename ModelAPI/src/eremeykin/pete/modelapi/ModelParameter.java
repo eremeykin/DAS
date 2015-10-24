@@ -11,16 +11,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 
 /**
  *
  * @author eremeykin
  */
-public class ModelParameter implements ModelParameterChangedListener {
+public final class ModelParameter implements ModelParameterChangedListener {
 
     private final Integer id;
+    private final Integer master;
     private final String name;
     private ModelParameter parent;
     private final String scriptArg;
@@ -28,25 +27,51 @@ public class ModelParameter implements ModelParameterChangedListener {
     private final String comment;
     private final CellProperties cProperties;
     private List<ModelParameter> children = new ArrayList<>();
-    private ArrayList<ModelParameterChangedListener> listeners = new ArrayList<>();
+    private ArrayList<ModelParameterChangedListener> slaves = new ArrayList<>();
     private Updater updater;
 
     public static interface Updater {
 
-        public void update(String value);
+        public void update(ModelParameter master);
     }
 
-    public ModelParameter(Integer id, String name, String scriptArg, String comment, CellProperties cProperties) {
+    public ModelParameter(Integer id, String name, String scriptArg, String comment, Integer master, CellProperties cProperties) {
         this.id = id;
+        this.master = master;
         this.name = name;
         this.scriptArg = scriptArg;
         this.comment = comment;
         this.cProperties = cProperties;
         if (cProperties != null && cProperties.getEditor() != null && cProperties.getEditor().getType() == CellProperties.Editor.Type.COMBO_BOX) {
-            this.value = cProperties.getEditor().getAvailableValues()[0].toString();
+            Value availableValue = cProperties.getEditor().getAvailableValues()[0];
+            if (availableValue != null) {
+                this.value = availableValue.toString();
+            }
+        }
+        if (cProperties != null && cProperties.getEditor() != null && cProperties.editor.getType().equals(CellProperties.Editor.Type.AUTO)) {
+            this.setUpdater(new ModelParameter.Updater() {
+
+                @Override
+                public void update(ModelParameter master) {
+                    String value = master.getValue();
+                    CellProperties.Editor editor = ModelParameter.this.getEditor();
+                    Value[] availableValues = editor.getAvailableValues();
+                    for (Value v : availableValues) {
+                        if (v.getKey().equals(value)) {
+                            ModelParameter.this.setValue(v.getValue());
+                            return;
+                        }
+                    }
+                }
+            });
         }
     }
 
+    public Integer getMaster() {
+        return master;
+    }
+
+//TODO: what is it?
     ModelParameter(ModelParameter p) {
         this.id = p.id;
         this.name = p.name;
@@ -56,6 +81,7 @@ public class ModelParameter implements ModelParameterChangedListener {
         this.comment = p.comment;
         this.cProperties = p.cProperties;
         this.children = p.children;
+        this.master = p.master;
     }
 
     public String getComment() {
@@ -75,8 +101,8 @@ public class ModelParameter implements ModelParameterChangedListener {
         Double d = null;
         String res = null;
         try {
-            d =Double.valueOf(value);
-            if (d>1000){
+            d = Double.valueOf(value);
+            if (d > 1000) {
                 formatter = new DecimalFormat("0.0##E0");
             }
             res = formatter.format(d);
@@ -85,7 +111,7 @@ public class ModelParameter implements ModelParameterChangedListener {
 
         this.value = res == null ? value : res;
         ModelParameterChangedEvent evt = new ModelParameterChangedEvent(this);
-        for (ModelParameterChangedListener listener : listeners) {
+        for (ModelParameterChangedListener listener : slaves) {
             listener.parameterChanged(evt);
         }
     }
@@ -111,6 +137,23 @@ public class ModelParameter implements ModelParameterChangedListener {
         this.children = children;
     }
 
+    public void addChild(ModelParameter child) {
+        children.add(child);
+        children.sort(new Comparator<ModelParameter>() {
+
+            @Override
+            public int compare(ModelParameter o1, ModelParameter o2) {
+                if (o1.getId() > o2.getId()) {
+                    return 1;
+                } else if (o1.getId() < o2.getId()) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+    }
+
     public CellProperties.Editor getEditor() {
         return cProperties.getEditor();
     }
@@ -125,20 +168,21 @@ public class ModelParameter implements ModelParameterChangedListener {
     }
 
     public void addParameterChangedListener(ModelParameterChangedListener listener) {
-        listeners.add(listener);
+        slaves.add(listener);
     }
 
     public void removeParameterChangedListener(ModelParameterChangedListener listener) {
-        listeners.remove(listener);
+        slaves.remove(listener);
     }
 
     public void setUpdater(Updater updater) {
         this.updater = updater;
     }
 
+    @Override
     public void parameterChanged(ModelParameterChangedEvent evt) {
         if (this.updater != null) {
-            updater.update(evt.getParameterSource().getValue());
+            updater.update(evt.getParameterSource());
         }
     }
 
@@ -147,31 +191,34 @@ public class ModelParameter implements ModelParameterChangedListener {
         public static class Editor {
 
             private final Type type;
-            private final List availableValues = new ArrayList();
+            private final List<Value> availableValues = new ArrayList<>();
 
             public Type getType() {
                 return type;
 
             }
 
-            public Editor(Type type, Object... availableValues) {
+            public Editor(Type type, Value... availableValues) {
                 this.type = type;
                 this.availableValues.addAll(Arrays.asList(availableValues));
             }
 
-            public Object[] getAvailableValues() {
-                return availableValues.toArray();
+            public Value[] getAvailableValues() {
+                Value[] a = new Value[1];
+                a = availableValues.toArray(a);
+                return a;
             }
 
             public enum Type {
 
                 DEFAULT,
                 COMBO_BOX,
-                TEXT_BOX
+                TEXT_BOX,
+                AUTO
             }
         }
 
-        Editor editor;
+        final Editor editor;
 
         public CellProperties(Editor e) {
             this.editor = e;
@@ -184,7 +231,6 @@ public class ModelParameter implements ModelParameterChangedListener {
         private Editor getEditor() {
             return editor;
         }
-    ;
 
-}
+    }
 }

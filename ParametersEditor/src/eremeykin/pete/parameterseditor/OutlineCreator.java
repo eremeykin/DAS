@@ -79,6 +79,7 @@ public class OutlineCreator {
                 Editor selectedEditor = selected.getEditor();
                 if (modelColumn == 2) {
                     switch (selectedEditor.getType()) {
+                        case AUTO:
                         case TEXT_BOX:
                         case DEFAULT:
                             return new DefaultOutlineCellRenderer();
