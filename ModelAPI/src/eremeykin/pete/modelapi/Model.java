@@ -5,11 +5,9 @@
  */
 package eremeykin.pete.modelapi;
 
-import java.io.BufferedReader;
+import eremeykin.pete.*;
+import eremeykin.pete.coreapi.workspace.WorkspaceManager;
 import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -28,18 +26,13 @@ public class Model implements ModelParameterChangedListener {
     private ArrayList<ModelChangedListener> modelListeners = new ArrayList<>();
     private File home;
 
-    public Model(ModelParameter root, File modelFile, File scriptFile) {
+    public Model(ModelParameter root) {
         this.root = root;
-        this.modelFile = modelFile;
-        this.scriptFile = scriptFile;
+        this.home = WorkspaceManager.INSTANCE.getWorkspace();
     }
 
     public ModelParameter getRoot() {
         return root;
-    }
-
-    public void setHome(File home) {
-        this.home = home;
     }
 
 //    public File getHome() {
@@ -64,12 +57,17 @@ public class Model implements ModelParameterChangedListener {
 //        script = result;
 //        return result;
 //    }
+    //why synchronized ?
     synchronized public void setModelFile(File modelFile) {
         this.modelFile = modelFile;
         ModelFileChangedEvent evt = new ModelFileChangedEvent(modelFile);
         for (ModelFileChangedListener listener : modelFileListeners) {
             listener.fileChanged(evt);
         }
+    }
+
+    public void setScriptFile(File scriptFile) {
+        this.scriptFile = scriptFile;
     }
 
     public String getArgs() {

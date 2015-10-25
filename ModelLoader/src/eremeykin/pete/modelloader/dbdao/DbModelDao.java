@@ -5,10 +5,9 @@
  */
 package eremeykin.pete.modelloader.dbdao;
 
-import eremeykin.pete.modelapi.Model;
-import eremeykin.pete.modelapi.ModelParameter;
+import eremeykin.pete.modelloader.dao.AbstractModelDao;
 import eremeykin.pete.modelloader.dao.DaoException;
-import eremeykin.pete.modelloader.dao.ModelDao;
+import eremeykin.pete.modelloader.dao.ModelParameterDao;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,41 +19,14 @@ import java.sql.Statement;
  *
  * @author eremeykin@gmail.com
  */
-public class DbModelDao implements ModelDao {
+public class DbModelDao extends AbstractModelDao{
 
     private final File source;
 
     public DbModelDao(File source) {
         this.source = source;
     }
-
-//    @Override
-//    protected List<ParameterEntry> selectAllParameters() throws DaoException {
-//        try {
-//            Connection connection = DriverManager.getConnection("jdbc:sqlite:" + source.getPath());
-//            connection.setAutoCommit(false);
-//            Statement st = connection.createStatement();
-//            PreparedStatement prepStatement = connection.prepareStatement("select * from " + PARAMETERS_TABLE + ";");
-//            ResultSet rSet = prepStatement.executeQuery();
-//            List<ParameterEntry> EntryList = new ArrayList<>();
-//            while (rSet.next()) {
-//                String id = rSet.getString(ID_COLUMN);
-//                String name = rSet.getString(NAME_COLUMN);
-//                String parent = rSet.getString(PARENT_COLUMN);
-//                String scriptArg = rSet.getString(SCRIPT_ARG_COLUMN);
-//                String value = rSet.getString(VALUE_COLUMN);
-//                String comment = rSet.getString(COMMENT_COLUMN);
-//                String editorType = rSet.getString(EDITOR_TYPE_COLUMN);
-//                String editorTable = rSet.getString(EDITOR_TABLE_COLUMN);
-//                String editorColumn = rSet.getString(EDITOR_COLUMN_COLUMN);
-//                ParameterEntry entry = new ParameterEntry(id, name, parent, scriptArg, value, comment, editorType, editorTable, editorColumn);
-//                EntryList.add(entry);
-//            }
-//            return EntryList;
-//        } catch (SQLException ex) {
-//            throw new DaoException("Can't select all parameters. DataBase file: "+source.getAbsolutePath(), ex);
-//        }
-//    }
+    
     private String getTableContent(String table) throws DaoException {
         Statement statement = null;
         Connection connection = null;
@@ -101,15 +73,8 @@ public class DbModelDao implements ModelDao {
     }
 
     @Override
-    public Model load() throws DaoException {
-        DbModelParameterDao modelParameterDao = new DbModelParameterDao(source);
-        ModelParameter root = modelParameterDao.getRoot();
-        Model model = new Model(root, source, source);
-        // model should know if it's parameter changes
-        for (ModelParameter parameter : modelParameterDao.getAll()) {
-            parameter.addParameterChangedListener(model);
-        }
-        return model;
+    protected ModelParameterDao getDao() {
+        return new DbModelParameterDao(source);
     }
 
 }

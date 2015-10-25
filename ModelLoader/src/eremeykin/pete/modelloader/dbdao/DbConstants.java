@@ -9,7 +9,7 @@ package eremeykin.pete.modelloader.dbdao;
  *
  * @author eremeykin@gmail.com
  */
-public class DbConstants {
+public final class DbConstants {
 
     private DbConstants() {// Prevents instantiation
 
@@ -32,9 +32,6 @@ public class DbConstants {
     public static final String EDITOR_COLUMN_COLUMN = "column";
     public static final String MODEL_COLUMN = "content";
     public static final String SCRIPT_COLUMN = "content";
-    public static final String MATERIALS_KEY = "name";
-    public static final String TEXT_EDITOR_TYPE = "text";
-    public static final String CBOX_EDITOR_TYPE = "cbox";
-    public static final String AUTO_EDITOR_TYPE = "auto";
+
 
 }

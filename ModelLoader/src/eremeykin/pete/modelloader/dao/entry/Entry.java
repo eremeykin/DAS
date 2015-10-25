@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eremeykin.pete.modelloader.dbdao.entry;
+package eremeykin.pete.modelloader.dao.entry;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;

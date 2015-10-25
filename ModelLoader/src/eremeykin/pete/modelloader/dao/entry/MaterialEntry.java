@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eremeykin.pete.modelloader.dbdao.entry;
+package eremeykin.pete.modelloader.dao.entry;
 
-import static eremeykin.pete.modelloader.dbdao.entry.MaterialEntry.Field.NAME;
-import static eremeykin.pete.modelloader.dbdao.entry.MaterialEntry.Field.POISSON;
-import static eremeykin.pete.modelloader.dbdao.entry.MaterialEntry.Field.YOUNG;
+import static eremeykin.pete.modelloader.dao.entry.MaterialEntry.Field.NAME;
+import static eremeykin.pete.modelloader.dao.entry.MaterialEntry.Field.POISSON;
+import static eremeykin.pete.modelloader.dao.entry.MaterialEntry.Field.YOUNG;
 import java.util.AbstractMap.SimpleEntry;
 
 /**

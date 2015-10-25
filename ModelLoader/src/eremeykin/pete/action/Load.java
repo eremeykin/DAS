@@ -75,7 +75,6 @@ public final class Load implements ActionListener, Lookup.Provider {
                     if (toAdd.getName().endsWith("sqlite")) {
                         ModelLoader modelLoader = new DBModelLoader(toAdd);
                         m = modelLoader.load();
-                        m.setHome(home);
                     } else if (toAdd.getName().endsWith("xlsx")) {
 //                        XlsxModelLoader modelLoader = new XlsxModelLoader(toAdd);
 //                        m = modelLoader.load();

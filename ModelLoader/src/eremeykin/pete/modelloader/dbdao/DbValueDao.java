@@ -41,8 +41,8 @@ public class DbValueDao implements ValueDao {
             ResultSet rs = statement.executeQuery(sql);
             List<Value> valuesList = new ArrayList<>();
             while (rs.next()) {
-                String k = rs.getString("key");//See sql (alials as)
-                String v = rs.getString("column");//See sql (alials as)
+                String k = rs.getString("key");//See sql alials
+                String v = rs.getString("column");//See sql alials
                 Value value = new Value(k, v);
                 valuesList.add(value);
             }
