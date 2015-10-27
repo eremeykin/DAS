@@ -17,14 +17,11 @@ public abstract class AbstractModelDao implements ModelDao {
     protected abstract ModelParameterDao getDao();
     
     @Override
-    public Model load() throws DaoException {
-        ModelParameterDao modelParameterDao = getDao();//new DbModelParameterDao(source);
+    public final Model load() throws DaoException {
+        ModelParameterDao modelParameterDao = getDao();
         ModelParameter root = modelParameterDao.getRoot();
         Model model = new Model(root);
-        // model should know if it's parameter changes
-        for (ModelParameter parameter : modelParameterDao.getAll()) {
-            parameter.addParameterChangedListener(model);
-        }
+
         return model;
     }
 

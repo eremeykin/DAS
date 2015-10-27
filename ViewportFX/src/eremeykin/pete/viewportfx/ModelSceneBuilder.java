@@ -172,7 +172,7 @@ public class ModelSceneBuilder extends SceneBuilder {
                 mouseDeltaX = (mousePosX - mouseOldX);
                 mouseDeltaY = (mousePosY - mouseOldY);
 
-                double modifier = SHIFT_MULTIPLIER;;
+                double modifier = SHIFT_MULTIPLIER;
 
                 if (me.isControlDown()) {
                     modifier = CONTROL_MULTIPLIER;

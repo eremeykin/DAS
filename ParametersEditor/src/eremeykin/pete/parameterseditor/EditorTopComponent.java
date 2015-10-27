@@ -6,6 +6,9 @@
 package eremeykin.pete.parameterseditor;
 
 import eremeykin.pete.coreapi.centrallookupapi.CentralLookup;
+import eremeykin.pete.coreapi.loggerapi.Logger;
+import eremeykin.pete.coreapi.loggerapi.LoggerManager;
+import eremeykin.pete.coreapi.workspace.WorkspaceManager;
 import eremeykin.pete.modelapi.Model;
 import eremeykin.pete.modelapi.ModelChangedEvent;
 import eremeykin.pete.modelapi.ModelChangedListener;
@@ -53,6 +56,7 @@ public final class EditorTopComponent extends TopComponent implements LookupList
     private JScrollPane jsPane = new JScrollPane();
     private Lookup.Result modelResult = null;
     private Outline outline;
+    private static final Logger LOGGER = LoggerManager.getLogger(WorkspaceManager.class);
 
     public EditorTopComponent() {
         initComponents();
@@ -66,7 +70,8 @@ public final class EditorTopComponent extends TopComponent implements LookupList
             add(jsPane);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e);
+            LOGGER.error(e.getStackTrace());
 //            JOptionPane.showMessageDialog(null, e.getStackTrace().toString());
         }
     }
@@ -118,13 +123,12 @@ public final class EditorTopComponent extends TopComponent implements LookupList
         Object o = evt.getSource();
         if (o != null) {
             Lookup.Result r = (Lookup.Result) o;
-            Collection infos = r.allInstances();
-            if (infos.isEmpty()) {
-                System.out.println("");
+            Collection models = r.allInstances();
+            if (models.isEmpty()) {
 //                EventQueue.invokeLater(new SetterRunnable(new DefaultUserInformation()));
             } else {
                 this.open();
-                Iterator<Model> it = infos.iterator();
+                Iterator<Model> it = models.iterator();
                 while (it.hasNext()) {
                     Model m = it.next();
                     outline = new OutlineCreator(m.getRoot()).getOutline();

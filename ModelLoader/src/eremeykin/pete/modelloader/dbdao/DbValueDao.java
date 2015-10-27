@@ -21,7 +21,7 @@ import java.util.List;
  *
  * @author eremeykin@gmail.com
  */
-public class DbValueDao implements ValueDao {
+public class DbValueDao implements ValueDao{
 
     private final File source;
 

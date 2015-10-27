@@ -10,7 +10,9 @@ import eremeykin.pete.coreapi.workspace.WorkspaceManager;
 import eremeykin.pete.modelapi.Model;
 import eremeykin.pete.modelloader.DBModelLoader;
 import eremeykin.pete.modelloader.ModelLoader;
+import eremeykin.pete.modelloader.XlsxModelLoader;
 import eremeykin.pete.modelloader.dao.DaoException;
+import eremeykin.pete.modelloader.xlsxdao.XlsxValueDao;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -76,9 +78,8 @@ public final class Load implements ActionListener, Lookup.Provider {
                         ModelLoader modelLoader = new DBModelLoader(toAdd);
                         m = modelLoader.load();
                     } else if (toAdd.getName().endsWith("xlsx")) {
-//                        XlsxModelLoader modelLoader = new XlsxModelLoader(toAdd);
-//                        m = modelLoader.load();
-//                        m.setHome(home);
+                        ModelLoader modelLoader = new XlsxModelLoader(toAdd);
+                        m = modelLoader.load();
                     }
                     CentralLookup cl = CentralLookup.getDefault();
                     Collection parameters = cl.lookupAll(Model.class);
@@ -90,14 +91,10 @@ public final class Load implements ActionListener, Lookup.Provider {
                         }
                     }
                     cl.add(m);
-                } catch (ClassNotFoundException ex) {
+                } catch (ClassNotFoundException | SQLException | DaoException ex) {
                     Exceptions.printStackTrace(ex);// Нельзя открыть модель т.к. отсутствует JDBC
-                } catch (SQLException ex) {
-                    Exceptions.printStackTrace(ex);
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(null, "Ошибка при копировании исходного файла модели в рабочий каталог.", "Ошибка", JOptionPane.ERROR_MESSAGE);
-                } catch (DaoException ex) {
-                    Exceptions.printStackTrace(ex);
                 }
             }
         } catch (NoSuchElementException ex) {

@@ -27,7 +27,7 @@ public final class ModelParameter implements ModelParameterChangedListener {
     private final String comment;
     private final CellProperties cProperties;
     private List<ModelParameter> children = new ArrayList<>();
-    private ArrayList<ModelParameterChangedListener> slaves = new ArrayList<>();
+    private ArrayList<ModelParameterChangedListener> listeners = new ArrayList<>();
     private Updater updater;
 
     public static interface Updater {
@@ -111,7 +111,7 @@ public final class ModelParameter implements ModelParameterChangedListener {
 
         this.value = res == null ? value : res;
         ModelParameterChangedEvent evt = new ModelParameterChangedEvent(this);
-        for (ModelParameterChangedListener listener : slaves) {
+        for (ModelParameterChangedListener listener : listeners) {
             listener.parameterChanged(evt);
         }
     }
@@ -168,11 +168,11 @@ public final class ModelParameter implements ModelParameterChangedListener {
     }
 
     public void addParameterChangedListener(ModelParameterChangedListener listener) {
-        slaves.add(listener);
+        listeners.add(listener);
     }
 
     public void removeParameterChangedListener(ModelParameterChangedListener listener) {
-        slaves.remove(listener);
+        listeners.remove(listener);
     }
 
     public void setUpdater(Updater updater) {

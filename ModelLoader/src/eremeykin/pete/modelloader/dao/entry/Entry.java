@@ -7,7 +7,6 @@ package eremeykin.pete.modelloader.dao.entry;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,7 +15,7 @@ import java.util.Map;
  */
 class Entry<T> {
 
-    private Map<T, String> storage = new HashMap<>();
+    private final Map<T, String> storage = new HashMap<>();
 
     protected Entry(SimpleEntry<T, String>... pairs) {
         for (SimpleEntry<T, String> pair : pairs) {
@@ -28,12 +27,12 @@ class Entry<T> {
     
     @Override
     public String toString() {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         result.append("Entry[");
         for (Map.Entry<T, String> entrySet : storage.entrySet()) {
             T key = entrySet.getKey();
             String value = entrySet.getValue();
-            result.append("<"+key+","+value+">");
+            result.append("<").append(key).append(",").append(value).append(">");
         }            
         result.append("]");
         return result.toString();

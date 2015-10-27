@@ -176,10 +176,7 @@ public final class PlotterTopComponent extends TopComponent {
 
             @Override
             public boolean accept(File dir, String name) {
-                if (name.endsWith(".rpt")) {
-                    return true;
-                }
-                return false;
+                return name.endsWith(".rpt");
             }
         });
         // catch if there is no such file

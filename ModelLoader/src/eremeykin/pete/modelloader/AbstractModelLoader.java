@@ -22,7 +22,6 @@ import java.io.PrintWriter;
 public abstract class AbstractModelLoader implements ModelLoader {
 
     File modelFile;
-    ModelDao dao = getDao();
     private static final String SCRIPT_FILE_NAME = "script.py";
     private static final String MODEL_FILE_NAME = "model.obj";
     private static final Logger LOGGER = LoggerManager.getLogger(AbstractModelLoader.class);
@@ -32,7 +31,7 @@ public abstract class AbstractModelLoader implements ModelLoader {
     @Override
     public Model load() throws DaoException {
         try {
-            Model model = dao.load();
+            Model model = getDao().load();
             model.setModelFile(getObjModelFile());
             model.setScriptFile(getScriptFile());
             LOGGER.info("Model has been successfully loaded.");
@@ -50,13 +49,13 @@ public abstract class AbstractModelLoader implements ModelLoader {
 
     private File getObjModelFile() throws DaoException, FileNotFoundException {
         File resultFile = new File(WorkspaceManager.INSTANCE.getWorkspace().getAbsolutePath() + "\\" + MODEL_FILE_NAME);
-        printStringToFile(dao.getObjModel(), resultFile);
+        printStringToFile(getDao().getObjModel(), resultFile);
         return resultFile;
     }
 
     private File getScriptFile() throws DaoException, FileNotFoundException {
         File resultFile = new File(WorkspaceManager.INSTANCE.getWorkspace().getAbsolutePath() + "\\" + SCRIPT_FILE_NAME);
-        printStringToFile(dao.getScript(), resultFile);
+        printStringToFile(getDao().getScript(), resultFile);
         return resultFile;
     }
 

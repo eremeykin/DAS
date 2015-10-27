@@ -9,8 +9,6 @@ import eremeykin.pete.modelapi.ModelParameter;
 import eremeykin.pete.modelapi.ModelParameter.CellProperties.Editor;
 import java.awt.Color;
 import java.awt.Component;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;

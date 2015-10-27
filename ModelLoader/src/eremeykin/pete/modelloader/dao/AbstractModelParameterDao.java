@@ -8,7 +8,6 @@ package eremeykin.pete.modelloader.dao;
 import eremeykin.pete.modelapi.ModelParameter;
 import eremeykin.pete.modelapi.Value;
 import eremeykin.pete.modelloader.dao.entry.ParameterEntry;
-import eremeykin.pete.modelloader.dbdao.DbConstants;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,11 +21,11 @@ public abstract class AbstractModelParameterDao implements ModelParameterDao {
     private ModelParameter root = null;
 
     protected abstract Map<ParameterEntry, ModelParameter> getORMap() throws DaoException;
+
     protected abstract ValueDao getValueDao();
-    
-    
+
     //<editor-fold defaultstate="collapsed" desc="move to ModelParameterBuilder">
-    protected ModelParameter buildModelParameter(ParameterEntry entry) throws DaoException {
+    protected final ModelParameter buildModelParameter(ParameterEntry entry) throws DaoException {
         String idString = entry.get(ParameterEntry.Field.ID);
         String name = entry.get(ParameterEntry.Field.NAME);
         String argScript = entry.get(ParameterEntry.Field.SCRIPT_ARG);
@@ -49,7 +48,7 @@ public abstract class AbstractModelParameterDao implements ModelParameterDao {
         }
     }
 
-    protected ModelParameter.CellProperties.Editor.Type parseEditorType(String editorType) throws DaoException {
+    protected final ModelParameter.CellProperties.Editor.Type parseEditorType(String editorType) throws DaoException {
         if (editorType == null) {
             return ModelParameter.CellProperties.Editor.Type.DEFAULT;
         }
@@ -65,7 +64,7 @@ public abstract class AbstractModelParameterDao implements ModelParameterDao {
         throw new DaoException("Can't parse editor type: " + editorType);
     }
 
-    protected ModelParameter.CellProperties.Editor parseEditor(String type, String table, String column) throws DaoException {
+    protected final ModelParameter.CellProperties.Editor parseEditor(String type, String table, String column) throws DaoException {
         if (type == null || table == null || column == null) {
             return new ModelParameter.CellProperties.Editor(ModelParameter.CellProperties.Editor.Type.DEFAULT);
         }
@@ -80,7 +79,7 @@ public abstract class AbstractModelParameterDao implements ModelParameterDao {
     }
 //</editor-fold>
 
-    protected void coupleMasterSlaves(Map<ParameterEntry, ModelParameter> orMap) throws DaoException {
+    private void coupleMasterSlaves(Map<ParameterEntry, ModelParameter> orMap) throws DaoException {
         for (Map.Entry<ParameterEntry, ModelParameter> orMapEntry : orMap.entrySet()) {
             ModelParameter currParameter = orMapEntry.getValue();
             ParameterEntry currEntry = orMapEntry.getKey();
@@ -95,7 +94,7 @@ public abstract class AbstractModelParameterDao implements ModelParameterDao {
         }
     }
 
-    protected void coupleChildParent(Map<ParameterEntry, ModelParameter> orMap) throws DaoException {
+    private void coupleChildParent(Map<ParameterEntry, ModelParameter> orMap) throws DaoException {
         for (Map.Entry<ParameterEntry, ModelParameter> orMapEntry : orMap.entrySet()) {
             ModelParameter currParameter = orMapEntry.getValue();
             ParameterEntry currEntry = orMapEntry.getKey();
@@ -109,7 +108,7 @@ public abstract class AbstractModelParameterDao implements ModelParameterDao {
         }
     }
 
-    protected ModelParameter findById(Map< ParameterEntry, ModelParameter> orMap, String signValue) {
+    protected final ModelParameter findById(Map< ParameterEntry, ModelParameter> orMap, String signValue) {
         for (Map.Entry<ParameterEntry, ModelParameter> orMapEntry : orMap.entrySet()) {
             ModelParameter currParameter = orMapEntry.getValue();
             ParameterEntry currEntry = orMapEntry.getKey();
@@ -122,13 +121,18 @@ public abstract class AbstractModelParameterDao implements ModelParameterDao {
 
     @Override
     public ModelParameter getRoot() throws DaoException {
-        getORMap();
+        Map<ParameterEntry, ModelParameter> orMap = getORMap();
+        coupleMasterSlaves(orMap);
+        coupleChildParent(orMap);
         return root;
     }
 
     @Override
     public List<ModelParameter> getAll() throws DaoException {
-        return new ArrayList<>(getORMap().values());
+        Map<ParameterEntry, ModelParameter> orMap = getORMap();
+        coupleMasterSlaves(orMap);
+        coupleChildParent(orMap);
+        return new ArrayList<>(orMap.values());
     }
 
 }

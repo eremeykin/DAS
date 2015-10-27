@@ -9,6 +9,8 @@ package eremeykin.pete.coreapi.startup;
  *
  * @author Pete
  */
+import eremeykin.pete.coreapi.loggerapi.Logger;
+import eremeykin.pete.coreapi.loggerapi.LoggerManager;
 import eremeykin.pete.coreapi.workspace.WorkspaceManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,6 +27,7 @@ public class StartupClass implements Runnable {
 
     private static Object lock = new Object();
     private static StartupForm frame = new StartupForm();
+    private static final Logger LOGGER = LoggerManager.getLogger(WorkspaceManager.class);
 
     public static void setUIFont(javax.swing.plaf.FontUIResource f) {
         java.util.Enumeration keys = UIManager.getDefaults().keys();
@@ -37,6 +40,7 @@ public class StartupClass implements Runnable {
         }
     }
 
+    @Override
     public void run() {
 //        setUIFont (new javax.swing.plaf.FontUIResource("Serif",Font.ITALIC,12));
         frame.setVisible(true);
@@ -77,7 +81,7 @@ public class StartupClass implements Runnable {
                 try {
                     lock.wait();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    LOGGER.error(e);
                     new JOptionPane(e.getMessage()).setVisible(true);
                     System.exit(-1);
                 }

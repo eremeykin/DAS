@@ -1,4 +1,8 @@
-2015-10-25T11:36:46,608 [INFO ] - The directory "C:\DASWD" has been successfully set as a workspace. 
-2015-10-25T11:36:51,967 [INFO ] - Antialiasing is supported: true 
-2015-10-25T11:36:55,783 [INFO ] - Model C:\Users\Pete\Documents\NetBeansProjects\DAS\SQL\model9.sqlite has been successfully loaded. 
-2015-10-25T11:36:55,839 [INFO ] - Antialiasing is supported: true 
+2015-10-27T18:19:55,298 [INFO ] - The directory "C:\DASWD" has been successfully set as a workspace. 
+2015-10-27T18:19:56,033 [INFO ] - Antialiasing is supported: true 
+2015-10-27T18:20:27,753 [INFO ] - Model has been successfully loaded. 
+2015-10-27T18:20:32,989 [INFO ] - Antialiasing is supported: true 
+2015-10-27T18:21:48,441 [FATAL] - Test MSG 
+2015-10-27T18:22:24,397 [FATAL] - Test MSG 
+2015-10-27T18:22:34,722 [FATAL] - Test MSG 
+2015-10-27T18:22:42,160 [FATAL] - Test MSG 

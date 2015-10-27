@@ -26,7 +26,7 @@ import java.util.Map;
 public class DbModelParameterDao extends AbstractModelParameterDao {
 
     private final File source;
-    private ModelParameter root = null;
+    private final ModelParameter root = null;
 
     public DbModelParameterDao(File source) {
         this.source = source;
@@ -63,8 +63,6 @@ public class DbModelParameterDao extends AbstractModelParameterDao {
                 ModelParameter parameter = buildModelParameter(pEntry);
                 orMap.put(pEntry, parameter);
             }
-            coupleMasterSlaves(orMap);
-            coupleChildParent(orMap);
             connection.commit();
             return orMap;
         } catch (SQLException ex) {

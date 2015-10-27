@@ -72,11 +72,11 @@ public final class CalculatorOutputTopComponent extends TopComponent implements 
                 Iterator<TurningStepBean> it = infos.iterator();
                 while (it.hasNext()) {
                     TurningStepBean s = it.next();
-                    NumberFormat formatter = new DecimalFormat("#0.000"); 
+                    NumberFormat formatter = new DecimalFormat("#0.000");
                     jFormattedTextField4.setText(formatter.format(s.getV()));
                     jFormattedTextField5.setText(formatter.format(s.getP()));
                     jFormattedTextField6.setText(formatter.format(s.getM()));
-                    jFormattedTextField7.setText(new Double(s.getN()).isNaN()? "NaN":formatter.format(s.getN()));
+                    jFormattedTextField7.setText(new Double(s.getN()).isNaN() ? "NaN" : formatter.format(s.getN()));
                     jFormattedTextField8.setText(formatter.format(s.getF()));
                 }
 
@@ -216,11 +216,12 @@ public final class CalculatorOutputTopComponent extends TopComponent implements 
             Iterator<Model> it = parameters.iterator();
             while (it.hasNext()) {
                 Model model = it.next();
+                // временное решение
                 // получить параметр с id=21 (сила)
                 // и установить для него соответствующий текст
                 ModelParameter p = model.getParameterByID(model.getRoot(), 21);
-                if(p!=null){
-                 p.setValue(jFormattedTextField5.getText());
+                if (p != null) {
+                    p.setValue(jFormattedTextField5.getText());
                 }
             }
         }

@@ -13,12 +13,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -38,25 +36,27 @@ public class XlsxValueDao implements ValueDao {
         try {
             excelFile = new FileInputStream(source);
             XSSFWorkbook wb = new XSSFWorkbook(excelFile);
-//            XSSFWorkbook test = new XSSFWorkbook();
             XSSFSheet sheet = wb.getSheet(table);
-//            XSSFRow row;
-//            XSSFCell cell;
-            Iterator rows = sheet.rowIterator();
-            for (Row row : sheet) {
-                XSSFRow xssfRow = (XSSFRow)row;
-                xssfRow.getCell(cellnum)
+            XlsxResultSet rs = new XlsxResultSet(sheet);
+            List<Value> valuesList = new ArrayList<>();
+            while (rs.next()) {
+                String k = rs.getString(key);//See sql alials
+                String v = rs.getString(column);//See sql alials
+                Value value = new Value(k, v);
+                valuesList.add(value);
             }
-
+            return valuesList;
         } catch (FileNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
+            throw new DaoException("Can't find excel file", ex);
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            throw new DaoException("Can't open excel file", ex);
         } finally {
             try {
-                excelFile.close();
+                if (excelFile != null) {
+                    excelFile.close();
+                }
             } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
+                throw new DaoException("Can't close excel file", ex);
             }
         }
     }

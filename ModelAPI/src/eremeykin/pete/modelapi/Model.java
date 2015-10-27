@@ -29,6 +29,22 @@ public class Model implements ModelParameterChangedListener {
     public Model(ModelParameter root) {
         this.root = root;
         this.home = WorkspaceManager.INSTANCE.getWorkspace();
+        listenAllParameters(root);
+
+        // model should know if it's parameter changes
+//        for (ModelParameter parameter : modelParameterDao.getAll()) {
+//            parameter.addParameterChangedListener(model);
+//        }
+    }
+
+    private void listenAllParameters(ModelParameter rootParameter) {
+        if (rootParameter.getChildren() != null) {
+            for (ModelParameter p : rootParameter.getChildren()) {
+                p.addParameterChangedListener(this);
+                listenAllParameters(p);
+                System.out.println(p);
+            }
+        }
     }
 
     public ModelParameter getRoot() {

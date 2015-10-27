@@ -5,29 +5,63 @@
  */
 package eremeykin.pete.modelloader.xlsxdao;
 
-import eremeykin.pete.modelapi.Model;
+import eremeykin.pete.modelloader.dao.AbstractModelDao;
 import eremeykin.pete.modelloader.dao.DaoException;
-import eremeykin.pete.modelloader.dao.ModelDao;
+import eremeykin.pete.modelloader.dao.ModelParameterDao;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
  * @author eremeykin@gmail.com
  */
-public class XlsxModelDao implements ModelDao{
+public class XlsxModelDao extends AbstractModelDao {
+
+    private final File source;
+
+    public XlsxModelDao(File source) {
+        this.source = source;
+    }
+
+    private String getTableContent(String table) throws DaoException {
+        FileInputStream excelFile = null;
+        try {
+            excelFile = new FileInputStream(source);
+            XSSFWorkbook wb = new XSSFWorkbook(excelFile);
+            XSSFSheet sheet = wb.getSheet(table);
+            return sheet.getRow(1).getCell(0).getStringCellValue();
+        } catch (FileNotFoundException ex) {
+            throw new DaoException("Can't find excel file " + source, ex);
+        } catch (IOException ex) {
+            throw new DaoException("Can't open excel file " + source, ex);
+        } finally {
+            try {
+                if (excelFile != null) {
+                    excelFile.close();
+                }
+            } catch (IOException ex) {
+                throw new DaoException("Can't close excel file " + source, ex);
+            }
+        }
+    }
 
     @Override
-    public Model load() throws DaoException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected ModelParameterDao getDao() {
+        return new XlsxModelParameterDao(source);
     }
 
     @Override
     public String getScript() throws DaoException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return getTableContent(XlsxConstants.SCRIPT_SHEET);
     }
 
     @Override
     public String getObjModel() throws DaoException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return getTableContent(XlsxConstants.MODEL_SHEET);
     }
-    
+
 }

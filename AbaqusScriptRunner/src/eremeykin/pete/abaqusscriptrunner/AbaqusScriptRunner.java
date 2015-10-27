@@ -93,8 +93,8 @@ public class AbaqusScriptRunner implements ScriptRunner {
         private final File home;
         private final String path;
         private Process p;
-        private boolean refresh;
-        private AtomicBoolean success = new AtomicBoolean(false);
+        private final boolean refresh;
+        private final AtomicBoolean success = new AtomicBoolean(false);
 
         public AtomicBoolean getSuccess() {
             return success;
