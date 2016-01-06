@@ -15,7 +15,7 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>eremeykin.pete.coreapi</code-name-base>
+                    <code-name-base>eremeykin.pete.api.core</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
@@ -23,7 +23,7 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>eremeykin.pete.modelapi</code-name-base>
+                    <code-name-base>eremeykin.pete.api.model</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>

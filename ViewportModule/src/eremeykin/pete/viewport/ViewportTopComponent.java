@@ -5,10 +5,10 @@
  */
 package eremeykin.pete.viewport;
 
-import eremeykin.pete.coreapi.centrallookupapi.CentralLookup;
-import eremeykin.pete.modelapi.Model;
-import eremeykin.pete.modelapi.ModelStringChangedEvent;
-import eremeykin.pete.modelapi.ReaderChangedListener;
+import eremeykin.pete.api.core.centrallookupapi.CentralLookup;
+import eremeykin.pete.api.model.Model;
+import eremeykin.pete.api.model.ModelStringChangedEvent;
+import eremeykin.pete.api.model.ReaderChangedListener;
 import java.util.Collection;
 import java.util.Iterator;
 import org.netbeans.api.settings.ConvertAsProperties;

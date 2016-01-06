@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: com.interactivemesh.jfx
+OpenIDE-Module-Localizing-Bundle: com/interactivemesh/jfx/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

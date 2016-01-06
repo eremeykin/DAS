@@ -1,8 +1,4 @@
-2015-10-27T18:19:55,298 [INFO ] - The directory "C:\DASWD" has been successfully set as a workspace. 
-2015-10-27T18:19:56,033 [INFO ] - Antialiasing is supported: true 
-2015-10-27T18:20:27,753 [INFO ] - Model has been successfully loaded. 
-2015-10-27T18:20:32,989 [INFO ] - Antialiasing is supported: true 
-2015-10-27T18:21:48,441 [FATAL] - Test MSG 
-2015-10-27T18:22:24,397 [FATAL] - Test MSG 
-2015-10-27T18:22:34,722 [FATAL] - Test MSG 
-2015-10-27T18:22:42,160 [FATAL] - Test MSG 
+2016-01-06T23:14:16,208 [INFO ] - The directory "C:\DASworkspace" has been successfully set as a workspace. 
+2016-01-06T23:14:20,186 [INFO ] - Antialiasing is supported: true 
+2016-01-06T23:14:49,512 [INFO ] - Model has been successfully loaded. 
+2016-01-06T23:14:49,554 [INFO ] - Antialiasing is supported: true 
