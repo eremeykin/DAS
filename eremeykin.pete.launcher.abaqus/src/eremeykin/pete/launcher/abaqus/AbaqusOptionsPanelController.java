@@ -13,12 +13,12 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-//@OptionsPanelController.TopLevelRegistration(
-//        categoryName = "#OptionsCategory_Name_Abaqus",
-//        iconBase = "res/Abaqus_icon.png",
-//        keywords = "#OptionsCategory_Keywords_Abaqus",
-//        keywordsCategory = "Abaqus"
-//)
+@OptionsPanelController.TopLevelRegistration(
+        categoryName = "#OptionsCategory_Name_Abaqus",
+        iconBase = "res/Abaqus_icon.png",
+        keywords = "#OptionsCategory_Keywords_Abaqus",
+        keywordsCategory = "Abaqus"
+)
 @org.openide.util.NbBundle.Messages({"OptionsCategory_Name_Abaqus=Abaqus", "OptionsCategory_Keywords_Abaqus=Abaqus"})
 public final class AbaqusOptionsPanelController extends OptionsPanelController {
 
