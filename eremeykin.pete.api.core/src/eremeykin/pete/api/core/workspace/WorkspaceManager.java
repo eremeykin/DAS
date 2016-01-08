@@ -5,8 +5,8 @@
  */
 package eremeykin.pete.api.core.workspace;
 
-import eremeykin.pete.api.core.loggerapi.Logger;
-import eremeykin.pete.api.core.loggerapi.LoggerManager;
+import eremeykin.pete.api.core.logger.Logger;
+import eremeykin.pete.api.core.logger.LoggerManager;
 import java.io.File;
 import org.openide.util.lookup.ServiceProvider;
 

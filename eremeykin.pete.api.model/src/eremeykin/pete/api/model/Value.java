@@ -6,7 +6,7 @@
 package eremeykin.pete.api.model;
 
 /**
- *
+ * used in DAO (ex. XlsxValueDao)
  * @author eremeykin@gmail.com
  */
 public class Value {

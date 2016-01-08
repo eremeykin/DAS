@@ -439,7 +439,7 @@ public class TurningStepBean {
         ROUGH("Черновое"),
         SEMI_ROUGH("Получистовое"),
         FINISH("Чистовое");
-        private String name;
+        private final String name;
 
         private TurningType(String name) {
             this.name = name;
@@ -460,7 +460,7 @@ public class TurningStepBean {
         PARTING("Отрезание");
 //        TAPPING("Нарезание резьбы");
 
-        private String name;
+        private final String name;
 
         private ProcessKind(String name) {
             this.name = name;
@@ -477,7 +477,7 @@ public class TurningStepBean {
 
         STEEL("Сталь"),
         CAST_IRON("Чугун");
-        private String name;
+        private final String name;
 
         private WorkpieceMaterial(String name) {
             this.name = name;
@@ -495,7 +495,7 @@ public class TurningStepBean {
         CASTING("Отливка"),
         ROLLING("Прокат"),
         CRUSTLESS("Полуфабрикат без корки");
-        private String name;
+        private final String name;
 
         private WorkpieceType(String name) {
             this.name = name;

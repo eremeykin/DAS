@@ -6,8 +6,8 @@
 package eremeykin.pete.calculator;
 
 import eremeykin.pete.api.core.centrallookupapi.CentralLookup;
-import eremeykin.pete.api.core.loggerapi.Logger;
-import eremeykin.pete.api.core.loggerapi.LoggerManager;
+import eremeykin.pete.api.core.logger.Logger;
+import eremeykin.pete.api.core.logger.LoggerManager;
 import java.util.Collection;
 import java.util.Iterator;
 import javax.swing.DefaultComboBoxModel;

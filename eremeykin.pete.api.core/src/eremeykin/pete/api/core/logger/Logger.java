@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eremeykin.pete.api.core.loggerapi;
+package eremeykin.pete.api.core.logger;
 
 /**
  *

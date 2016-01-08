@@ -43,46 +43,36 @@ public final class ModelParameter implements ModelParameterChangedListener {
         this.comment = comment;
         this.cProperties = cProperties;
         this.value = value;
-        if (cProperties != null && cProperties.getEditor() != null && cProperties.getEditor().getType() == CellProperties.Editor.Type.COMBO_BOX) {
-            Value availableValue = cProperties.getEditor().getAvailableValues()[0];
-            if (availableValue != null) {
-                this.value = availableValue.toString();
-            }
-        }
-        if (cProperties != null && cProperties.getEditor() != null && cProperties.editor.getType().equals(CellProperties.Editor.Type.AUTO)) {
-            this.setUpdater(new ModelParameter.Updater() {
 
-                @Override
-                public void update(ModelParameter master) {
-                    String value = master.getValue();
-                    CellProperties.Editor editor = ModelParameter.this.getEditor();
-                    Value[] availableValues = editor.getAvailableValues();
-                    for (Value v : availableValues) {
-                        if (v.getKey().equals(value)) {
-                            ModelParameter.this.setValue(v.getValue());
-                            return;
+        if (cProperties != null && cProperties.getEditor() != null && cProperties.getEditor().getType() != null) {
+            if (cProperties.getEditor().getType() == CellProperties.Editor.Type.COMBO_BOX) {
+                Value availableValue = cProperties.getEditor().getAvailableValues()[0];
+                if (availableValue != null) {
+                    this.value = availableValue.toString();
+                }
+            }
+            if (cProperties.getEditor().getType() == CellProperties.Editor.Type.AUTO) {
+                this.setUpdater(new ModelParameter.Updater() {
+
+                    @Override
+                    public void update(ModelParameter master) {
+                        String value = master.getValue();
+                        CellProperties.Editor editor = ModelParameter.this.getEditor();
+                        Value[] availableValues = editor.getAvailableValues();
+                        for (Value v : availableValues) {
+                            if (v.getKey().equals(value)) {
+                                ModelParameter.this.setValue(v.getValue());
+                                return;
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
         }
     }
 
     public Integer getMaster() {
         return master;
-    }
-
-//TODO: what is it?
-    ModelParameter(ModelParameter p) {
-        this.id = p.id;
-        this.name = p.name;
-        this.parent = p.parent;
-        this.scriptArg = p.scriptArg;
-        this.value = p.value;
-        this.comment = p.comment;
-        this.cProperties = p.cProperties;
-        this.children = p.children;
-        this.master = p.master;
     }
 
     public String getComment() {

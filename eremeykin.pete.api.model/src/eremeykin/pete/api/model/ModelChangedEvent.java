@@ -11,7 +11,7 @@ import java.util.EventObject;
  *
  * @author Pete
  */
-public class ModelChangedEvent extends EventObject {
+public class ModelChangedEvent extends ModelEvent {
 
     ModelParameter parameterSource;
 

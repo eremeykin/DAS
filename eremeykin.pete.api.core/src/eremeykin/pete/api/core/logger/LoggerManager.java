@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eremeykin.pete.api.core.loggerapi;
+package eremeykin.pete.api.core.logger;
 
-import eremeykin.pete.api.core.loggerapi.defaultlog.DefaultLogger;
 import java.util.Collection;
 import org.openide.util.Lookup;
 
@@ -15,6 +14,9 @@ import org.openide.util.Lookup;
  */
 public class LoggerManager {
 
+    private LoggerManager(){};//ensure noninstantiability
+    
+    
     public static Logger getLogger(String name) {
         Logger log;
         Collection<? extends Logger> allLoggers = Lookup.getDefault().lookupAll(Logger.class);

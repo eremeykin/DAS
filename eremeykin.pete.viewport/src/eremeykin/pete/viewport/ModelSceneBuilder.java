@@ -1,8 +1,8 @@
 package eremeykin.pete.viewport;
 
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
-import eremeykin.pete.api.core.loggerapi.Logger;
-import eremeykin.pete.api.core.loggerapi.LoggerManager;
+import eremeykin.pete.api.core.logger.Logger;
+import eremeykin.pete.api.core.logger.LoggerManager;
 import java.io.File;
 import javafx.application.ConditionalFeature;
 import javafx.application.Platform;

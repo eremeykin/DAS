@@ -5,8 +5,6 @@
  */
 package eremeykin.pete.api.model;
 
-import eremeykin.pete.*;
-import eremeykin.pete.api.core.workspace.WorkspaceManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
@@ -21,20 +19,12 @@ public class Model implements ModelParameterChangedListener {
     private ModelParameter root;
     private File modelFile;
     private File scriptFile;
-    private String script;
-    private ArrayList<ModelFileChangedListener> modelFileListeners = new ArrayList<>();
-    private ArrayList<ModelChangedListener> modelListeners = new ArrayList<>();
-    private File home;
+    private final ArrayList<ModelFileChangedListener> modelFileListeners = new ArrayList<>();
+    private final ArrayList<ModelChangedListener> modelListeners = new ArrayList<>();
 
     public Model(ModelParameter root) {
         this.root = root;
-        this.home = WorkspaceManager.INSTANCE.getWorkspace();
         listenAllParameters(root);
-
-        // model should know if it's parameter changes
-//        for (ModelParameter parameter : modelParameterDao.getAll()) {
-//            parameter.addParameterChangedListener(model);
-//        }
     }
 
     private void listenAllParameters(ModelParameter rootParameter) {
@@ -42,7 +32,6 @@ public class Model implements ModelParameterChangedListener {
             for (ModelParameter p : rootParameter.getChildren()) {
                 p.addParameterChangedListener(this);
                 listenAllParameters(p);
-                System.out.println(p);
             }
         }
     }
@@ -51,9 +40,6 @@ public class Model implements ModelParameterChangedListener {
         return root;
     }
 
-//    public File getHome() {
-//        return home;
-//    }
     public File getModelFile() {
         return modelFile;
     }
@@ -62,17 +48,6 @@ public class Model implements ModelParameterChangedListener {
         return scriptFile;
     }
 
-//    public String getScript() throws IOException {
-//        if (script != null) {
-//            return script;
-//        }
-//        String line, result = "";
-//        while ((line = scriptReader.readLine()) != null) {
-//            result += line + "\r\n";
-//        }
-//        script = result;
-//        return result;
-//    }
     //why synchronized ?
     synchronized public void setModelFile(File modelFile) {
         this.modelFile = modelFile;

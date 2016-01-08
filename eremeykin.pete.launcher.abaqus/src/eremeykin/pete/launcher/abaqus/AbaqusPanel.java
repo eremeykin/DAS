@@ -5,8 +5,8 @@
  */
 package eremeykin.pete.launcher.abaqus;
 
-import eremeykin.pete.api.core.loggerapi.Logger;
-import eremeykin.pete.api.core.loggerapi.LoggerManager;
+import eremeykin.pete.api.core.logger.Logger;
+import eremeykin.pete.api.core.logger.LoggerManager;
 import eremeykin.pete.api.core.workspace.WorkspaceManager;
 import java.awt.Cursor;
 import java.io.BufferedReader;

@@ -5,6 +5,7 @@
  */
 package eremeykin.pete.logger;
 
+import eremeykin.pete.api.core.logger.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -12,8 +13,8 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Pete
  */
-@ServiceProvider(service = eremeykin.pete.api.core.loggerapi.Logger.class)
-public class Log4jLogger implements eremeykin.pete.api.core.loggerapi.Logger {
+@ServiceProvider(service = Logger.class)
+public class Log4jLogger implements Logger {
 
     private org.apache.logging.log4j.Logger log;
 

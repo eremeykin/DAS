@@ -6,8 +6,8 @@
 package eremeykin.pete.plotter;
 
 import eremeykin.pete.api.core.centrallookupapi.CentralLookup;
-import eremeykin.pete.api.core.loggerapi.Logger;
-import eremeykin.pete.api.core.loggerapi.LoggerManager;
+import eremeykin.pete.api.core.logger.Logger;
+import eremeykin.pete.api.core.logger.LoggerManager;
 import eremeykin.pete.api.core.workspace.WorkspaceManager;
 import eremeykin.pete.api.model.Model;
 import java.awt.BorderLayout;
