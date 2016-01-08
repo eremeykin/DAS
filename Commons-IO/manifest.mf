@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-AutoUpdate-Show-In-Client: true
-OpenIDE-Module: eremeykin.pete.commonsio
-OpenIDE-Module-Localizing-Bundle: eremeykin/pete/commonsio/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.0
-
