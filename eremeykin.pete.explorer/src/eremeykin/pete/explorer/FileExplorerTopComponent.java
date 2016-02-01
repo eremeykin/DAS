@@ -8,15 +8,13 @@ package eremeykin.pete.explorer;
 import eremeykin.pete.api.core.centrallookupapi.CentralLookup;
 import eremeykin.pete.api.core.workspace.WorkspaceManager;
 import eremeykin.pete.api.model.Model;
-import eremeykin.pete.explorer.nodes.FileFilterNode;
+import eremeykin.pete.explorer.nodes.ReportItemNode;
+import eremeykin.pete.explorer.nodes.WorkspaceFileNode;
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import javax.swing.Action;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -24,12 +22,10 @@ import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.BeanTreeView;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
-import org.openide.nodes.FilterNode;
+import org.openide.nodes.Children;
 import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
@@ -65,14 +61,17 @@ public final class FileExplorerTopComponent extends TopComponent implements Expl
     private Model model;
     private Lookup.Result<Model> modelResult = null;
     private ExplorerManager mgr = new ExplorerManager();
+    private List<ReportItemNode> reportItems = new ArrayList<ReportItemNode>();
+    private WorkspaceFileNode wfNode = null;
 
     public FileExplorerTopComponent() throws DataObjectNotFoundException {
         initComponents();
         setName(Bundle.CTL_FileExplorerTopComponent());
         setToolTipText(Bundle.HINT_FileExplorerTopComponent());
-        setLayout(new BorderLayout());
-        add(new BeanTreeView(), BorderLayout.CENTER);
-
+//        setLayout(new BorderLayout());
+        jPanel1.setLayout(new BorderLayout());
+        jPanel1.add(new BeanTreeView(), BorderLayout.CENTER);
+        
         mgr.getRootContext().setName("No models");
     }
 
@@ -84,19 +83,55 @@ public final class FileExplorerTopComponent extends TopComponent implements Expl
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton1 = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+
+        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(FileExplorerTopComponent.class, "FileExplorerTopComponent.jButton1.text")); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 271, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jButton1)
+                .addGap(0, 327, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (wfNode !=null){
+            reportItems.add(new ReportItemNode(Children.LEAF));
+            wfNode.refresh();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
@@ -152,7 +187,13 @@ public final class FileExplorerTopComponent extends TopComponent implements Expl
             DataObject dob = DataObject.find(fo);
             Node rootNode = dob.getNodeDelegate();
             this.getActionMap().clear();
-            mgr.setRootContext(new FileFilterNode(rootNode));
+            
+            for (int i =0; i<5;i++){
+                reportItems.add(new ReportItemNode(Children.LEAF));
+            }
+            
+            wfNode = new WorkspaceFileNode.Builder(rootNode,reportItems).build();
+            mgr.setRootContext(wfNode);
         } catch (DataObjectNotFoundException ex) {
             throw new RuntimeException(ex);
         }

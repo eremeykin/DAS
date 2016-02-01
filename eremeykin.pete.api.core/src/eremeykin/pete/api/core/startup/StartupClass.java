@@ -59,6 +59,11 @@ public class StartupClass implements Runnable {
                         mainFrame.setTitle("Deformation Analysis System: " + workspace.getAbsolutePath());
                     }
                 });
+                if (frame.getClearFlag()) {
+                    for (File file : workspace.listFiles()) {
+                        file.delete();
+                    }
+                }
                 frame.setVisible(false);
                 lock.notify();
             } else {
@@ -69,23 +74,23 @@ public class StartupClass implements Runnable {
 
     @Override
     public void run() {
-                frame.setVisible(true);
-                frame.getOKButton().addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        StartupClass.this.setWorkspace(e);
-                    }
-                });
-                synchronized (lock) {
-                    while (frame.isVisible()) {
-                        try {
-                            lock.wait();
-                        } catch (InterruptedException e) {
-                            LOGGER.error(e);
-                            new JOptionPane(e.getMessage()).setVisible(true);
-                            System.exit(-1);
-                        }
-                    }
+        frame.setVisible(true);
+        frame.getOKButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                StartupClass.this.setWorkspace(e);
+            }
+        });
+        synchronized (lock) {
+            while (frame.isVisible()) {
+                try {
+                    lock.wait();
+                } catch (InterruptedException e) {
+                    LOGGER.error(e);
+                    new JOptionPane(e.getMessage()).setVisible(true);
+                    System.exit(-1);
                 }
             }
+        }
     }
+}

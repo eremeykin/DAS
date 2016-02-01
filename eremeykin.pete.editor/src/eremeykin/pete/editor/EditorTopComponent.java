@@ -53,17 +53,15 @@ import org.openide.util.NbBundle.Messages;
 public final class EditorTopComponent extends TopComponent implements LookupListener {
 
 //    private static final String DEFAULT_MODEL = ConfigLoader.load("path", "default model");
+    private Lookup.Result<Model> modelResult = null;
+    
+    private Model model;
     private JScrollPane jsPane = new JScrollPane();
-    private Lookup.Result modelResult = null;
     private Outline outline;
     private static final Logger LOGGER = LoggerManager.getLogger(WorkspaceManager.class);
 
     public EditorTopComponent() {
         initComponents();
-        Lookup.Template template = new Lookup.Template(Model.class);
-        CentralLookup cl = CentralLookup.getDefault();
-        modelResult = cl.lookup(template);
-        modelResult.addLookupListener(this);
         try {
             setName("Parameter Editor");
             setLayout(new BorderLayout());
@@ -99,11 +97,18 @@ public final class EditorTopComponent extends TopComponent implements LookupList
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
+        modelResult = CentralLookup.getDefault().lookupResult(Model.class);
+        modelResult.addLookupListener(this);
+                
+        model = CentralLookup.getDefault().lookup(Model.class);
+        if (model != null){
+            setModel();
+        }
     }
 
     @Override
     public void componentClosed() {
-        // TODO add custom code on component closing
+        modelResult.removeLookupListener(this);
     }
 
     void writeProperties(java.util.Properties p) {
@@ -118,6 +123,19 @@ public final class EditorTopComponent extends TopComponent implements LookupList
         // TODO read your settings according to their version
     }
 
+    private void setModel() {
+        outline = new OutlineCreator(model.getRoot()).getOutline();
+        jsPane.setViewportView(outline);
+        add(jsPane);
+        model.addModelChangedListener(new ModelChangedListener() {
+
+            @Override
+            public void modelChanged(ModelChangedEvent evt) {
+                outline.repaint();
+            }
+        });
+    }
+
     @Override
     public void resultChanged(LookupEvent evt) {
         Object o = evt.getSource();
@@ -125,23 +143,12 @@ public final class EditorTopComponent extends TopComponent implements LookupList
             Lookup.Result r = (Lookup.Result) o;
             Collection models = r.allInstances();
             if (models.isEmpty()) {
-//                EventQueue.invokeLater(new SetterRunnable(new DefaultUserInformation()));
             } else {
                 this.open();
                 Iterator<Model> it = models.iterator();
                 while (it.hasNext()) {
-                    Model m = it.next();
-                    outline = new OutlineCreator(m.getRoot()).getOutline();
-                    jsPane.setViewportView(outline);
-                    add(jsPane);
-                    m.addModelChangedListener(new ModelChangedListener() {
-
-                        @Override
-                        public void modelChanged(ModelChangedEvent evt) {
-                            outline.repaint();
-                        }
-                    });
-                    //                    EventQueue.invokeLater(new SetterRunnable(info));
+                    model = it.next();
+                    setModel();
                 }
             }
         }

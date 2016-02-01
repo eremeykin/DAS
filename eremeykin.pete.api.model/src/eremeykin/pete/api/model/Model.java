@@ -7,6 +7,8 @@ package eremeykin.pete.api.model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -50,6 +52,9 @@ public class Model implements ModelParameterChangedListener {
 
     //why synchronized ?
     synchronized public void setModelFile(File modelFile) {
+        if (modelFile == null) {
+            throw new NullPointerException("modelFile can't be null");
+        }
         this.modelFile = modelFile;
         ModelFileChangedEvent evt = new ModelFileChangedEvent(modelFile);
         for (ModelFileChangedListener listener : modelFileListeners) {

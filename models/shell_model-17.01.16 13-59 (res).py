@@ -1,0 +1,476 @@
+''' Shell model, ready to calculate with force instead of
+displacement. 
+- new jaw partion added to apply central force
+- BCs corrected (coordinate axies changed)
+- interaction on whole jaw area (now there is 4 areas due to new partion)
+At this point calculations are implemented via displacment cause jaws have wrong
+result displacement if force applyed. But at the same time the part is deformed correctly.
+- add jaw transform to the part for thigh contact
+- before creating tie constraint
+- add friction coeff, force value'''
+
+from abaqus import *
+from abaqusConstants import *
+from caeModules import *
+from driverUtils import executeOnCaeStartup
+import math
+import tempfile
+import sys
+import os
+import argparse
+import math
+
+executeOnCaeStartup()
+
+
+def create_workpiece_part(length, inner, outer, angle):
+    s = mdb.models['Model-1'].ConstrainedSketch(name='__profile__', sheetSize=0.10)
+    g, v, d, c = s.geometry, s.vertices, s.dimensions, s.constraints
+    s.setPrimaryObject(option=STANDALONE)
+
+    mid_d = float(inner-outer)/2+inner
+    s.CircleByCenterPerimeter(center=(0.0, 0.0), point1=(0.0, mid_d)) #diameter
+    p = mdb.models['Model-1'].Part(name='Part', dimensionality=THREE_D, type=DEFORMABLE_BODY)
+    p = mdb.models['Model-1'].parts['Part']
+    p.BaseShellExtrude(sketch=s, depth=length) #depth
+    s.unsetPrimaryObject()
+    p = mdb.models['Model-1'].parts['Part']
+    session.viewports['Viewport: 1'].setValues(displayedObject=p)
+    del mdb.models['Model-1'].sketches['__profile__']
+    __create_workpiece_partion(p.name)
+    __create_workpiece_partion_by_angle(p.name, angle)
+    sys.__stdout__.write("Create workpiece model"+" Length:"+str(length)+" Inner:"+str(inner)+" Outer:"+str(outer)+"\n")
+    return p.name
+
+def __create_workpiece_partion(part_name):
+    p = mdb.models['Model-1'].parts[part_name]
+    p0 = p.DatumPointByCoordinate(coords=(0.0, 0.0, 0.0))
+    p1 = p.DatumPointByCoordinate(coords=(0.1, 0.0, 0.0))
+    p2 = p.DatumPointByCoordinate(coords=(-0.05, math.sqrt(3)/2/10, 0.0 )).id
+    p3 = p.DatumPointByCoordinate(coords=(-0.05, -math.sqrt(3)/2/10, 0.0)).id
+    p4 = p.DatumPointByCoordinate(coords=(0.0, 0.0, 0.1))
+    p = mdb.models['Model-1'].parts[part_name]
+    v1, e1, d1 = p.vertices, p.edges, p.datums
+    c=p.cells
+    #p.PartitionCellByPlaneThreePoints(cells=c, point1=p0, point2=p1, point3=p4)
+    c=p.cells
+    #p.PartitionCellByPlaneThreePoints(cells=c, point1=d1[p0], point2=d1[p2], point3=d1[p4])
+    c=p.cells
+    #p.PartitionCellByPlaneThreePoints(cells=c, point1=d1[p0], point2=d1[p3], point3=d1[p4])
+    return p.name
+
+def __create_workpiece_partion_by_angle(part_name, angle):
+    return None
+    p = mdb.models['Model-1'].parts[part_name]
+    p0 = p.DatumPointByCoordinate(coords=(0.0, 0.0, 0.0)).id
+    x = math.cos(math.radians(angle))
+    y = math.sin(math.radians(angle))
+    p1 = p.DatumPointByCoordinate(coords=(x, y, 0.0)).id
+    p2 = p.DatumPointByCoordinate(coords=(0.0, 0.0, 0.1)).id
+    v1, e1, d1 = p.vertices, p.edges, p.datums
+    for c in p.cells:
+        try:
+            p.PartitionCellByPlaneThreePoints(cells=c, point1=d1[p0], point2=d1[p1], point3=d1[p2])
+        except:
+            pass
+        
+def create_jaw_part(length, height, width):
+    """Creates a jaw part"""
+    s = mdb.models['Model-1'].ConstrainedSketch(name='__profile__', sheetSize=0.1) # 
+    g, v, d, c = s.geometry, s.vertices, s.dimensions, s.constraints #
+    s.sketchOptions.setValues(decimalPlaces=3)
+    s.setPrimaryObject(option=STANDALONE)
+    s.rectangle(point1=(0.0, 0.0), point2=(length, height)) #
+    p = mdb.models['Model-1'].Part(name='Jaw', dimensionality=THREE_D,  type=DEFORMABLE_BODY) # 
+    p = mdb.models['Model-1'].parts['Jaw']
+    p.BaseSolidExtrude(sketch=s, depth=width) #
+    s.unsetPrimaryObject()
+    p = mdb.models['Model-1'].parts['Jaw']
+    del mdb.models['Model-1'].sketches['__profile__'] #
+    __create_jaw_partion(p.name, length, height, width)
+    sys.__stdout__.write("Create jaw part "+" Length:"+str(length)+" Height:"+str(height)+" Width:"+str(width)+"\n")
+    return p.name
+    
+def __create_jaw_partion(part_name, length, height, width):
+    p = mdb.models['Model-1'].parts[part_name]
+    p1 = p.DatumPointByCoordinate(coords=(length/2, 0.0, 0.0)).id
+    p2 = p.DatumPointByCoordinate(coords=(length/2, height, width)).id
+    p3 = p.DatumPointByCoordinate(coords=(length/2, 0, width)).id
+    c, v1, e1, d1 = p.cells, p.vertices, p.edges, p.datums
+    p.PartitionCellByPlaneThreePoints(cells=c, point1=d1[p1], point2=d1[p2], point3=d1[p3])
+        
+    p1 = p.DatumPointByCoordinate(coords=(0.0, 0.0, width/2)).id
+    p2 = p.DatumPointByCoordinate(coords=(length, 0.0, width/2)).id
+    p3 = p.DatumPointByCoordinate(coords=(length, height, width/2)).id
+    c, v1, e1, d1 = p.cells, p.vertices, p.edges, p.datums
+    p.PartitionCellByPlaneThreePoints(cells=c, point1=d1[p1], point2=d1[p2], point3=d1[p3])
+    
+
+def create_section(section_name,material_name, type, thickness=None):
+    if type == 'solid':
+        mdb.models['Model-1'].HomogeneousSolidSection(name=section_name, material=material_name, thickness=None)
+        return section_name
+    if type == 'shell':
+        mdb.models['Model-1'].HomogeneousShellSection(name=section_name, 
+        preIntegrate=OFF, material='Workpiece_material', thicknessType=UNIFORM, 
+        thickness=thickness, thicknessField='', idealization=NO_IDEALIZATION, 
+        poissonDefinition=DEFAULT, thicknessModulus=None, temperature=GRADIENT, 
+        useDensity=OFF, integrationRule=SIMPSON, numIntPts=5)
+        return section_name
+    raise Exception('Wrong section type')
+    
+def create_material(material_name,young,poisson):
+    """Creates material with specified name, Young's modulus and Poisson ratio"""
+    mdb.models['Model-1'].Material(name=material_name)
+    mdb.models['Model-1'].materials[material_name].Elastic(table=((young, poisson), ))
+    sys.__stdout__.write("Create material "+material_name+" Young modulus:"+str(young)+" Poisson ratio:"+str(poisson)+"\n")
+    return material_name
+
+def mesh_part(part_name, size, dev_factor, min_size_factor):
+    p = mdb.models['Model-1'].parts[part_name]
+    p.seedPart(size=size, deviationFactor=dev_factor, minSizeFactor=min_size_factor)
+
+    if p.cells: # if solid 
+        c = p.cells
+        p.setMeshControls(regions=c, technique=SWEEP) # 
+        p = mdb.models['Model-1'].parts[part_name]
+    else: # if shell
+        elemType1 = mesh.ElemType(elemCode=S4R, elemLibrary=STANDARD, 
+        secondOrderAccuracy=OFF, hourglassControl=DEFAULT)
+        elemType2 = mesh.ElemType(elemCode=S3, elemLibrary=STANDARD)    
+        pickedRegions =(p.faces, )
+        p.setElementType(regions=pickedRegions, elemTypes=(elemType1, elemType2))
+    p.generateMesh()
+    sys.__stdout__.write("Mesh part"+"\n")
+
+def create_property(friction_coeff):
+    mdb.models['Model-1'].ContactProperty('IntProp-1')
+    mdb.models['Model-1'].interactionProperties['IntProp-1'].TangentialBehavior(
+        formulation=PENALTY, directionality=ISOTROPIC, slipRateDependency=OFF, 
+        pressureDependency=OFF, temperatureDependency=OFF, dependencies=0, table=((
+        friction_coeff, ), ), shearStressLimit=None, maximumElasticSlip=FRACTION, 
+        fraction=0.005, elasticSlipStiffness=None)
+    mdb.models['Model-1'].interactionProperties['IntProp-1'].NormalBehavior(
+        pressureOverclosure=HARD, allowSeparation=OFF, contactStiffness=DEFAULT, 
+        contactStiffnessScaleFactor=1.0, clearanceAtZeroContactPressure=0.0, 
+        stiffnessBehavior=LINEAR, constraintEnforcementMethod=PENALTY)
+    # mdb.models['Model-1'].ContactProperty('IntProp-1')
+    # mdb.models['Model-1'].interactionProperties['IntProp-1'].TangentialBehavior(formulation=ROUGH)
+    # mdb.models['Model-1'].interactionProperties['IntProp-1'].NormalBehavior(pressureOverclosure=HARD, allowSeparation=ON, constraintEnforcementMethod=DEFAULT)
+    # return mdb.models['Model-1'].interactionProperties['IntProp-1']
+
+def create_assembly(displ, outer, length, Fx, Fy, Fz, angle):
+    create_property(f_coeff)# pass friction coeff
+    a = mdb.models['Model-1'].rootAssembly
+    a.DatumCsysByDefault(CARTESIAN)
+    p = mdb.models['Model-1'].parts['Part']
+    a.Instance(name='Part-1', part=p, dependent=ON)
+    p = mdb.models['Model-1'].parts['Jaw']
+    a.Instance(name='Jaw-1', part=p, dependent=ON)
+    a.translate(instanceList=('Jaw-1', ), vector=(-jaw_width/2, 0.0, 0.0))
+    a.rotate(instanceList=('Jaw-1', ), axisPoint=(0.0, 0.0, 0.0), axisDirection=(0.0, 0.0, 1), angle=-90.0)
+    mid_d = float(inner-outer)/2+inner
+    a.translate(instanceList=('Jaw-1', ), vector=(mid_d, 0.0, 0.0))
+    ###translate to tigh contact ?
+    #f1 = a.instances['Jaw-1'].faces
+    #f2 = a.instances['Part-1'].faces
+    #p1 = a.instances['Jaw-1']
+    #p1.translateTo(movableList=(f1[13], ), fixedList=(f2[0], ), direction=(-1.0,0.0, 0.0), clearance=0.0)
+    ###
+    a.RadialInstancePattern(instanceList=('Jaw-1', ), point=(0.0, 0.0, 0.0), axis=(0.0, 0.0, 1.0), number=3, totalAngle=360.0)
+    mdb.models['Model-1'].rootAssembly.features.changeKey(fromName='Jaw-1', toName='Jaw-1-rad-1')
+    sys.__stdout__.write("Create assembly"+"\n") 
+    create_interaction()
+    c_systems = create_CSYS()
+    create_step()
+    create_jaw_BSs(c_systems)
+    apply_jaw_force(300, c_systems)
+    #create_displ(displ)
+    create_force_CSYS(outer, length, angle)
+    create_force(Fx, Fy, Fz, angle)
+
+def create_force_CSYS(outer, length, angle):
+    Ox = outer * math.cos(math.radians(angle))
+    Oy = outer * math.sin(math.radians(angle))
+    Oz = length
+    Ax = (outer-0.001) * math.cos(math.radians(angle))
+    Ay = (outer-0.001) * math.sin(math.radians(angle))
+    Az = length
+    force_CSYS = mdb.models['Model-1'].rootAssembly.DatumCsysByThreePoints(name='force_CSYS', 
+        coordSysType=CARTESIAN, origin=(Ox, Oy, Oz), point1=(Ax, Ay, Az), 
+        point2=(Ax-0.01, Ay-0.01, Az))
+    return force_CSYS
+    
+def create_force(Fx, Fy, Fz, angle):
+    pass
+
+def create_tie_constraint():
+    for j in JAWS:
+        jaw = 'Jaw-1-rad-'+str(j)
+        a = mdb.models['Model-1'].rootAssembly
+        s1 = a.instances[j].faces
+        side1Faces1 = s1.getSequenceFromMask(mask=('[#22084 ]', ), )
+        region2=a.Surface(side1Faces=side1Faces1, name=jaw+'_tie_constraint_set')
+        mdb.models['Model-1'].Tie(name=jaw+'_tie_constraint', master=region1, slave=region2, 
+        positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, thickness=OFF)
+    
+def __get_xy(radius, ref_angle):
+    x1 = radius * math.cos(math.radians(ref_angle+0.05))
+    x2 = radius * math.cos(math.radians(ref_angle-0.05))
+    y1 = radius * math.sin(math.radians(ref_angle+0.05))
+    y2 = radius * math.sin(math.radians(ref_angle-0.05))
+    return x1, y1, x2,y2
+
+def create_interaction():
+    z = jaw_length/100
+    mid_d = float(inner-outer)/2+inner
+    for j in JAWS:
+        jaw = 'Jaw-1-rad-'+str(j)
+        angle = (j-1)*(360.0/len(JAWS))
+        x1, y1, x2, y2 = __get_xy(mid_d, angle)
+        
+        # select areas on Jaw
+        a = mdb.models['Model-1'].rootAssembly
+        s1 = a.instances[jaw].faces
+        side1Faces1 = s1.findAt(((x1, y1, z), ), ((x2, y2, z), ),((x1, y1, z+jaw_length/2), ),((x2, y2, z+jaw_length/2), ))
+        region1=a.Surface(side1Faces=side1Faces1, name=jaw + '_master_surf')
+        
+        # select areas on Part
+        a = mdb.models['Model-1'].rootAssembly
+        s1 = a.instances['Part-1'].faces
+        side1Faces1 = s1.findAt(((x1, y1, z), ), ((x2, y2, z), ),((x1, y1, z+jaw_length/2), ),((x2, y2, z+jaw_length/2), ))
+        region2=a.Surface(side1Faces=side1Faces1, name='Part_slave_surf' + str(j))
+        
+        # apply interaction to Jaaw and Part
+        mdb.models['Model-1'].SurfaceToSurfaceContactStd(name='Int-'+str(j), 
+            createStepName='Initial', master=region1, slave=region2, sliding=FINITE, 
+            thickness=ON, interactionProperty='IntProp-1', adjustMethod=NONE, 
+            initialClearance=OMIT, datumAxis=None, clearanceRegion=None)
+
+def create_CSYS():
+    res=[]
+    for j in JAWS:
+        jaw = 'Jaw-1-rad-'+str(j)
+        # shift to 1 cause there is initial global CSYS with n=1
+        #  JAWS=1,2,3; csys_n = 2,3,4
+        csys_n = j+1
+        a = mdb.models['Model-1'].rootAssembly
+        d1 = a.instances[jaw].datums
+        v1 = a.instances[jaw].vertices
+        d2 = a.instances['Part-1'].datums
+        res.append(a.DatumCsysByThreePoints(origin=d1[2], point1=d2[2], point2=v1[7], 
+            name = jaw + '_csys-'+str(csys_n), coordSysType=CARTESIAN))
+    return res
+
+def create_jaw_BSs(c_systems):
+    for j in JAWS:
+        jaw = 'Jaw-1-rad-'+str(j)
+        #starts from 0 cause c_systems is passed to function
+        # JAWS=1,2,3; csys_n = 0,1,2
+        csys_n = j - 1
+        a = mdb.models['Model-1'].rootAssembly
+        f1 = a.instances['Jaw-1-rad-'+str(j)].faces
+        faces1 = f1.getSequenceFromMask(mask=('[#402 ]', ), )
+        region = a.Set(faces=faces1, name='Jaw_BS_set-'+str(j))
+        datum = mdb.models['Model-1'].rootAssembly.datums[c_systems[csys_n].id]
+        mdb.models['Model-1'].DisplacementBC(name='BC-'+str(j), createStepName='Initial', 
+            region=region, u1=UNSET, u2=SET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, 
+            amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=datum)
+  
+def create_step():
+    mdb.models['Model-1'].StaticStep(name='Step-1', previous='Initial')
+
+def apply_jaw_force(value, c_systems):
+    print c_systems
+    for j in JAWS:
+        jaw = 'Jaw-1-rad-'+str(j)
+        # JAWS=1,2,3; csys_n = 0,1,2
+        csys_n = j - 1
+        a = mdb.models['Model-1'].rootAssembly
+        v1 = a.instances[jaw].vertices
+        verts1 = v1.getSequenceFromMask(mask=('[#2 ]', ), )
+        region = a.Set(vertices=verts1, name=jaw+'force_set')
+        datum = mdb.models['Model-1'].rootAssembly.datums[c_systems[csys_n].id]
+        mdb.models['Model-1'].ConcentratedForce(name=jaw + 'load', createStepName='Step-1', 
+            region=region, cf1=value, distributionType=UNIFORM, field='', localCsys=datum)
+
+def assign_section(part_name, section_name):
+    p = mdb.models['Model-1'].parts[part_name]
+    if p.cells:  # if solid
+        region = p.Set(cells=p.cells, name=part_name+'_material_region')
+    else:        # if shell
+        region = p.Set(faces=p.faces, name=part_name+'_material_region')
+    p.SectionAssignment(region=region, sectionName=section_name, offset=0.0, 
+                offsetType=MIDDLE_SURFACE, offsetField='', 
+                thicknessAssignment=FROM_SECTION)          
+
+def run_job(home):
+    sys.__stdout__.write("Run job"+"\n")
+    Job1 = mdb.Job(name='Job-1', model='Model-1', description='', type=ANALYSIS, 
+    atTime=None, waitMinutes=0, waitHours=0, queue=None, memory=90, 
+    memoryUnits=PERCENTAGE, getMemoryFromAnalysis=True, 
+    explicitPrecision=SINGLE, nodalOutputPrecision=SINGLE, echoPrint=OFF, 
+    modelPrint=OFF, contactPrint=OFF, historyPrint=OFF, userSubroutine='', 
+    scratch=home, resultsFormat=ODB, multiprocessingMode=DEFAULT, numCpus=1, 
+    numGPUs=0)
+    sys.__stdout__.write("Submit"+"\n")
+    Job1.submit(consistencyChecking=OFF)
+    Job1.waitForCompletion()
+    sys.__stdout__.write("Job completed"+"\n")
+
+def create_path():
+    return session.Path(name='Path-1', type=EDGE_LIST, expression=(('PART-1', ((84, 3, 2, 
+    1), (96, 3, 2, 1), (108, 3, 2, 1), (120, 3, 2, 1), (132, 3, 2, 1), (144, 3, 
+    2, 1), (156, 3, 2, 1), (168, 3, 2, 1), (180, 3, 2, 1), (192, 3, 2, 1), (
+    204, 3, 2, 1), (216, 3, 2, 1), (228, 3, 2, 1), (240, 3, 2, 1), (252, 3, 2, 
+    1), (264, 3, 2, 1), (276, 3, 2, 1), (288, 3, 2, 1), (300, 3, 2, 1), (312, 
+    3, 2, 1), (324, 3, 2, 1), (336, 3, 2, 1), (348, 3, 2, 1), (360, 3, 2, 1), (
+    372, 3, 2, 1), (384, 3, 2, 1), (396, 3, 2, 1), (408, 3, 2, 1), (420, 3, 2, 
+    1), (432, 3, 2, 1), (12, 3, 2, 1), (24, 3, 2, 1), (36, 3, 2, 1), (48, 3, 2, 
+    1), (60, 3, 2, 1), )), ))
+
+Mdb()
+
+length, outer, inner = 0.06, 0.030, 0.028
+anglef = 20
+jaw_count = 3
+JAWS = range(1,jaw_count+1)
+jaw_length, jaw_height, jaw_width= 0.015, 0.015, 0.015
+jaw_young, jaw_poisson = 210e9, 0.29
+jaw_mesh_size = 0.005
+jaw_force = 300
+refresh = False
+displ = 0.001
+f_coeff = 0.3
+
+workpiece_young, workpiece_poisson = 210e9, 0.29
+workpiece_mesh_size = 0.003
+
+Fx,Fy,Fz=0, 0, 0
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='argparse')
+    
+    parser.add_argument("-dir", nargs=1)
+    parser.add_argument("-refresh", nargs=1)
+    parser.add_argument("-inner", nargs=1)
+    parser.add_argument("-outer", nargs=1)
+    parser.add_argument("-length", nargs=1)
+    parser.add_argument("-anglef", nargs=1)
+    parser.add_argument("-workpiece_young")
+    parser.add_argument("-workpiece_poisson")
+    parser.add_argument("-displ", nargs=1)
+    parser.add_argument("-jaw_length", nargs=1)
+    parser.add_argument("-jaw_height", nargs=1)
+    parser.add_argument("-jaw_width", nargs=1)
+    parser.add_argument("-jaw_young", nargs=1)
+    parser.add_argument("-jaw_poisson", nargs=1)
+
+    args, unknown = parser.parse_known_args()
+    sys.__stdout__.write(str(args))
+    sys.__stdout__.flush()
+    res = vars(args)
+    try:
+        home = res['dir'][0]
+    except:
+        res = {"dir" : ("C:\\DASworkspace",), 
+                "refresh" : (False,),
+                "inner" : (inner,),
+                "outer" : (outer,),
+                "length" :(length,),
+                "anglef" : (anglef,),
+                "workpiece_young" : (workpiece_young,),
+                "workpiece_poisson" : (workpiece_poisson,),
+                "displ" : (displ,),
+                "jaw_length" : (jaw_length,),
+                "jaw_height" : (jaw_height,),
+                "jaw_width" : (jaw_width,),
+                "jaw_young" : (jaw_young,),
+                "jaw_poisson": (jaw_poisson,),
+        }
+    for r in res:
+        try:
+            res[r][0] = res[r][0].replace(",",".")
+        except:
+            pass
+    home = res['dir'][0]
+    refresh = res['refresh'][0] in ["True","true"]
+    inner = float(res['inner'][0])
+    outer = float(res['outer'][0])
+    length = float(res['length'][0])
+    anglef = float(res['anglef'][0])
+    workpiece_young = float(res['workpiece_young'][0])
+    workpiece_poisson = float(res['workpiece_poisson'][0])
+    displ = float(res['displ'][0])
+    jaw_length= float(res['jaw_length'][0])
+    jaw_height= float(res['jaw_height'][0])
+    jaw_width= float(res['jaw_width'][0])
+    jaw_young = float(res['jaw_young'][0])
+    jaw_poisson = float(res['jaw_poisson'][0])
+    
+    os.chdir(home)
+    sys.__stdout__.write("Working directory="+str(home)+"\n")
+    sys.__stdout__.flush()
+
+    sys.__stdout__.write("Refresh="+str(refresh)+"\n")
+    sys.__stdout__.flush()
+
+    sys.__stdout__.write("START\n")
+    sys.__stdout__.flush()
+
+    workpiece_part=create_workpiece_part(length, inner, outer, anglef)
+    jaw_part = create_jaw_part(jaw_width, jaw_height, jaw_length)
+    j_material = create_material('Jaw_material', jaw_young, jaw_poisson)
+    w_material = create_material('Workpiece_material', workpiece_young, workpiece_poisson)
+    j_section = create_section(section_name='Jaw_section', material_name=j_material,type='solid')
+    w_section = create_section(section_name='Workpiece_section', material_name=w_material,type='shell',thickness=0.002)
+    
+    mesh_part(part_name = jaw_part, size = jaw_mesh_size, dev_factor=0.1, min_size_factor = 0.1 )
+    mesh_part(part_name = workpiece_part, size = workpiece_mesh_size, dev_factor=0.1, min_size_factor = 0.1 )
+
+    assign_section(part_name = workpiece_part, section_name = w_section)
+    assign_section(part_name = jaw_part, section_name = j_section)
+    
+    create_assembly(displ, outer, length, Fx, Fy, Fz, anglef)
+    a = mdb.models['Model-1'].rootAssembly
+    session.viewports['Viewport: 1'].setValues(displayedObject=a)
+    session.viewports['Viewport: 1'].assemblyDisplay.setValues(optimizationTasks=OFF, geometricRestrictions=OFF, stopConditions=OFF)
+    session.writeOBJFile(fileName=home+"/tmp_model.obj",canvasObjects= (session.viewports['Viewport: 1'], ))
+    if refresh:
+        sys.__stdout__.write("Refreshed!"+"\n")
+        sys.__stdout__.flush()
+        sys.exit()
+    #run_job(home)
+
+    o1 = session.openOdb(name=home+'/Job-1.odb')
+    odb = session.odbs[home+'/Job-1.odb']
+    scratchOdb = session.ScratchOdb(odb)
+    scratchOdb.rootAssembly.DatumCsysByThreePoints(name='CSYS-1', 
+        coordSysType=CYLINDRICAL, origin=(0.0, 0.0, 0.0), point1=(1.0, 0.0, 0.0), 
+        point2=(0.0, 1.0, 0.0))
+    dtm = session.scratchOdbs[home+'/Job-1.odb'].rootAssembly.datumCsyses['CSYS-1']
+
+    session.viewports['Viewport: 1'].setValues(displayedObject=o1)
+    session.viewports['Viewport: 1'].odbDisplay.display.setValues(plotState=(CONTOURS_ON_DEF, ))
+    session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+        variableLabel='U', outputPosition=NODAL, refinement=(COMPONENT, 'U1'), )
+    session.viewports['Viewport: 1'].odbDisplay.basicOptions.setValues(
+        transformationType=USER_SPECIFIED, datumCsys=dtm)
+    session.xyReportOptions.setValues(numberFormat=SCIENTIFIC)
+
+    pth = create_path()
+    session.XYDataFromPath(name='XYData-1', path=pth, includeIntersections=False, 
+                    projectOntoMesh=False, pathStyle=PATH_POINTS, numIntervals=10, 
+                    projectionTolerance=0, shape=DEFORMED, labelType=TRUE_DISTANCE)
+    sys.__stdout__.write("XY data created"+"\n")
+    sys.__stdout__.flush()
+    x0 = session.xyDataObjects['XYData-1']
+    session.writeXYReport(fileName=home+'/abaqus.rpt', appendMode=OFF, xyData=(x0, ))
+    session.writeOBJFile(fileName=home+"/tmp_model.obj",canvasObjects= (session.viewports['Viewport: 1'], ))
+    sys.__stdout__.write("Script completed!"+"\n")
+    sys.__stdout__.flush()
+
+
+
+
+

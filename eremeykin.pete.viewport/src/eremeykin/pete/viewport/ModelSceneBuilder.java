@@ -11,9 +11,11 @@ import javafx.scene.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.event.EventHandler;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
@@ -73,10 +75,11 @@ public class ModelSceneBuilder extends SceneBuilder {
             if (meshViews[0] != null) {
                 MeshView meshView = meshViews[0];
                 meshView.setMaterial(modelMaterial);
+                float maxX = 0, maxY = 0, maxZ = 0;
                 if (meshView.getMesh() instanceof TriangleMesh) {
                     TriangleMesh tMesh = (TriangleMesh) meshView.getMesh();
                     ObservableFloatArray points = tMesh.getPoints();
-                    float maxX = 0, maxY = 0, maxZ = 0;
+                    
                     for (int p = 0; p < points.size(); p += 3) {
                         float x = points.get(p);
                         float y = points.get(p);
@@ -96,6 +99,50 @@ public class ModelSceneBuilder extends SceneBuilder {
                 }
 
                 modelGroup.getChildren().addAll(meshViews);
+                ////////////////////////////////////
+                TriangleMesh m = new TriangleMesh();
+                m.getPoints().setAll(0, 0, 0, //P0
+                        100, 0, 0, //P1
+                        0, 100, 0, //P2
+                        100, 100, 0 //P3
+                );
+                m.getTexCoords().addAll(
+                        0.25f, 0, //T0
+                        0.5f, 0, //T1
+                        0, 0.25f, //T2
+                        0.25f, 0.25f, //T3
+                        0.5f, 0.25f, //T4
+                        0.75f, 0.25f, //T5
+                        1, 0.25f, //T6
+                        0, 0.5f, //T7
+                        0.25f, 0.5f, //T8
+                        0.5f, 0.5f, //T9
+                        0.75f, 0.5f, //T10
+                        1, 0.5f, //T11
+                        0.25f, 0.75f, //T12
+                        0.5f, 0.75f //T13
+                );
+                m.getFaces().addAll(
+                        
+                          1, 4, 0, 3, 2, 8 //P1,T4 ,P0,T3  ,P2,T8
+                        , 1, 4, 2, 8, 3, 9 //P1,T4 ,P2,T8  ,P3,T9
+                        
+                        , 1, 4, 2, 8, 0, 3
+                        , 1, 4, 3, 9, 2, 8
+                        
+                );
+                MeshView newMeshView = new MeshView(m);
+                
+                final PhongMaterial planeMaterial = new PhongMaterial();
+//                planeMaterial.setDiffuseColor(Color.BLUE);
+//                planeMaterial.setSpecularColor(Color.BLUE);
+
+                planeMaterial.setDiffuseColor(Color.web("#FF101060"));
+//                newMeshView.setMaterial(planeMaterial);
+                Box b = new Box(maxX*2,maxY*2,maxZ/1000);
+                b.translateZProperty().setValue(-0.25);
+                b.setMaterial(planeMaterial);
+                modelGroup.getChildren().addAll(b);
             }
             modelGroup.setScale(scale);
             world.getChildren().add(modelGroup);

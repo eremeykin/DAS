@@ -14,9 +14,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.layout.BorderPane;
 import javax.swing.BoxLayout;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
@@ -53,26 +56,21 @@ import org.openide.util.TaskListener;
     "CTL_ViewportFXTopComponent=ViewportFX Window",
     "HINT_ViewportFXTopComponent=This is a ViewportFX window"
 })
-public final class ViewportFXTopComponent extends TopComponent implements LookupListener, TaskListener {
+public final class ViewportFXTopComponent extends TopComponent implements TaskListener {
+
+    private Lookup.Result<Model> modelResult = null;
+    private LookupListener modelLookupListener = this.new ModelLookupListener();
+    private Lookup.Result<Task> taskResult = null;
+    private LookupListener taskLookupListerner = this.new TaskLookupListener();
 
     final JFXPanel fxPanel = new JFXPanel();
-    private Lookup.Result<Model> modelResult = null;
-    private Lookup.Result taskResult = null;
     private JFXPanel indPanel = new JFXPanel();
+    private Model model;
 
     public ViewportFXTopComponent() {
         initComponents();
         setName(Bundle.CTL_ViewportFXTopComponent());
         setToolTipText(Bundle.HINT_ViewportFXTopComponent());
-
-        Lookup.Template template = new Lookup.Template(Model.class);
-        CentralLookup cl = CentralLookup.getDefault();
-        modelResult = cl.lookup(template);
-        modelResult.addLookupListener(this);
-
-        template = new Lookup.Template(Task.class);
-        taskResult = cl.lookup(template);
-        taskResult.addLookupListener(this);
 
         Platform.setImplicitExit(false);
         //setLayout(new BorderLayout());
@@ -99,7 +97,7 @@ public final class ViewportFXTopComponent extends TopComponent implements Lookup
         s.setFill(javafx.scene.paint.Color.TRANSPARENT);
         indPanel.setScene(s);
         indPanel.setMaximumSize(new Dimension(60, 120));
-
+  
         fxPanel.setLayout(new BoxLayout(fxPanel, BoxLayout.X_AXIS));
         indPanel.setVisible(false);
         fxPanel.add(indPanel);
@@ -114,16 +112,37 @@ public final class ViewportFXTopComponent extends TopComponent implements Lookup
     private void initComponents() {
 
         jPanel2 = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 318, Short.MAX_VALUE)
+        );
+
+        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(ViewportFXTopComponent.class, "ViewportFXTopComponent.jButton1.text")); // NOI18N
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton1)
+                .addContainerGap(337, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -131,24 +150,42 @@ public final class ViewportFXTopComponent extends TopComponent implements Lookup
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
-        // TODO add custom code on component opening
+        modelResult = CentralLookup.getDefault().lookupResult(Model.class);
+        modelResult.addLookupListener(modelLookupListener);
+
+        taskResult = CentralLookup.getDefault().lookupResult(Task.class);
+        taskResult.addLookupListener(taskLookupListerner);
+
+        Model m = CentralLookup.getDefault().lookup(Model.class);
+        if (m != null) {
+            model = m;
+            updateView();
+        }
     }
 
     @Override
     public void componentClosed() {
-        // TODO add custom code on component closing
+        modelResult.removeLookupListener(modelLookupListener);
+        taskResult.removeLookupListener(taskLookupListerner);
     }
 
     void writeProperties(java.util.Properties p) {
@@ -167,57 +204,66 @@ public final class ViewportFXTopComponent extends TopComponent implements Lookup
 
     }
 
-    @Override
-    public void resultChanged(LookupEvent evt) {
-        Object o = evt.getSource();
-        if (o != null) {
-            Lookup.Result r = (Lookup.Result) o;
-            Collection infos = r.allInstances();
-            if (!infos.isEmpty()) {
-                this.open();
-                Iterator it = infos.iterator();
-                if (it.hasNext()) {
-                    Object obj = it.next();
-                    if (obj instanceof Task) {
-                        Task task = (Task) obj;
-                        while (task.isFinished()) {
-                            if (it.hasNext()) {
-                                task = (Task) it.next();
-                            }
-                        }
-                        if (task.isFinished()) {
-                            return;
-                        }
-                        task.addTaskListener(this);
-                        indPanel.setVisible(true);
-                    }
-                    if (obj instanceof Model) {
-                        final Model m = (Model) obj;
-                        ModelFileChangedListener readerChangedListener = new ModelFileChangedListener() {
+    private class ModelLookupListener implements LookupListener {
 
-                            @Override
-                            public void fileChanged(ModelFileChangedEvent evt) {
-//                            ViewportFXTopComponent.this.fxPanel.removeAll();
-                                Platform.runLater(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        SceneBuilder builder = new ModelSceneBuilder();
-                                        Director director = new Director();
-                                        director.setSceneBuilder(builder);
-                                        director.buildScene(m.getModelFile());
-                                        Scene scene = director.getScene();
-                                        fxPanel.setScene(scene);
-                                    }
-                                });
-                            }
-
-                        };
-                        readerChangedListener.fileChanged(null);
-                        m.addModelFileChangedListener(readerChangedListener);
-                    }
+        @Override
+        public void resultChanged(LookupEvent ev) {
+            Collection<? extends Model> allModels = modelResult.allInstances();
+            if (!allModels.isEmpty()) {
+                for (Model model : allModels) {
+                    setModel(model);
                 }
             }
         }
+    }
+
+    private class TaskLookupListener implements LookupListener {
+
+        @Override
+        public void resultChanged(LookupEvent ev) {
+            Iterator iter = taskResult.allInstances().iterator();
+            Task task = (Task)iter.next();
+            while (task.isFinished()) {
+                if (iter.hasNext()) {
+                    task = (Task) iter.next();
+                }
+            }
+            if (task.isFinished()) {
+                return;
+            }
+            task.addTaskListener(ViewportFXTopComponent.this);
+            indPanel.setVisible(true);
+        }
+
+    }
+
+
+    private void updateView() {
+        SceneBuilder builder = new ModelSceneBuilder();
+        Director director = new Director();
+        director.setSceneBuilder(builder);
+        director.buildScene(model.getModelFile());
+        Scene scene = director.getScene();
+        fxPanel.setScene(scene);
+    }
+
+    private void setModel(final Model model) {
+        this.model = model;
+        ModelFileChangedListener readerChangedListener = new ModelFileChangedListener() {
+
+            @Override
+            public void fileChanged(ModelFileChangedEvent evt) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateView();
+                    }
+                });
+            }
+
+        };
+        readerChangedListener.fileChanged(null);
+        model.addModelFileChangedListener(readerChangedListener);
     }
 
     @Override
