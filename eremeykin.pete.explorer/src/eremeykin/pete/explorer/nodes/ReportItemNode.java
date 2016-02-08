@@ -17,16 +17,17 @@ import org.openide.nodes.Node;
  */
 public class ReportItemNode extends AbstractNode{
 
-    static int c = 0;
-    
-    public ReportItemNode(Children children) {
-        super(children);
+    private final Object obj;
+
+   
+    public ReportItemNode(Object obj) {
+        super(Children.LEAF);
+        this.obj = obj;
     }
 
     @Override
     public String getDisplayName() {
-        c++;
-        return "Node "+c; //To change body of generated methods, choose Tools | Templates.
+        return obj.toString(); //To change body of generated methods, choose Tools | Templates.
     }
     
     

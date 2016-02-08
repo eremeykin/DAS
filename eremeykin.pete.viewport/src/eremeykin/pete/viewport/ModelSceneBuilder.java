@@ -3,14 +3,23 @@ package eremeykin.pete.viewport;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import eremeykin.pete.api.core.logger.Logger;
 import eremeykin.pete.api.core.logger.LoggerManager;
+import eremeykin.pete.api.model.ModelChangedEvent;
+import eremeykin.pete.api.model.ModelChangedListener;
+import eremeykin.pete.api.model.ModelParameter;
+import eremeykin.pete.api.model.ModelParameterChangedEvent;
+import eremeykin.pete.api.model.ModelParameterChangedListener;
 import java.io.File;
+import java.util.function.Predicate;
+import javafx.animation.RotateTransition;
 import javafx.application.ConditionalFeature;
 import javafx.application.Platform;
+import javafx.beans.property.DoubleProperty;
 import javafx.collections.ObservableFloatArray;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.event.EventHandler;
+import javafx.geometry.Point3D;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -20,15 +29,18 @@ import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Transform;
+import javafx.scene.transform.Translate;
 import javax.swing.JOptionPane;
+import static java.lang.Math.*;
 
 /**
  *
  * @author cmcastil
  */
-public class ModelSceneBuilder extends SceneBuilder {
+public final class ModelSceneBuilder extends SceneBuilder implements ModelChangedListener {
 
-    final Group root = new Group();
+    Group root = new Group();
     final Xform axisGroup = new Xform();
     final Xform modelGroup = new Xform();
     final Xform world = new Xform();
@@ -48,6 +60,12 @@ public class ModelSceneBuilder extends SceneBuilder {
     private static final double MOUSE_SPEED = 0.1;
     private static final double ROTATION_SPEED = 5.0;
     private static final double TRACK_SPEED = 0.3;
+    private Box plane = new Box();
+    private Box planeR = new Box();
+    private Rotate rotate = new Rotate();
+    private Translate translate = new Translate();
+    private double maxZ = 0;
+    private final File modelFile;
 
     double mousePosX;
     double mousePosY;
@@ -56,8 +74,55 @@ public class ModelSceneBuilder extends SceneBuilder {
     double mouseDeltaX;
     double mouseDeltaY;
 
+    public ModelSceneBuilder(File modelFile) {
+        this.modelFile = modelFile;
+        buildCamera();
+        buildModel();
+        buildAxes();
+        buildScene();
+    }
+    
+    public ModelSceneBuilder() {
+        this.modelFile = null;
+        buildCamera();
+        buildModel();
+        buildAxes();
+        buildScene();
+    }
+    
+
+    private void removeRotate() {
+        planeR.getTransforms().removeIf(new Predicate<Transform>() {
+            @Override
+            public boolean test(Transform t) {
+                return t instanceof Rotate;
+            }
+        });
+    }
+
+    private void removeTranslate() {
+        plane.getTransforms().removeIf(new Predicate<Transform>() {
+            @Override
+            public boolean test(Transform t) {
+                return t instanceof Translate;
+            }
+        });
+    }
+
+    public void rotate(double angle) {
+        removeRotate();
+        rotate.setAngle(angle);
+        planeR.getTransforms().add(rotate);
+    }
+
+    public void translate(double value) {
+        removeTranslate();
+        translate.setZ(-maxZ * value);
+        plane.getTransforms().add(translate);
+    }
+
     @Override
-    public void buildModel(File modelFile) {
+    public void buildModel() {
         try {
             MeshView[] meshViews;
             if (modelFile != null) {
@@ -79,70 +144,53 @@ public class ModelSceneBuilder extends SceneBuilder {
                 if (meshView.getMesh() instanceof TriangleMesh) {
                     TriangleMesh tMesh = (TriangleMesh) meshView.getMesh();
                     ObservableFloatArray points = tMesh.getPoints();
-                    
+
                     for (int p = 0; p < points.size(); p += 3) {
                         float x = points.get(p);
-                        float y = points.get(p);
-                        float z = points.get(p);
-                        if (maxX < x) {
-                            maxX = x;
+                        float y = points.get(p + 1);
+                        float z = points.get(p + 2);
+                        if (p < 30) {
+                            System.out.println("x=" + x);
+                            System.out.println("y=" + y);
+                            System.out.println("z=" + z);
                         }
-                        if (maxY < y) {
-                            maxY = y;
+                        if (maxX < abs(x)) {
+                            maxX = abs(x);
                         }
-                        if (maxZ < z) {
-                            maxZ = z;
+                        if (maxY < abs(y)) {
+                            maxY = abs(y);
+                        }
+                        if (maxZ < abs(z)) {
+                            maxZ = abs(z);
                         }
                     }
+                    this.maxZ = maxZ;
+
                     float max = Math.max(Math.max(maxX, maxY), maxZ);
                     scale = AXIS_LENGTH / max / 3;
                 }
 
                 modelGroup.getChildren().addAll(meshViews);
                 ////////////////////////////////////
-                TriangleMesh m = new TriangleMesh();
-                m.getPoints().setAll(0, 0, 0, //P0
-                        100, 0, 0, //P1
-                        0, 100, 0, //P2
-                        100, 100, 0 //P3
-                );
-                m.getTexCoords().addAll(
-                        0.25f, 0, //T0
-                        0.5f, 0, //T1
-                        0, 0.25f, //T2
-                        0.25f, 0.25f, //T3
-                        0.5f, 0.25f, //T4
-                        0.75f, 0.25f, //T5
-                        1, 0.25f, //T6
-                        0, 0.5f, //T7
-                        0.25f, 0.5f, //T8
-                        0.5f, 0.5f, //T9
-                        0.75f, 0.5f, //T10
-                        1, 0.5f, //T11
-                        0.25f, 0.75f, //T12
-                        0.5f, 0.75f //T13
-                );
-                m.getFaces().addAll(
-                        
-                          1, 4, 0, 3, 2, 8 //P1,T4 ,P0,T3  ,P2,T8
-                        , 1, 4, 2, 8, 3, 9 //P1,T4 ,P2,T8  ,P3,T9
-                        
-                        , 1, 4, 2, 8, 0, 3
-                        , 1, 4, 3, 9, 2, 8
-                        
-                );
-                MeshView newMeshView = new MeshView(m);
-                
-                final PhongMaterial planeMaterial = new PhongMaterial();
-//                planeMaterial.setDiffuseColor(Color.BLUE);
-//                planeMaterial.setSpecularColor(Color.BLUE);
 
-                planeMaterial.setDiffuseColor(Color.web("#FF101060"));
-//                newMeshView.setMaterial(planeMaterial);
-                Box b = new Box(maxX*2,maxY*2,maxZ/1000);
-                b.translateZProperty().setValue(-0.25);
-                b.setMaterial(planeMaterial);
-                modelGroup.getChildren().addAll(b);
+                final PhongMaterial planeZMaterial = new PhongMaterial();
+                planeZMaterial.setDiffuseColor(Color.web("#FF101060"));
+                Box bZ = new Box(maxX * 2, maxY * 2, maxZ / 1000);
+                bZ.setMaterial(planeZMaterial);
+
+                final PhongMaterial planeRMaterial = new PhongMaterial();
+                planeRMaterial.setDiffuseColor(Color.web("#1010FF60"));
+                Box bR = new Box(maxZ / 1000, maxY, maxZ);
+                bR.setMaterial(planeRMaterial);
+                bR.translateYProperty().setValue(maxY / 2);
+                bR.translateZProperty().setValue(-maxZ / 2);
+
+                modelGroup.getChildren().addAll(bZ);
+                modelGroup.getChildren().addAll(bR);
+                this.plane = bZ;
+                this.planeR = bR;
+                this.rotate = new Rotate(0, 0, -maxY / 2, 0, Rotate.Z_AXIS);
+
             }
             modelGroup.setScale(scale);
             world.getChildren().add(modelGroup);
@@ -274,4 +322,30 @@ public class ModelSceneBuilder extends SceneBuilder {
         scene.setCamera(camera);
     }
 
+    @Override
+    public void modelChanged(ModelChangedEvent evt) {
+        ModelParameter mp = evt.getParameterSource();
+        if (mp.getId() == 28) {
+            if (mp.getValue().equals("ВЫКЛ")) {
+                planeR.setVisible(false);
+            } else {
+                planeR.setVisible(true);
+            }
+        }
+
+        if (mp.getId() == 31) {
+            if (mp.getValue().equals("ВЫКЛ")) {
+                plane.setVisible(false);
+            } else {
+                plane.setVisible(true);
+            }
+        }
+
+        if (mp.getId() == 29) {
+            rotate(Double.valueOf(mp.getValue()));
+        }
+        if (mp.getId() == 32) {
+            translate(Double.valueOf(mp.getValue()));
+        }
+    }
 }

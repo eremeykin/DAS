@@ -20,7 +20,7 @@ public abstract class SceneBuilder {
 
     public abstract void buildCamera();
 
-    public abstract void buildModel(File modelFile);
+    public abstract void buildModel();
 
     public abstract void buildAxes();
 

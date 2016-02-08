@@ -8,19 +8,28 @@ package eremeykin.pete.viewport;
 import eremeykin.pete.api.core.centrallookupapi.CentralLookup;
 import eremeykin.pete.api.model.*;
 import eremeykin.pete.api.model.Model;
+import eremeykin.pete.reports.api.Report;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Label;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.Iterator;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
+import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -67,6 +76,8 @@ public final class ViewportFXTopComponent extends TopComponent implements TaskLi
     private JFXPanel indPanel = new JFXPanel();
     private Model model;
 
+    ModelSceneBuilder builder = new ModelSceneBuilder();
+
     public ViewportFXTopComponent() {
         initComponents();
         setName(Bundle.CTL_ViewportFXTopComponent());
@@ -77,17 +88,66 @@ public final class ViewportFXTopComponent extends TopComponent implements TaskLi
         jPanel2.setLayout(new BorderLayout());
         jPanel2.add(fxPanel);
         fxPanel.setVisible(true);
-        Platform.runLater(new Runnable() {
+
+        jButton1.setBorder(null);
+        jButton1.setText(null);
+        jButton1.addActionListener(new ActionListener() {
             @Override
-            public void run() {
-                SceneBuilder builder = new ModelSceneBuilder();
-                Director director = new Director();
-                director.setSceneBuilder(builder);
-                director.buildScene();
-                Scene scene = director.getScene();
-                fxPanel.setScene(scene);
+            public void actionPerformed(ActionEvent e) {
+                ModelParameter p = model.getParameterByID(model.getRoot(), 32);
+                Double value = Double.valueOf(p.getValue());
+                value += 0.1;
+                p.setValue(Double.toString(value));
             }
         });
+
+        jButton2.setBorder(null);
+        jButton2.setText(null);
+
+        jButton2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ModelParameter p = model.getParameterByID(model.getRoot(), 32);
+                Double value = Double.valueOf(p.getValue());
+                value -= 0.1;
+                p.setValue(Double.toString(value));
+            }
+        });
+
+        jButton3.setBorder(null);
+        jButton3.setText(null);
+        jButton3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ModelParameter p = model.getParameterByID(model.getRoot(), 29);
+                Double angle = Double.valueOf(p.getValue());
+                angle -= 15.0;
+                p.setValue(Double.toString(angle));
+            }
+        });
+        jButton4.setBorder(null);
+        jButton4.setText(null);
+        jButton4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ModelParameter p = model.getParameterByID(model.getRoot(), 29);
+                Double angle = Double.valueOf(p.getValue());
+                angle += 15.0;
+                p.setValue(Double.toString(angle));
+            }
+        });
+        updateView();
+//        Platform.runLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                SceneBuilder builder = new ModelSceneBuilder();
+//                Director director = new Director();
+//                director.setSceneBuilder(builder);
+//                director.buildScene();
+//                Scene scene = director.getScene();
+//                fxPanel.setScene(scene);
+//            }
+//        });
 
         ProgressIndicator pin = new ProgressIndicator();
         pin.setProgress(-1.0f);
@@ -97,7 +157,7 @@ public final class ViewportFXTopComponent extends TopComponent implements TaskLi
         s.setFill(javafx.scene.paint.Color.TRANSPARENT);
         indPanel.setScene(s);
         indPanel.setMaximumSize(new Dimension(60, 120));
-  
+
         fxPanel.setLayout(new BoxLayout(fxPanel, BoxLayout.X_AXIS));
         indPanel.setVisible(false);
         fxPanel.add(indPanel);
@@ -112,60 +172,77 @@ public final class ViewportFXTopComponent extends TopComponent implements TaskLi
     private void initComponents() {
 
         jPanel2 = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
+        jToolBar1 = new javax.swing.JToolBar();
+        jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 420, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 318, Short.MAX_VALUE)
+            .addGap(0, 349, Short.MAX_VALUE)
         );
 
+        jToolBar1.setFloatable(false);
+        jToolBar1.setRollover(true);
+
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/call_point_18l.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(ViewportFXTopComponent.class, "ViewportFXTopComponent.jButton2.text")); // NOI18N
+        jButton2.setFocusable(false);
+        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(jButton2);
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/call_point_18r.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(ViewportFXTopComponent.class, "ViewportFXTopComponent.jButton1.text")); // NOI18N
+        jButton1.setFocusable(false);
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(jButton1);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton1)
-                .addContainerGap(337, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/rollback-l.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton3, org.openide.util.NbBundle.getMessage(ViewportFXTopComponent.class, "ViewportFXTopComponent.jButton3.text")); // NOI18N
+        jButton3.setFocusable(false);
+        jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(jButton3);
+
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/rollback-r.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton4, org.openide.util.NbBundle.getMessage(ViewportFXTopComponent.class, "ViewportFXTopComponent.jButton4.text")); // NOI18N
+        jButton4.setFocusable(false);
+        jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(jButton4);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
@@ -176,8 +253,10 @@ public final class ViewportFXTopComponent extends TopComponent implements TaskLi
         taskResult.addLookupListener(taskLookupListerner);
 
         Model m = CentralLookup.getDefault().lookup(Model.class);
-        if (m != null) {
+        if (m != null && model != null) {
+            model.removeModelChangedListener(builder);
             model = m;
+            model.addModelChangedListener(builder);
             updateView();
         }
     }
@@ -222,7 +301,7 @@ public final class ViewportFXTopComponent extends TopComponent implements TaskLi
         @Override
         public void resultChanged(LookupEvent ev) {
             Iterator iter = taskResult.allInstances().iterator();
-            Task task = (Task)iter.next();
+            Task task = (Task) iter.next();
             while (task.isFinished()) {
                 if (iter.hasNext()) {
                     task = (Task) iter.next();
@@ -237,18 +316,28 @@ public final class ViewportFXTopComponent extends TopComponent implements TaskLi
 
     }
 
-
     private void updateView() {
-        SceneBuilder builder = new ModelSceneBuilder();
-        Director director = new Director();
-        director.setSceneBuilder(builder);
-        director.buildScene(model.getModelFile());
-        Scene scene = director.getScene();
+//        Director director = new Director();
+//        builder = new ModelSceneBuilder();
+//        director.setSceneBuilder(builder);
+//        director.buildScene(model!=null?model.getModelFile():null);
+        if (this.model != null) {
+            this.model.removeModelChangedListener(builder);
+        }
+        builder = new ModelSceneBuilder(model != null ? model.getModelFile() : null);
+        if (model != null) {
+            model.addModelChangedListener(builder);
+        }
+        Scene scene = builder.getScene();
         fxPanel.setScene(scene);
     }
 
     private void setModel(final Model model) {
+        if (this.model != null) {
+            this.model.removeModelChangedListener(builder);
+        }
         this.model = model;
+        this.model.addModelChangedListener(builder);
         ModelFileChangedListener readerChangedListener = new ModelFileChangedListener() {
 
             @Override

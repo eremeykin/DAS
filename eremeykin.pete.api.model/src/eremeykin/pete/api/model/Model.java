@@ -6,8 +6,10 @@
 package eremeykin.pete.api.model;
 
 import java.io.File;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -89,6 +91,9 @@ public class Model implements ModelParameterChangedListener {
     }
 
     public ModelParameter getParameterByID(ModelParameter rootParameter, Integer id) {
+        if (root.getId().equals(id)){
+            return root;
+        }
         for (ModelParameter p : rootParameter.getChildren()) {
             if (p.getId().equals(id)) {
                 return p;
@@ -96,6 +101,38 @@ public class Model implements ModelParameterChangedListener {
                 ModelParameter subParam = getParameterByID(p, id);
                 if (subParam != null) {
                     return subParam;
+                }
+            }
+        }
+        return null;
+    }
+    
+    public Map<Integer, ModelParameter> asMap(){
+        HashMap<Integer, ModelParameter> result = new HashMap<>();
+        asMap(root,result);
+        return result;
+    }
+    
+    private void asMap(ModelParameter rootParameter, Map<Integer, ModelParameter> map){
+        map.put(rootParameter.getId(), rootParameter);
+        for (ModelParameter p : rootParameter.getChildren()) {
+            asMap(p, map);            
+        }
+    }
+    
+    public Map.Entry<ModelParameter,Integer> getParameterAndLevelByID(ModelParameter rootParameter, Integer id){
+        Integer level = 0;
+        if (root.getId().equals(id)){
+            return new AbstractMap.SimpleEntry<>(root, level);
+        }
+        level++;
+        for (ModelParameter p : rootParameter.getChildren()) {
+            if (p.getId().equals(id)) {
+                return new AbstractMap.SimpleEntry<>(p, level);
+            } else {
+                Map.Entry<ModelParameter, Integer> pL = getParameterAndLevelByID(p, id);
+                if (pL != null) {
+                    return new AbstractMap.SimpleEntry<>(pL.getKey(), pL.getValue()+level);
                 }
             }
         }
