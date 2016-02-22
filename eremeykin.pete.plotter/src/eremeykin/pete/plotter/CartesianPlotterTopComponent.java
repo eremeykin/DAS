@@ -12,33 +12,26 @@ import eremeykin.pete.api.core.workspace.WorkspaceManager;
 import eremeykin.pete.api.model.Model;
 import eremeykin.pete.api.model.ModelChangedEvent;
 import eremeykin.pete.api.model.ModelChangedListener;
-import eremeykin.pete.api.model.ModelParameter;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.StandardWatchEventKinds;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicBoolean;
+import javafx.application.Platform;
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.Plot;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.PolarPlot;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
@@ -46,71 +39,66 @@ import org.jfree.data.xy.XYSeriesCollection;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.Task;
 
 /**
  * Top component which displays something.
  */
 //@ConvertAsProperties(
-//        dtd = "-//eremeykin.pete.plotter//Plotter//EN",
+//        dtd = "-//eremeykin.pete.plotter//CartesianPlotter//EN",
 //        autostore = false
 //)
-//@TopComponent.Description(
-//        preferredID = "PlotterTopComponent",
-//        //iconBase="SET/PATH/TO/ICON/HERE", 
-//        persistenceType = TopComponent.PERSISTENCE_ALWAYS
-//)
-//@TopComponent.Registration(mode = "editor", openAtStartup = false)
-//@ActionID(category = "Window", id = "eremeykin.pete.plotter.PlotterTopComponent")
-//@ActionReference(path = "Menu/Window" /*, position = 333 */)
-//@TopComponent.OpenActionRegistration(
-//        displayName = "#CTL_PlotterAction",
-//        preferredID = "PlotterTopComponent"
-//)
-//@Messages({
-//    "CTL_PlotterAction=Plotter",
-//    "CTL_PlotterTopComponent=Plotter Window",
-//    "HINT_PlotterTopComponent=This is a Plotter window"
-//})
-public abstract class PlotterTopComponent extends TopComponent implements LookupListener, ModelChangedListener, FileWatcher.Updateable {
+@TopComponent.Description(
+        preferredID = "CartesianPlotterTopComponent",
+        //iconBase="SET/PATH/TO/ICON/HERE", 
+        persistenceType = TopComponent.PERSISTENCE_ALWAYS
+)
+@TopComponent.Registration(mode = "explorer", openAtStartup = false)
+@ActionID(category = "Window", id = "eremeykin.pete.plotter.CartesianPlotterTopComponent")
+@ActionReference(path = "Menu/Window" /*, position = 333 */)
+@TopComponent.OpenActionRegistration(
+        displayName = "#CTL_CartesianPlotterAction",
+        preferredID = "CartesianPlotterTopComponent"
+)
+@Messages({
+    "CTL_CartesianPlotterAction=CartesianPlotter",
+    "CTL_CartesianPlotterTopComponent=CartesianPlotter Window",
+    "HINT_CartesianPlotterTopComponent=This is a CartesianPlotter window"
+})
+public final class CartesianPlotterTopComponent extends TopComponent implements LookupListener, ModelChangedListener, FileWatcher.Updateable {
 
     private static final Logger LOGGER = LoggerManager.getLogger(PlotterTopComponent.class);
     private File home;
     Model model;
     private Lookup.Result<Model> modelResult = null;
 
-    private final XYSeries toleranceSeries = new XYSeries("Tolerance");
-    private final XYSeries dataSeries = new XYSeries("Deformation");
-//    private final FileWatcher watchThread = new FileWatcher(home, this);
+    private final FileWatcher watchThread = new FileWatcher(this);
     private ChartPanel chartPanel;
-    
-    
-    
-    public PlotterTopComponent() {
+    private XYPlot plot;
+
+    public CartesianPlotterTopComponent() {
         initComponents();
-//        setName(Bundle.CTL_PlotterTopComponent());
-//        setToolTipText(Bundle.HINT_PlotterTopComponent());
-        
-        
-    }
-    
-    void init(TopComponent tc){
+        setName(Bundle.CTL_CartesianPlotterTopComponent());
+        setToolTipText(Bundle.HINT_CartesianPlotterTopComponent());
         final XYSeriesCollection dataset = new XYSeriesCollection();
+
+        final XYSeries toleranceSeries = new XYSeries("Tolerance");
+        final XYSeries dataSeries = new XYSeries("Deformation");
+
         dataset.addSeries(dataSeries);
         dataset.addSeries(toleranceSeries);
         final JFreeChart chart = createChart(dataset);
         chartPanel = new ChartPanel(chart);
-        tc.setLayout(new java.awt.BorderLayout());
-        tc.add(chartPanel, BorderLayout.CENTER);
-        tc.validate();
+        setLayout(new java.awt.BorderLayout());
+        add(chartPanel, BorderLayout.CENTER);
+        validate();
+
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -119,45 +107,35 @@ public abstract class PlotterTopComponent extends TopComponent implements Lookup
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(PlotterTopComponent.class, "PlotterTopComponent.jLabel1.text")); // NOI18N
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addContainerGap(275, Short.MAX_VALUE))
+            .addGap(0, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addContainerGap(274, Short.MAX_VALUE))
+            .addGap(0, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
         modelResult = CentralLookup.getDefault().lookupResult(Model.class);
         modelResult.addLookupListener(this);
         home = WorkspaceManager.INSTANCE.getWorkspace();
-//        if (!watchThread.isAlive())
-//            watchThread.start();
+        try {
+            watchThread.start();
+        } catch (IllegalThreadStateException exc) {
+        }
     }
 
     @Override
     public void componentClosed() {
         model.removeModelChangedListener(this);
-//        watchThread.stopWatch();
+        watchThread.stopWatch();
     }
 
     void writeProperties(java.util.Properties p) {
@@ -169,14 +147,15 @@ public abstract class PlotterTopComponent extends TopComponent implements Lookup
     }
 
     private void clear() {
-        toleranceSeries.clear();
-        dataSeries.clear();
+
+//        toleranceSeries.clear();
+//        dataSeries.clear();
     }
-    
-//    @Override
-    public void update(File home) {
+
+    @Override
+    public void update() {
         // for first rpt file
-        if (model == null){
+        if (model == null) {
             clear();
             return;
         }
@@ -218,17 +197,54 @@ public abstract class PlotterTopComponent extends TopComponent implements Lookup
             clear();
             return;
         }
-        fillData(tmpList, dataSeries, toleranceSeries);       
-        
+        fillData(tmpList);
+
     }
 
-    abstract void fillData(List<Map.Entry<Double, Double>> tmpList, XYSeries dataSeries, XYSeries toleranceSeries);
-    
-    abstract FilenameFilter filter();
-    
-    abstract JFreeChart createChart(XYDataset dataset);
-    
-//    private static JFreeChart createChart(XYDataset dataset) {
+    protected void fillData(List<Map.Entry<Double, Double>> tmpList) {
+        final XYSeriesCollection dataset = new XYSeriesCollection();
+
+        final XYSeries toleranceSeries = new XYSeries("Tolerance");
+        final XYSeries dataSeries = new XYSeries("Deformation");
+
+        for (Map.Entry<Double, Double> point : tmpList) {
+            Double xv = point.getKey();
+            Double yv = point.getValue();
+            if (xv == null || yv == null) {
+                continue;
+            }
+            dataSeries.add(xv, yv);
+            toleranceSeries.add(xv, Double.valueOf(model.getParameterByID(model.getRoot(), 5).getValue()));
+        }
+        dataset.addSeries(dataSeries);
+        dataset.addSeries(toleranceSeries);
+        plot.setDataset(dataset);
+    }
+
+    JFreeChart createChart(XYDataset dataset) {
+        // create the chart...
+        final JFreeChart chart = ChartFactory.createXYLineChart(
+                "Деформации детали", // chart title
+                "Расстояние", // x axis label
+                "Величина деформации", // y axis label
+                dataset, // data
+                PlotOrientation.VERTICAL,
+                true, // include legend
+                true, // tooltips
+                false // urls
+        );
+
+        chart.setBackgroundPaint(Color.white);
+        plot = chart.getXYPlot();
+        plot.setBackgroundPaint(Color.WHITE);
+        //    plot.setAxisOffset(new Spacer(Spacer.ABSOLUTE, 5.0, 5.0, 5.0, 5.0));
+        plot.setDomainGridlinePaint(Color.DARK_GRAY);
+        plot.setRangeGridlinePaint(Color.DARK_GRAY);
+        final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+        renderer.setSeriesLinesVisible(0, true);
+        renderer.setSeriesShapesVisible(0, false);
+        plot.setRenderer(renderer);
+        return chart;
 //        final JFreeChart chart = ChartFactory.createPolarChart("Деформации детали", dataset, true, true, false);
 //        chart.setBackgroundPaint(Color.white);
 //        final PolarPlot plot = (PolarPlot) chart.getPlot();
@@ -239,20 +255,34 @@ public abstract class PlotterTopComponent extends TopComponent implements Lookup
 //        renderer.setSeriesLinesVisible(0, true);
 //        renderer.setSeriesShapesVisible(0, false);
 //        return chart;
-//    }
+    }
 
-//    @Override
-//    public void modelChanged(ModelChangedEvent evt) {
-//            update(home);
-//    }
-//
-//    @Override
-//    public void resultChanged(LookupEvent ev) {
-//        Collection<? extends Model> allModels = modelResult.allInstances();
-//        if (!allModels.isEmpty()) {
-//            model = allModels.iterator().next();
-//            modelChanged(null);
-//        }
-//    }
+    FilenameFilter filter() {
+        return new FilenameFilter() {
 
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith("A.rpt");
+            }
+        };
+    }
+
+    @Override
+    public void modelChanged(ModelChangedEvent evt) {
+        update();
+    }
+
+    @Override
+    public void resultChanged(LookupEvent ev) {
+        Collection<? extends Model> allModels = modelResult.allInstances();
+        if (!allModels.isEmpty()) {
+            model = allModels.iterator().next();
+            modelChanged(null);
+        }
+    }
+
+    @Override
+    public File home() {
+        return home;
+    }
 }

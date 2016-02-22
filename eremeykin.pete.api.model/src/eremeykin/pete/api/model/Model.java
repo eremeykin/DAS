@@ -139,6 +139,16 @@ public class Model implements ModelParameterChangedListener {
         return null;
     }
 
+    public void refresh(){
+        for (Integer id : asMap().keySet()){
+            ModelParameter p = getParameterByID(root, id);
+            String v = p.getValue();
+            if (v!=null){
+                p.setValue(v);
+            }
+        }
+    }
+    
     public void addModelChangedListener(ModelChangedListener listener) {
         modelListeners.add(listener);
     }

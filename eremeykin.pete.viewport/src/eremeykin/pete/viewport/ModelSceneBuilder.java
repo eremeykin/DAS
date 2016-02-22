@@ -190,7 +190,6 @@ public final class ModelSceneBuilder extends SceneBuilder implements ModelChange
                 this.plane = bZ;
                 this.planeR = bR;
                 this.rotate = new Rotate(0, 0, -maxY / 2, 0, Rotate.Z_AXIS);
-
             }
             modelGroup.setScale(scale);
             world.getChildren().add(modelGroup);
@@ -325,7 +324,7 @@ public final class ModelSceneBuilder extends SceneBuilder implements ModelChange
     @Override
     public void modelChanged(ModelChangedEvent evt) {
         ModelParameter mp = evt.getParameterSource();
-        if (mp.getId() == 28) {
+        if (mp.getId() == 29) {
             if (mp.getValue().equals("ВЫКЛ")) {
                 planeR.setVisible(false);
             } else {
@@ -333,7 +332,7 @@ public final class ModelSceneBuilder extends SceneBuilder implements ModelChange
             }
         }
 
-        if (mp.getId() == 31) {
+        if (mp.getId() == 32) {
             if (mp.getValue().equals("ВЫКЛ")) {
                 plane.setVisible(false);
             } else {
@@ -341,10 +340,10 @@ public final class ModelSceneBuilder extends SceneBuilder implements ModelChange
             }
         }
 
-        if (mp.getId() == 29) {
+        if (mp.getId() == 30) {
             rotate(Double.valueOf(mp.getValue()));
         }
-        if (mp.getId() == 32) {
+        if (mp.getId() == 33) {
             translate(Double.valueOf(mp.getValue()));
         }
     }

@@ -19,26 +19,22 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.util.Units;
+import org.apache.poi.xwpf.usermodel.BreakType;
 import org.apache.poi.xwpf.usermodel.Document;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.TextAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.*;
 import org.openide.util.NbBundle.Messages;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTRowImpl;
 
 @ActionID(
         category = "Tools",
@@ -125,18 +121,41 @@ public final class ReportAction implements ActionListener, LookupListener {
         r3.setBold(false);
         r3.setFontFamily("Times New Roman");
         r3.setFontSize(14);
-        
-        File plotFile = new File(WorkspaceManager.INSTANCE.getWorkspace().getAbsolutePath()+"/plot.png");
+
+        File uPlotFile = new File(WorkspaceManager.INSTANCE.getWorkspace().getAbsolutePath() + "/uplot.png");
         try {
-            byte [] picbytes = IOUtils.toByteArray(new FileInputStream(plotFile));
+            byte[] picbytes = IOUtils.toByteArray(new FileInputStream(uPlotFile));
             doc.addPictureData(picbytes, XWPFDocument.PICTURE_TYPE_PNG);
-            doc.createParagraph().createRun().addPicture(new FileInputStream(plotFile), Document.PICTURE_TYPE_PNG, "plot.png", Units.toEMU(450), Units.toEMU(337));
-        } catch (InvalidFormatException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IOException ex) {
+            XWPFRun pr = doc.createParagraph().createRun();
+            pr.addPicture(new FileInputStream(uPlotFile), Document.PICTURE_TYPE_PNG, "plot.png", Units.toEMU(450), Units.toEMU(337));
+            pr.addCarriageReturn();
+            pr.addBreak(BreakType.PAGE);
+            pr.addBreak(BreakType.TEXT_WRAPPING);
+
+        } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
         }
-        
+
+        XWPFParagraph p4 = doc.createParagraph();
+        p4.setAlignment(ParagraphAlignment.LEFT);
+        p4.setVerticalAlignment(TextAlignment.CENTER);
+        XWPFRun r4 = p4.createRun();
+        r4.addBreak();
+        r4.setText("\nДиаграмма напряжений: ");
+        r4.setBold(false);
+        r4.setFontFamily("Times New Roman");
+        r4.setFontSize(14);
+
+        File sPlotFile = new File(WorkspaceManager.INSTANCE.getWorkspace().getAbsolutePath() + "/splot.png");
+        try {
+            byte[] picbytes = IOUtils.toByteArray(new FileInputStream(sPlotFile));
+            doc.addPictureData(picbytes, XWPFDocument.PICTURE_TYPE_PNG);
+            XWPFParagraph pp = doc.createParagraph();
+            pp.createRun().addPicture(new FileInputStream(sPlotFile), Document.PICTURE_TYPE_PNG, "plot.png", Units.toEMU(450), Units.toEMU(337));
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
         File reportFile = new File("report.docx");
         try (FileOutputStream out = new FileOutputStream(reportFile)) {
             doc.write(out);

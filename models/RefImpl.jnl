@@ -1,0 +1,1137 @@
+# -*- coding: mbcs -*-
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.models['Model-1'].ConstrainedSketch(name='__profile__', sheetSize=0.1)
+mdb.models['Model-1'].sketches['__profile__'].sketchOptions.setValues(
+    decimalPlaces=3)
+mdb.models['Model-1'].sketches['__profile__'].CircleByCenterPerimeter(center=(
+    0.0, 0.0), point1=(0.0, 0.028))
+mdb.models['Model-1'].sketches['__profile__'].CircleByCenterPerimeter(center=(
+    0.0, 0.0), point1=(0.0, 0.03))
+mdb.models['Model-1'].Part(dimensionality=THREE_D, name='Part', type=
+    DEFORMABLE_BODY)
+mdb.models['Model-1'].parts['Part'].BaseSolidExtrude(depth=0.06, sketch=
+    mdb.models['Model-1'].sketches['__profile__'])
+del mdb.models['Model-1'].sketches['__profile__']
+mdb.models['Model-1'].parts['Part'].PartitionCellByPlaneThreePoints(cells=
+    mdb.models['Model-1'].parts['Part'].cells, point1=(0, 0, 0), point2=(0, 0, 
+    1), point3=(0, 1, 1))
+mdb.models['Model-1'].parts['Part'].PartitionEdgeByParam(edges=
+    mdb.models['Model-1'].parts['Part'].edges[0], parameter=0.4)
+mdb.models['Model-1'].ConstrainedSketch(name='__profile__', sheetSize=0.1)
+mdb.models['Model-1'].sketches['__profile__'].sketchOptions.setValues(
+    decimalPlaces=3)
+mdb.models['Model-1'].sketches['__profile__'].rectangle(point1=(0.0, 0.0), 
+    point2=(0.015, 0.015))
+mdb.models['Model-1'].Part(dimensionality=THREE_D, name='Jaw', type=
+    DEFORMABLE_BODY)
+mdb.models['Model-1'].parts['Jaw'].BaseSolidExtrude(depth=0.015, sketch=
+    mdb.models['Model-1'].sketches['__profile__'])
+del mdb.models['Model-1'].sketches['__profile__']
+mdb.models['Model-1'].parts['Jaw'].DatumPointByCoordinate(coords=(0.0075, 0.0, 
+    0.0))
+mdb.models['Model-1'].parts['Jaw'].DatumPointByCoordinate(coords=(0.0075, 
+    0.015, 0.015))
+mdb.models['Model-1'].parts['Jaw'].DatumPointByCoordinate(coords=(0.0075, 0, 
+    0.015))
+mdb.models['Model-1'].parts['Jaw'].PartitionCellByPlaneThreePoints(cells=
+    mdb.models['Model-1'].parts['Jaw'].cells, point1=
+    mdb.models['Model-1'].parts['Jaw'].datums[2], point2=
+    mdb.models['Model-1'].parts['Jaw'].datums[3], point3=
+    mdb.models['Model-1'].parts['Jaw'].datums[4])
+mdb.models['Model-1'].parts['Jaw'].DatumPointByCoordinate(coords=(0.0, 0.0, 
+    0.0075))
+mdb.models['Model-1'].parts['Jaw'].DatumPointByCoordinate(coords=(0.015, 0.0, 
+    0.0075))
+mdb.models['Model-1'].parts['Jaw'].DatumPointByCoordinate(coords=(0.015, 0.015, 
+    0.0075))
+mdb.models['Model-1'].parts['Jaw'].PartitionCellByPlaneThreePoints(cells=
+    mdb.models['Model-1'].parts['Jaw'].cells, point1=
+    mdb.models['Model-1'].parts['Jaw'].datums[6], point2=
+    mdb.models['Model-1'].parts['Jaw'].datums[7], point3=
+    mdb.models['Model-1'].parts['Jaw'].datums[8])
+mdb.models['Model-1'].Material(name='Jaw_material')
+mdb.models['Model-1'].materials['Jaw_material'].Elastic(table=((2.1e+17, 0.29), 
+    ))
+mdb.models['Model-1'].Material(name='Workpiece_material')
+mdb.models['Model-1'].materials['Workpiece_material'].Elastic(table=((
+    210000000000.0, 0.29), ))
+mdb.models['Model-1'].HomogeneousSolidSection(material='Jaw_material', name=
+    'Jaw_section', thickness=None)
+mdb.models['Model-1'].HomogeneousSolidSection(material='Workpiece_material', 
+    name='Workpiece_section', thickness=None)
+mdb.models['Model-1'].parts['Jaw'].setMeshControls(algorithm=MEDIAL_AXIS, 
+    regions=mdb.models['Model-1'].parts['Jaw'].cells, technique=SWEEP)
+mdb.models['Model-1'].parts['Jaw'].seedPart(deviationFactor=0.1, minSizeFactor=
+    0.1, size=0.0015)
+mdb.models['Model-1'].parts['Jaw'].generateMesh()
+mdb.models['Model-1'].parts['Part'].setMeshControls(algorithm=MEDIAL_AXIS, 
+    regions=mdb.models['Model-1'].parts['Part'].cells, technique=SWEEP)
+mdb.models['Model-1'].parts['Part'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=0.002)
+mdb.models['Model-1'].parts['Part'].generateMesh()
+mdb.models['Model-1'].parts['Part'].Set(cells=
+    mdb.models['Model-1'].parts['Part'].cells, name='Part_material_region')
+mdb.models['Model-1'].parts['Part'].SectionAssignment(offset=0.0, offsetField=
+    '', offsetType=TOP_SURFACE, region=
+    mdb.models['Model-1'].parts['Part'].sets['Part_material_region'], 
+    sectionName='Workpiece_section', thicknessAssignment=FROM_SECTION)
+mdb.models['Model-1'].parts['Jaw'].Set(cells=
+    mdb.models['Model-1'].parts['Jaw'].cells, name='Jaw_material_region')
+mdb.models['Model-1'].parts['Jaw'].SectionAssignment(offset=0.0, offsetField=''
+    , offsetType=TOP_SURFACE, region=
+    mdb.models['Model-1'].parts['Jaw'].sets['Jaw_material_region'], 
+    sectionName='Jaw_section', thicknessAssignment=FROM_SECTION)
+mdb.models['Model-1'].ContactProperty('IntProp-1')
+mdb.models['Model-1'].interactionProperties['IntProp-1'].TangentialBehavior(
+    dependencies=0, directionality=ISOTROPIC, elasticSlipStiffness=None, 
+    formulation=PENALTY, fraction=0.005, maximumElasticSlip=FRACTION, 
+    pressureDependency=OFF, shearStressLimit=None, slipRateDependency=OFF, 
+    table=((0.3, ), ), temperatureDependency=OFF)
+mdb.models['Model-1'].interactionProperties['IntProp-1'].NormalBehavior(
+    allowSeparation=OFF, clearanceAtZeroContactPressure=0.0, 
+    constraintEnforcementMethod=PENALTY, contactStiffness=DEFAULT, 
+    contactStiffnessScaleFactor=1.0, pressureOverclosure=HARD, 
+    stiffnessBehavior=LINEAR)
+mdb.models['Model-1'].rootAssembly.DatumCsysByDefault(CARTESIAN)
+mdb.models['Model-1'].rootAssembly.Instance(dependent=ON, name='Part-1', part=
+    mdb.models['Model-1'].parts['Part'])
+mdb.models['Model-1'].rootAssembly.Instance(dependent=ON, name='Jaw-1', part=
+    mdb.models['Model-1'].parts['Jaw'])
+mdb.models['Model-1'].rootAssembly.translate(instanceList=('Jaw-1', ), vector=(
+    -0.0075, 0.0, 0.0))
+mdb.models['Model-1'].rootAssembly.rotate(angle=-90.0, axisDirection=(0.0, 0.0, 
+    1), axisPoint=(0.0, 0.0, 0.0), instanceList=('Jaw-1', ))
+mdb.models['Model-1'].rootAssembly.translate(instanceList=('Jaw-1', ), vector=(
+    0.03, 0.0, 0.0))
+mdb.models['Model-1'].rootAssembly.RadialInstancePattern(axis=(0.0, 0.0, 1.0), 
+    instanceList=('Jaw-1', ), number=3, point=(0.0, 0.0, 0.0), totalAngle=
+    360.0)
+mdb.models['Model-1'].rootAssembly.features.changeKey(fromName='Jaw-1', toName=
+    'Jaw-1-rad-1')
+mdb.models['Model-1'].rootAssembly.rotate(angle=180.0, axisDirection=(0.0, 0.0, 
+    1.0), axisPoint=(0.0, 0.0, 0.0), instanceList=('Part-1', ))
+mdb.models['Model-1'].rootAssembly.Surface(name='Jaw-1-rad-1_master_surf', 
+    side1Faces=
+    mdb.models['Model-1'].rootAssembly.instances['Jaw-1-rad-1'].faces.getSequenceFromMask(
+    mask=('[#22084 ]', ), ))
+mdb.models['Model-1'].rootAssembly.Surface(name='Part_slave_surf1', side1Faces=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1'].faces.getSequenceFromMask(
+    mask=('[#8 ]', ), ))
+mdb.models['Model-1'].SurfaceToSurfaceContactStd(adjustMethod=NONE, 
+    clearanceRegion=None, createStepName='Initial', datumAxis=None, 
+    initialClearance=OMIT, interactionProperty='IntProp-1', master=
+    mdb.models['Model-1'].rootAssembly.surfaces['Jaw-1-rad-1_master_surf'], 
+    name='Int-1', slave=
+    mdb.models['Model-1'].rootAssembly.surfaces['Part_slave_surf1'], sliding=
+    FINITE, thickness=ON)
+mdb.models['Model-1'].rootAssembly.Surface(name='Jaw-1-rad-2_master_surf', 
+    side1Faces=
+    mdb.models['Model-1'].rootAssembly.instances['Jaw-1-rad-2'].faces.getSequenceFromMask(
+    mask=('[#22084 ]', ), ))
+mdb.models['Model-1'].rootAssembly.Surface(name='Part_slave_surf2', side1Faces=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1'].faces.getSequenceFromMask(
+    mask=('[#40 ]', ), ))
+mdb.models['Model-1'].SurfaceToSurfaceContactStd(adjustMethod=NONE, 
+    clearanceRegion=None, createStepName='Initial', datumAxis=None, 
+    initialClearance=OMIT, interactionProperty='IntProp-1', master=
+    mdb.models['Model-1'].rootAssembly.surfaces['Jaw-1-rad-2_master_surf'], 
+    name='Int-2', slave=
+    mdb.models['Model-1'].rootAssembly.surfaces['Part_slave_surf2'], sliding=
+    FINITE, thickness=ON)
+mdb.models['Model-1'].rootAssembly.Surface(name='Jaw-1-rad-3_master_surf', 
+    side1Faces=
+    mdb.models['Model-1'].rootAssembly.instances['Jaw-1-rad-3'].faces.getSequenceFromMask(
+    mask=('[#22084 ]', ), ))
+mdb.models['Model-1'].rootAssembly.Surface(name='Part_slave_surf3', side1Faces=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1'].faces.getSequenceFromMask(
+    mask=('[#40 ]', ), ))
+mdb.models['Model-1'].SurfaceToSurfaceContactStd(adjustMethod=NONE, 
+    clearanceRegion=None, createStepName='Initial', datumAxis=None, 
+    initialClearance=OMIT, interactionProperty='IntProp-1', master=
+    mdb.models['Model-1'].rootAssembly.surfaces['Jaw-1-rad-3_master_surf'], 
+    name='Int-3', slave=
+    mdb.models['Model-1'].rootAssembly.surfaces['Part_slave_surf3'], sliding=
+    FINITE, thickness=ON)
+mdb.models['Model-1'].rootAssembly.DatumCsysByThreePoints(coordSysType=
+    CARTESIAN, name='Jaw-1-rad-1_csys-2', origin=
+    mdb.models['Model-1'].rootAssembly.instances['Jaw-1-rad-1'].datums[2], 
+    point1=(0, 0, 0), point2=
+    mdb.models['Model-1'].rootAssembly.instances['Jaw-1-rad-1'].vertices[7])
+mdb.models['Model-1'].rootAssembly.DatumCsysByThreePoints(coordSysType=
+    CARTESIAN, name='Jaw-1-rad-2_csys-3', origin=
+    mdb.models['Model-1'].rootAssembly.instances['Jaw-1-rad-2'].datums[2], 
+    point1=(0, 0, 0), point2=
+    mdb.models['Model-1'].rootAssembly.instances['Jaw-1-rad-2'].vertices[7])
+mdb.models['Model-1'].rootAssembly.DatumCsysByThreePoints(coordSysType=
+    CARTESIAN, name='Jaw-1-rad-3_csys-4', origin=
+    mdb.models['Model-1'].rootAssembly.instances['Jaw-1-rad-3'].datums[2], 
+    point1=(0, 0, 0), point2=
+    mdb.models['Model-1'].rootAssembly.instances['Jaw-1-rad-3'].vertices[7])
+mdb.models['Model-1'].StaticStep(name='Step-1', previous='Initial')
+mdb.models['Model-1'].rootAssembly.Set(faces=
+    mdb.models['Model-1'].rootAssembly.instances['Jaw-1-rad-1'].faces.getSequenceFromMask(
+    ('[#402 ]', ), ), name='Jaw_BS_set-1')
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Initial', 
+    distributionType=UNIFORM, fieldName='', localCsys=
+    mdb.models['Model-1'].rootAssembly.datums[16], name='BC-1', region=
+    mdb.models['Model-1'].rootAssembly.sets['Jaw_BS_set-1'], u1=UNSET, u2=SET, 
+    u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET)
+mdb.models['Model-1'].rootAssembly.Set(faces=
+    mdb.models['Model-1'].rootAssembly.instances['Jaw-1-rad-2'].faces.getSequenceFromMask(
+    ('[#402 ]', ), ), name='Jaw_BS_set-2')
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Initial', 
+    distributionType=UNIFORM, fieldName='', localCsys=
+    mdb.models['Model-1'].rootAssembly.datums[17], name='BC-2', region=
+    mdb.models['Model-1'].rootAssembly.sets['Jaw_BS_set-2'], u1=UNSET, u2=SET, 
+    u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET)
+mdb.models['Model-1'].rootAssembly.Set(faces=
+    mdb.models['Model-1'].rootAssembly.instances['Jaw-1-rad-3'].faces.getSequenceFromMask(
+    ('[#402 ]', ), ), name='Jaw_BS_set-3')
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Initial', 
+    distributionType=UNIFORM, fieldName='', localCsys=
+    mdb.models['Model-1'].rootAssembly.datums[18], name='BC-3', region=
+    mdb.models['Model-1'].rootAssembly.sets['Jaw_BS_set-3'], u1=UNSET, u2=SET, 
+    u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET)
+mdb.models['Model-1'].rootAssembly.Set(faces=
+    mdb.models['Model-1'].rootAssembly.instances['Jaw-1-rad-1'].faces.getSequenceFromMask(
+    mask=('[#8850 ]', ), ), name='Jaw-1-rad-1_displ_surf')
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Step-1', 
+    distributionType=UNIFORM, fieldName='', fixed=OFF, localCsys=
+    mdb.models['Model-1'].rootAssembly.datums[16], name='DISPL-BC-1', region=
+    mdb.models['Model-1'].rootAssembly.sets['Jaw-1-rad-1_displ_surf'], u1=0.001
+    , u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET)
+mdb.models['Model-1'].rootAssembly.Set(faces=
+    mdb.models['Model-1'].rootAssembly.instances['Jaw-1-rad-2'].faces.getSequenceFromMask(
+    mask=('[#8850 ]', ), ), name='Jaw-1-rad-2_displ_surf')
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Step-1', 
+    distributionType=UNIFORM, fieldName='', fixed=OFF, localCsys=
+    mdb.models['Model-1'].rootAssembly.datums[17], name='DISPL-BC-2', region=
+    mdb.models['Model-1'].rootAssembly.sets['Jaw-1-rad-2_displ_surf'], u1=0.001
+    , u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET)
+mdb.models['Model-1'].rootAssembly.Set(faces=
+    mdb.models['Model-1'].rootAssembly.instances['Jaw-1-rad-3'].faces.getSequenceFromMask(
+    mask=('[#8850 ]', ), ), name='Jaw-1-rad-3_displ_surf')
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Step-1', 
+    distributionType=UNIFORM, fieldName='', fixed=OFF, localCsys=
+    mdb.models['Model-1'].rootAssembly.datums[18], name='DISPL-BC-3', region=
+    mdb.models['Model-1'].rootAssembly.sets['Jaw-1-rad-3_displ_surf'], u1=0.001
+    , u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET)
+mdb.models['Model-1'].rootAssembly.Surface(name='Jaw-1-rad-1_tie_surf', 
+    side1Faces=
+    mdb.models['Model-1'].rootAssembly.instances['Jaw-1-rad-1'].faces.getSequenceFromMask(
+    mask=('[#22084 ]', ), ))
+mdb.models['Model-1'].rootAssembly.Surface(name='Part_tie_surf1', side1Faces=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1'].faces.getSequenceFromMask(
+    mask=('[#8 ]', ), ))
+mdb.models['Model-1'].Tie(adjust=ON, master=
+    mdb.models['Model-1'].rootAssembly.surfaces['Part_tie_surf1'], name=
+    'Jaw-1-rad-1_tie_constraint', positionToleranceMethod=COMPUTED, slave=
+    mdb.models['Model-1'].rootAssembly.surfaces['Jaw-1-rad-1_tie_surf'], 
+    thickness=OFF, tieRotations=ON)
+mdb.models['Model-1'].rootAssembly.Surface(name='Jaw-1-rad-2_tie_surf', 
+    side1Faces=
+    mdb.models['Model-1'].rootAssembly.instances['Jaw-1-rad-2'].faces.getSequenceFromMask(
+    mask=('[#22084 ]', ), ))
+mdb.models['Model-1'].rootAssembly.Surface(name='Part_tie_surf2', side1Faces=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1'].faces.getSequenceFromMask(
+    mask=('[#40 ]', ), ))
+mdb.models['Model-1'].Tie(adjust=ON, master=
+    mdb.models['Model-1'].rootAssembly.surfaces['Part_tie_surf2'], name=
+    'Jaw-1-rad-2_tie_constraint', positionToleranceMethod=COMPUTED, slave=
+    mdb.models['Model-1'].rootAssembly.surfaces['Jaw-1-rad-2_tie_surf'], 
+    thickness=OFF, tieRotations=ON)
+mdb.models['Model-1'].rootAssembly.Surface(name='Jaw-1-rad-3_tie_surf', 
+    side1Faces=
+    mdb.models['Model-1'].rootAssembly.instances['Jaw-1-rad-3'].faces.getSequenceFromMask(
+    mask=('[#22084 ]', ), ))
+mdb.models['Model-1'].rootAssembly.Surface(name='Part_tie_surf3', side1Faces=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1'].faces.getSequenceFromMask(
+    mask=('[#40 ]', ), ))
+mdb.models['Model-1'].Tie(adjust=ON, master=
+    mdb.models['Model-1'].rootAssembly.surfaces['Part_tie_surf3'], name=
+    'Jaw-1-rad-3_tie_constraint', positionToleranceMethod=COMPUTED, slave=
+    mdb.models['Model-1'].rootAssembly.surfaces['Jaw-1-rad-3_tie_surf'], 
+    thickness=OFF, tieRotations=ON)
+mdb.models['Model-1'].rootAssembly.DatumCsysByTwoLines(CYLINDRICAL, line1=
+    mdb.models['Model-1'].rootAssembly.datums[1].axis1, line2=
+    mdb.models['Model-1'].rootAssembly.datums[1].axis2, name=
+    'Cutting_force_csys')
+mdb.models['Model-1'].rootAssembly.Set(name='Set-7', vertices=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1'].vertices.getSequenceFromMask(
+    ('[#2 ]', ), ))
+mdb.models['Model-1'].StaticStep(name='Step-2', previous='Step-1')
+mdb.models['Model-1'].ConcentratedForce(cf1=-300.0, cf2=200.0, cf3=200.0, 
+    createStepName='Step-2', distributionType=UNIFORM, field='', localCsys=
+    mdb.models['Model-1'].rootAssembly.datums[31], name='Cutting_force', 
+    region=mdb.models['Model-1'].rootAssembly.sets['Set-7'])
+mdb.Job(atTime=None, contactPrint=OFF, description='', echoPrint=OFF, 
+    explicitPrecision=SINGLE, getMemoryFromAnalysis=True, historyPrint=OFF, 
+    memory=90, memoryUnits=PERCENTAGE, model='Model-1', modelPrint=OFF, 
+    multiprocessingMode=DEFAULT, name='Job-1', nodalOutputPrecision=SINGLE, 
+    numCpus=1, numGPUs=0, queue=None, resultsFormat=ODB, scratch=
+    'C:\\DASworkspace', type=ANALYSIS, userSubroutine='', waitHours=0, 
+    waitMinutes=0)
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+mdb.jobs['Job-1'].waitForCompletion()
+mdb.models['Model-1'].constraints.delete(('Jaw-1-rad-1_tie_constraint', 
+    'Jaw-1-rad-2_tie_constraint', 'Jaw-1-rad-3_tie_constraint'))
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+mdb.jobs['Job-1']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'clientHost': 'PC', 'handle': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FILE, {'phase': BATCHPRE_PHASE, 
+    'file': 'C:\\DASworkspace\\Job-1.odb', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(COMPLETED, {'phase': BATCHPRE_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'clientHost': 'PC', 'handle': 616, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.0, 'attempts': 0, 
+    'timeIncrement': 1.0, 'increment': 0, 'stepTime': 0.0, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 0, 'phase': STANDARD_PHASE, 
+    'equilibrium': 0})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THERE ARE 4 UNCONNECTED REGIONS IN THE MODEL.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'Job-1', 'memory': 180.0})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 2 of 1 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_2_1_1_1_1.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 3 of 1 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_3_1_1_1_1.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.0, 'attempts': ' 1U', 
+    'timeIncrement': 1.0, 'increment': 1, 'stepTime': 0.0, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 10, 'iterations': 10, 
+    'phase': STANDARD_PHASE, 'equilibrium': 0})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 1 of 1 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_1_1_1_1_2.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 2 of 1 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_2_1_1_1_2.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 3 of 1 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_3_1_1_1_2.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 1, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.25, 'attempts': 2, 
+    'timeIncrement': 0.25, 'increment': 1, 'stepTime': 0.25, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 5, 'iterations': 8, 'phase': STANDARD_PHASE, 
+    'equilibrium': 3})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 2, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.5, 'attempts': 1, 
+    'timeIncrement': 0.25, 'increment': 2, 'stepTime': 0.5, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 2, 'phase': STANDARD_PHASE, 
+    'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 3, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.875, 'attempts': 1, 
+    'timeIncrement': 0.375, 'increment': 3, 'stepTime': 0.875, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 2, 'phase': STANDARD_PHASE, 
+    'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 4, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.0, 'attempts': 1, 
+    'timeIncrement': 0.125, 'increment': 4, 'stepTime': 1.0, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 
+    'equilibrium': 1})
+mdb.jobs['Job-1']._Message(END_STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STEP, {'phase': STANDARD_PHASE, 'stepId': 2, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.0, 'attempts': 0, 
+    'timeIncrement': 1.0, 'increment': 0, 'stepTime': 0.0, 'step': 2, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 
+    'equilibrium': 1})
+mdb.jobs['Job-1']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'Job-1', 'memory': 192.0})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.0, 'attempts': ' 1U', 
+    'timeIncrement': 1.0, 'increment': 1, 'stepTime': 0.0, 'step': 2, 
+    'jobName': 'Job-1', 'severe': 4, 'iterations': 4, 'phase': STANDARD_PHASE, 
+    'equilibrium': 0})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.0, 'attempts': ' 2U', 
+    'timeIncrement': 0.25, 'increment': 1, 'stepTime': 0.0, 'step': 2, 
+    'jobName': 'Job-1', 'severe': 10, 'iterations': 10, 
+    'phase': STANDARD_PHASE, 'equilibrium': 0})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.0, 'attempts': ' 3U', 
+    'timeIncrement': 0.0625, 'increment': 1, 'stepTime': 0.0, 'step': 2, 
+    'jobName': 'Job-1', 'severe': 6, 'iterations': 6, 'phase': STANDARD_PHASE, 
+    'equilibrium': 0})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 1, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.015625, 'attempts': 4, 
+    'timeIncrement': 0.015625, 'increment': 1, 'stepTime': 0.015625, 'step': 2, 
+    'jobName': 'Job-1', 'severe': 3, 'iterations': 5, 'phase': STANDARD_PHASE, 
+    'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 2, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.03125, 'attempts': 1, 
+    'timeIncrement': 0.015625, 'increment': 2, 'stepTime': 0.03125, 'step': 2, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 
+    'equilibrium': 1})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 3, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.0546875, 'attempts': 1, 
+    'timeIncrement': 0.0234375, 'increment': 3, 'stepTime': 0.0546875, 
+    'step': 2, 'jobName': 'Job-1', 'severe': 0, 'iterations': 2, 
+    'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 4, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.08984375, 'attempts': 1, 
+    'timeIncrement': 0.03515625, 'increment': 4, 'stepTime': 0.08984375, 
+    'step': 2, 'jobName': 'Job-1', 'severe': 0, 'iterations': 2, 
+    'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'DISPLACEMENT INCREMENT FOR CONTACT IS TOO BIG.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'DISPLACEMENT INCREMENT FOR CONTACT IS TOO BIG.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'DISPLACEMENT INCREMENT FOR CONTACT IS TOO BIG.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.08984375, 'attempts': ' 1U', 
+    'timeIncrement': 0.052734375, 'increment': 5, 'stepTime': 0.08984375, 
+    'step': 2, 'jobName': 'Job-1', 'severe': 4, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 5, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.10302734375, 'attempts': 2, 
+    'timeIncrement': 0.01318359375, 'increment': 5, 'stepTime': 0.10302734375, 
+    'step': 2, 'jobName': 'Job-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 6, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.122802734375, 'attempts': 1, 
+    'timeIncrement': 0.019775390625, 'increment': 6, 
+    'stepTime': 0.122802734375, 'step': 2, 'jobName': 'Job-1', 'severe': 2, 
+    'iterations': 5, 'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'DISPLACEMENT INCREMENT FOR CONTACT IS TOO BIG.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'DISPLACEMENT INCREMENT FOR CONTACT IS TOO BIG.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.122802734375, 
+    'attempts': ' 1U', 'timeIncrement': 0.0296630859375, 'increment': 7, 
+    'stepTime': 0.122802734375, 'step': 2, 'jobName': 'Job-1', 'severe': 2, 
+    'iterations': 3, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.122802734375, 
+    'attempts': ' 2U', 'timeIncrement': 0.007415771484375, 'increment': 7, 
+    'stepTime': 0.122802734375, 'step': 2, 'jobName': 'Job-1', 'severe': 4, 
+    'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 0})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 7, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.12465667724609, 
+    'attempts': 3, 'timeIncrement': 0.00185394287109375, 'increment': 7, 
+    'stepTime': 0.124656677246094, 'step': 2, 'jobName': 'Job-1', 'severe': 6, 
+    'iterations': 8, 'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 8, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.12743759155273, 
+    'attempts': 1, 'timeIncrement': 0.00278091430664063, 'increment': 8, 
+    'stepTime': 0.127437591552734, 'step': 2, 'jobName': 'Job-1', 'severe': 1, 
+    'iterations': 2, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 9, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.1316089630127, 
+    'attempts': 1, 'timeIncrement': 0.00417137145996094, 'increment': 9, 
+    'stepTime': 0.131608963012695, 'step': 2, 'jobName': 'Job-1', 'severe': 2, 
+    'iterations': 3, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 10, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.13786602020264, 
+    'attempts': 1, 'timeIncrement': 0.00625705718994141, 'increment': 10, 
+    'stepTime': 0.137866020202637, 'step': 2, 'jobName': 'Job-1', 'severe': 1, 
+    'iterations': 2, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 11, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.14725160598755, 
+    'attempts': 1, 'timeIncrement': 0.00938558578491211, 'increment': 11, 
+    'stepTime': 0.147251605987549, 'step': 2, 'jobName': 'Job-1', 'severe': 1, 
+    'iterations': 2, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 12, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.16132998466492, 
+    'attempts': 1, 'timeIncrement': 0.0140783786773682, 'increment': 12, 
+    'stepTime': 0.161329984664917, 'step': 2, 'jobName': 'Job-1', 'severe': 0, 
+    'iterations': 2, 'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 13, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.18244755268097, 
+    'attempts': 1, 'timeIncrement': 0.0211175680160522, 'increment': 13, 
+    'stepTime': 0.182447552680969, 'step': 2, 'jobName': 'Job-1', 'severe': 0, 
+    'iterations': 2, 'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 14, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.21412390470505, 
+    'attempts': 1, 'timeIncrement': 0.0316763520240784, 'increment': 14, 
+    'stepTime': 0.214123904705048, 'step': 2, 'jobName': 'Job-1', 'severe': 1, 
+    'iterations': 2, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.21412390470505, 
+    'attempts': ' 1U', 'timeIncrement': 0.0475145280361176, 'increment': 15, 
+    'stepTime': 0.214123904705048, 'step': 2, 'jobName': 'Job-1', 'severe': 4, 
+    'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 0})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 15, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.22600253671408, 
+    'attempts': 2, 'timeIncrement': 0.0118786320090294, 'increment': 15, 
+    'stepTime': 0.226002536714077, 'step': 2, 'jobName': 'Job-1', 'severe': 2, 
+    'iterations': 3, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 16, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.24382048472762, 
+    'attempts': 1, 'timeIncrement': 0.0178179480135441, 'increment': 16, 
+    'stepTime': 0.243820484727621, 'step': 2, 'jobName': 'Job-1', 'severe': 0, 
+    'iterations': 3, 'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 17, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.27054740674794, 
+    'attempts': 1, 'timeIncrement': 0.0267269220203161, 'increment': 17, 
+    'stepTime': 0.270547406747937, 'step': 2, 'jobName': 'Job-1', 'severe': 0, 
+    'iterations': 2, 'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.27054740674794, 
+    'attempts': ' 1U', 'timeIncrement': 0.0400903830304742, 'increment': 18, 
+    'stepTime': 0.270547406747937, 'step': 2, 'jobName': 'Job-1', 'severe': 7, 
+    'iterations': 8, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 18, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.28057000250556, 
+    'attempts': 2, 'timeIncrement': 0.0100225957576185, 'increment': 18, 
+    'stepTime': 0.280570002505556, 'step': 2, 'jobName': 'Job-1', 'severe': 0, 
+    'iterations': 2, 'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 19, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.29560389614198, 
+    'attempts': 1, 'timeIncrement': 0.0150338936364278, 'increment': 19, 
+    'stepTime': 0.295603896141984, 'step': 2, 'jobName': 'Job-1', 'severe': 0, 
+    'iterations': 2, 'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.29560389614198, 
+    'attempts': ' 1U', 'timeIncrement': 0.0225508404546417, 'increment': 20, 
+    'stepTime': 0.295603896141984, 'step': 2, 'jobName': 'Job-1', 'severe': 4, 
+    'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 0})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.29560389614198, 
+    'attempts': ' 2U', 'timeIncrement': 0.00563771011366043, 'increment': 20, 
+    'stepTime': 0.295603896141984, 'step': 2, 'jobName': 'Job-1', 'severe': 6, 
+    'iterations': 7, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 20, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.2970133236704, 
+    'attempts': 3, 'timeIncrement': 0.00140942752841511, 'increment': 20, 
+    'stepTime': 0.297013323670399, 'step': 2, 'jobName': 'Job-1', 'severe': 0, 
+    'iterations': 2, 'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 21, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.29912746496302, 
+    'attempts': 1, 'timeIncrement': 0.00211414129262266, 'increment': 21, 
+    'stepTime': 0.299127464963021, 'step': 2, 'jobName': 'Job-1', 'severe': 0, 
+    'iterations': 2, 'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.29912746496302, 
+    'attempts': ' 1U', 'timeIncrement': 0.00317121193893399, 'increment': 22, 
+    'stepTime': 0.299127464963021, 'step': 2, 'jobName': 'Job-1', 'severe': 4, 
+    'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 0})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 22, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.29992026794775, 
+    'attempts': 2, 'timeIncrement': 0.000792802984733498, 'increment': 22, 
+    'stepTime': 0.299920267947755, 'step': 2, 'jobName': 'Job-1', 'severe': 1, 
+    'iterations': 2, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.29992026794775, 
+    'attempts': ' 1U', 'timeIncrement': 0.00118920447710025, 'increment': 23, 
+    'stepTime': 0.299920267947755, 'step': 2, 'jobName': 'Job-1', 'severe': 11, 
+    'iterations': 11, 'phase': STANDARD_PHASE, 'equilibrium': 0})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.29992026794775, 
+    'attempts': ' 2U', 'timeIncrement': 0.000297301119275062, 'increment': 23, 
+    'stepTime': 0.299920267947755, 'step': 2, 'jobName': 'Job-1', 'severe': 8, 
+    'iterations': 11, 'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 23, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.29999459322757, 
+    'attempts': 3, 'timeIncrement': 7.43252798187655e-05, 'increment': 23, 
+    'stepTime': 0.299994593227574, 'step': 2, 'jobName': 'Job-1', 'severe': 0, 
+    'iterations': 2, 'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.29999459322757, 
+    'attempts': ' 1U', 'timeIncrement': 0.000111487919728148, 'increment': 24, 
+    'stepTime': 0.299994593227574, 'step': 2, 'jobName': 'Job-1', 'severe': 5, 
+    'iterations': 9, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 24, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.30002246520751, 
+    'attempts': 2, 'timeIncrement': 2.78719799320371e-05, 'increment': 24, 
+    'stepTime': 0.300022465207506, 'step': 2, 'jobName': 'Job-1', 'severe': 0, 
+    'iterations': 2, 'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.30002246520751, 
+    'attempts': ' 1U', 'timeIncrement': 4.18079698980556e-05, 'increment': 25, 
+    'stepTime': 0.300022465207506, 'step': 2, 'jobName': 'Job-1', 'severe': 0, 
+    'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 25, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.30003291719998, 
+    'attempts': 2, 'timeIncrement': 1.04519924745139e-05, 'increment': 25, 
+    'stepTime': 0.30003291719998, 'step': 2, 'jobName': 'Job-1', 'severe': 0, 
+    'iterations': 2, 'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 26, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.30004859518869, 
+    'attempts': 1, 'timeIncrement': 1.56779887117708e-05, 'increment': 26, 
+    'stepTime': 0.300048595188692, 'step': 2, 'jobName': 'Job-1', 'severe': 0, 
+    'iterations': 2, 'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.30004859518869, 
+    'attempts': ' 1U', 'timeIncrement': 2.35169830676563e-05, 'increment': 27, 
+    'stepTime': 0.300048595188692, 'step': 2, 'jobName': 'Job-1', 'severe': 7, 
+    'iterations': 14, 'phase': STANDARD_PHASE, 'equilibrium': 7})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 27, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.30005859518869, 
+    'attempts': 2, 'timeIncrement': 1e-05, 'increment': 27, 
+    'stepTime': 0.300058595188692, 'step': 2, 'jobName': 'Job-1', 'severe': 0, 
+    'iterations': 2, 'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 28, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.30007359518869, 
+    'attempts': 1, 'timeIncrement': 1.5e-05, 'increment': 28, 
+    'stepTime': 0.300073595188692, 'step': 2, 'jobName': 'Job-1', 'severe': 1, 
+    'iterations': 3, 'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.30007359518869, 
+    'attempts': ' 1U', 'timeIncrement': 2.25e-05, 'increment': 29, 
+    'stepTime': 0.300073595188692, 'step': 2, 'jobName': 'Job-1', 'severe': 7, 
+    'iterations': 7, 'phase': STANDARD_PHASE, 'equilibrium': 0})
+mdb.jobs['Job-1']._Message(ERROR, {'phase': STANDARD_PHASE, 
+    'message': 'Time increment required is less than the minimum specified', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.30007359518869, 
+    'attempts': ' 2U', 'timeIncrement': 1e-05, 'increment': 29, 
+    'stepTime': 0.300073595188692, 'step': 2, 'jobName': 'Job-1', 'severe': 4, 
+    'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 0})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 29, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.30007359518869, 
+    'attempts': 3, 'timeIncrement': 1e-35, 'increment': 29, 
+    'stepTime': 0.300073595188692, 'step': 2, 'jobName': 'Job-1', 'severe': 0, 
+    'iterations': 0, 'phase': STANDARD_PHASE, 'equilibrium': 0})
+mdb.jobs['Job-1']._Message(ERROR, {'phase': STANDARD_PHASE, 
+    'message': 'THE ANALYSIS HAS BEEN TERMINATED DUE TO PREVIOUS ERRORS. ALL OUTPUT REQUESTS HAVE BEEN WRITTEN FOR THE LAST CONVERGED INCREMENT.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ABORTED, {'phase': STANDARD_PHASE, 
+    'message': 'Analysis phase failed due to errors', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ERROR, {
+    'message': 'Abaqus/Standard Analysis exited with an error - Please see the  message file for possible error messages if the file exists.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(JOB_ABORTED, {
+    'message': 'Abaqus/Standard Analysis exited with an error - Please see the  message file for possible error messages if the file exists.', 
+    'jobName': 'Job-1'})
+mdb.models['Model-1'].steps['Step-2'].suppress()
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+mdb.jobs['Job-1']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'clientHost': 'PC', 'handle': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FILE, {'phase': BATCHPRE_PHASE, 
+    'file': 'C:\\DASworkspace\\Job-1.odb', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(COMPLETED, {'phase': BATCHPRE_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'clientHost': 'PC', 'handle': 7316, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.0, 'attempts': 0, 
+    'timeIncrement': 1.0, 'increment': 0, 'stepTime': 0.0, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 0, 'phase': STANDARD_PHASE, 
+    'equilibrium': 0})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THERE ARE 4 UNCONNECTED REGIONS IN THE MODEL.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'Job-1', 'memory': 180.0})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 2 of 1 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_2_1_1_1_1.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 3 of 1 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_3_1_1_1_1.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.0, 'attempts': ' 1U', 
+    'timeIncrement': 1.0, 'increment': 1, 'stepTime': 0.0, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 10, 'iterations': 10, 
+    'phase': STANDARD_PHASE, 'equilibrium': 0})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 2 of 1 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_2_1_1_1_2.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 3 of 2 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_3_1_1_1_2.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 1, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.25, 'attempts': 2, 
+    'timeIncrement': 0.25, 'increment': 1, 'stepTime': 0.25, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 5, 'iterations': 8, 'phase': STANDARD_PHASE, 
+    'equilibrium': 3})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 2, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.5, 'attempts': 1, 
+    'timeIncrement': 0.25, 'increment': 2, 'stepTime': 0.5, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 2, 'phase': STANDARD_PHASE, 
+    'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 3, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.875, 'attempts': 1, 
+    'timeIncrement': 0.375, 'increment': 3, 'stepTime': 0.875, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 2, 'phase': STANDARD_PHASE, 
+    'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 4, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.0, 'attempts': 1, 
+    'timeIncrement': 0.125, 'increment': 4, 'stepTime': 1.0, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 
+    'equilibrium': 1})
+mdb.jobs['Job-1']._Message(END_STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(COMPLETED, {'phase': STANDARD_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(JOB_COMPLETED, {'time': 'Mon Feb 15 19:23:20 2016', 
+    'jobName': 'Job-1'})
+mdb.models['Model-1'].steps['Step-2'].resume()
+mdb.models['Model-1'].rootAssembly.Set(faces=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1'].faces.getSequenceFromMask(
+    ('[#204 ]', ), ), name='Set-8')
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Step-2', 
+    distributionType=UNIFORM, fieldName='', fixed=OFF, localCsys=None, name=
+    'BC-7', region=mdb.models['Model-1'].rootAssembly.sets['Set-8'], u1=0.0, 
+    u2=0.0, u3=0.0, ur1=UNSET, ur2=UNSET, ur3=UNSET)
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+mdb.jobs['Job-1']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'clientHost': 'PC', 'handle': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FILE, {'phase': BATCHPRE_PHASE, 
+    'file': 'C:\\DASworkspace\\Job-1.odb', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(COMPLETED, {'phase': BATCHPRE_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'clientHost': 'PC', 'handle': 7804, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.0, 'attempts': 0, 
+    'timeIncrement': 1.0, 'increment': 0, 'stepTime': 0.0, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 0, 'phase': STANDARD_PHASE, 
+    'equilibrium': 0})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THERE ARE 4 UNCONNECTED REGIONS IN THE MODEL.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'Job-1', 'memory': 180.0})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 2 of 1 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_2_1_1_1_1.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 3 of 1 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_3_1_1_1_1.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.0, 'attempts': ' 1U', 
+    'timeIncrement': 1.0, 'increment': 1, 'stepTime': 0.0, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 10, 'iterations': 10, 
+    'phase': STANDARD_PHASE, 'equilibrium': 0})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 1 of 1 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_1_1_1_1_2.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 2 of 1 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_2_1_1_1_2.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 3 of 1 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_3_1_1_1_2.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 1, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.25, 'attempts': 2, 
+    'timeIncrement': 0.25, 'increment': 1, 'stepTime': 0.25, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 5, 'iterations': 8, 'phase': STANDARD_PHASE, 
+    'equilibrium': 3})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 2, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.5, 'attempts': 1, 
+    'timeIncrement': 0.25, 'increment': 2, 'stepTime': 0.5, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 2, 'phase': STANDARD_PHASE, 
+    'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 3, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.875, 'attempts': 1, 
+    'timeIncrement': 0.375, 'increment': 3, 'stepTime': 0.875, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 2, 'phase': STANDARD_PHASE, 
+    'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 4, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.0, 'attempts': 1, 
+    'timeIncrement': 0.125, 'increment': 4, 'stepTime': 1.0, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 
+    'equilibrium': 1})
+mdb.jobs['Job-1']._Message(END_STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STEP, {'phase': STANDARD_PHASE, 'stepId': 2, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.0, 'attempts': 0, 
+    'timeIncrement': 1.0, 'increment': 0, 'stepTime': 0.0, 'step': 2, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 
+    'equilibrium': 1})
+mdb.jobs['Job-1']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'Job-1', 'memory': 192.0})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.0, 'attempts': ' 1U', 
+    'timeIncrement': 1.0, 'increment': 1, 'stepTime': 0.0, 'step': 2, 
+    'jobName': 'Job-1', 'severe': 6, 'iterations': 6, 'phase': STANDARD_PHASE, 
+    'equilibrium': 0})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 1, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.25, 'attempts': 2, 
+    'timeIncrement': 0.25, 'increment': 1, 'stepTime': 0.25, 'step': 2, 
+    'jobName': 'Job-1', 'severe': 7, 'iterations': 9, 'phase': STANDARD_PHASE, 
+    'equilibrium': 2})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.25, 'attempts': ' 1U', 
+    'timeIncrement': 0.25, 'increment': 2, 'stepTime': 0.25, 'step': 2, 
+    'jobName': 'Job-1', 'severe': 6, 'iterations': 6, 'phase': STANDARD_PHASE, 
+    'equilibrium': 0})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 2, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.3125, 'attempts': 2, 
+    'timeIncrement': 0.0625, 'increment': 2, 'stepTime': 0.3125, 'step': 2, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 3, 'phase': STANDARD_PHASE, 
+    'equilibrium': 3})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 3, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.40625, 'attempts': 1, 
+    'timeIncrement': 0.09375, 'increment': 3, 'stepTime': 0.40625, 'step': 2, 
+    'jobName': 'Job-1', 'severe': 2, 'iterations': 5, 'phase': STANDARD_PHASE, 
+    'equilibrium': 3})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 4, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.546875, 'attempts': 1, 
+    'timeIncrement': 0.140625, 'increment': 4, 'stepTime': 0.546875, 'step': 2, 
+    'jobName': 'Job-1', 'severe': 3, 'iterations': 4, 'phase': STANDARD_PHASE, 
+    'equilibrium': 1})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'DISPLACEMENT INCREMENT FOR CONTACT IS TOO BIG.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'DISPLACEMENT INCREMENT FOR CONTACT IS TOO BIG.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.546875, 'attempts': ' 1U', 
+    'timeIncrement': 0.2109375, 'increment': 5, 'stepTime': 0.546875, 
+    'step': 2, 'jobName': 'Job-1', 'severe': 1, 'iterations': 2, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 5, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.599609375, 'attempts': 2, 
+    'timeIncrement': 0.052734375, 'increment': 5, 'stepTime': 0.599609375, 
+    'step': 2, 'jobName': 'Job-1', 'severe': 3, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 6, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.6787109375, 'attempts': 1, 
+    'timeIncrement': 0.0791015625, 'increment': 6, 'stepTime': 0.6787109375, 
+    'step': 2, 'jobName': 'Job-1', 'severe': 2, 'iterations': 3, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'DISPLACEMENT INCREMENT FOR CONTACT IS TOO BIG.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.6787109375, 
+    'attempts': ' 1U', 'timeIncrement': 0.11865234375, 'increment': 7, 
+    'stepTime': 0.6787109375, 'step': 2, 'jobName': 'Job-1', 'severe': 3, 
+    'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 7, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.7083740234375, 
+    'attempts': 2, 'timeIncrement': 0.0296630859375, 'increment': 7, 
+    'stepTime': 0.7083740234375, 'step': 2, 'jobName': 'Job-1', 'severe': 1, 
+    'iterations': 3, 'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 8, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.75286865234375, 
+    'attempts': 1, 'timeIncrement': 0.04449462890625, 'increment': 8, 
+    'stepTime': 0.75286865234375, 'step': 2, 'jobName': 'Job-1', 'severe': 0, 
+    'iterations': 2, 'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 9, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.81961059570313, 
+    'attempts': 1, 'timeIncrement': 0.066741943359375, 'increment': 9, 
+    'stepTime': 0.819610595703125, 'step': 2, 'jobName': 'Job-1', 'severe': 2, 
+    'iterations': 3, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 10, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.91972351074219, 
+    'attempts': 1, 'timeIncrement': 0.100112915039063, 'increment': 10, 
+    'stepTime': 0.919723510742188, 'step': 2, 'jobName': 'Job-1', 'severe': 2, 
+    'iterations': 5, 'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 11, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 2.0, 'attempts': 1, 
+    'timeIncrement': 0.0802764892578125, 'increment': 11, 'stepTime': 1.0, 
+    'step': 2, 'jobName': 'Job-1', 'severe': 2, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['Job-1']._Message(END_STEP, {'phase': STANDARD_PHASE, 'stepId': 2, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(COMPLETED, {'phase': STANDARD_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(JOB_COMPLETED, {'time': 'Mon Feb 15 19:29:28 2016', 
+    'jobName': 'Job-1'})
+mdb.models['Model-1'].boundaryConditions['BC-7'].setValues(u3=UNSET)
+mdb.models['Model-1'].boundaryConditions['BC-7'].setValues(fixed=ON, u1=SET, 
+    u2=SET, u3=SET)
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+mdb.jobs['Job-1']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'clientHost': 'PC', 'handle': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FILE, {'phase': BATCHPRE_PHASE, 
+    'file': 'C:\\DASworkspace\\Job-1.odb', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(COMPLETED, {'phase': BATCHPRE_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'clientHost': 'PC', 'handle': 6360, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.0, 'attempts': 0, 
+    'timeIncrement': 1.0, 'increment': 0, 'stepTime': 0.0, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 0, 'phase': STANDARD_PHASE, 
+    'equilibrium': 0})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THERE ARE 4 UNCONNECTED REGIONS IN THE MODEL.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'Job-1', 'memory': 180.0})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 2 of 1 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_2_1_1_1_1.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 3 of 1 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_3_1_1_1_1.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.0, 'attempts': ' 1U', 
+    'timeIncrement': 1.0, 'increment': 1, 'stepTime': 0.0, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 10, 'iterations': 10, 
+    'phase': STANDARD_PHASE, 'equilibrium': 0})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 1 of 1 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_1_1_1_1_2.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 2 of 1 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_2_1_1_1_2.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 3 of 1 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_3_1_1_1_2.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 1, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.25, 'attempts': 2, 
+    'timeIncrement': 0.25, 'increment': 1, 'stepTime': 0.25, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 5, 'iterations': 8, 'phase': STANDARD_PHASE, 
+    'equilibrium': 3})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 2, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.5, 'attempts': 1, 
+    'timeIncrement': 0.25, 'increment': 2, 'stepTime': 0.5, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 2, 'phase': STANDARD_PHASE, 
+    'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 3, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.875, 'attempts': 1, 
+    'timeIncrement': 0.375, 'increment': 3, 'stepTime': 0.875, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 2, 'phase': STANDARD_PHASE, 
+    'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 4, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.0, 'attempts': 1, 
+    'timeIncrement': 0.125, 'increment': 4, 'stepTime': 1.0, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 
+    'equilibrium': 1})
+mdb.jobs['Job-1']._Message(END_STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STEP, {'phase': STANDARD_PHASE, 'stepId': 2, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.0, 'attempts': 0, 
+    'timeIncrement': 1.0, 'increment': 0, 'stepTime': 0.0, 'step': 2, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 
+    'equilibrium': 1})
+mdb.jobs['Job-1']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'Job-1', 'memory': 192.0})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 1, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 2.0, 'attempts': 1, 
+    'timeIncrement': 1.0, 'increment': 1, 'stepTime': 1.0, 'step': 2, 
+    'jobName': 'Job-1', 'severe': 1, 'iterations': 2, 'phase': STANDARD_PHASE, 
+    'equilibrium': 1})
+mdb.jobs['Job-1']._Message(END_STEP, {'phase': STANDARD_PHASE, 'stepId': 2, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(COMPLETED, {'phase': STANDARD_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(JOB_COMPLETED, {'time': 'Mon Feb 15 20:13:21 2016', 
+    'jobName': 'Job-1'})
+mdb.models['Model-1'].boundaryConditions['BC-1'].deactivate('Step-2')
+mdb.models['Model-1'].boundaryConditions['BC-2'].deactivate('Step-2')
+mdb.models['Model-1'].boundaryConditions['BC-3'].deactivate('Step-2')
+mdb.models['Model-1'].rootAssembly.Set(faces=
+    mdb.models['Model-1'].rootAssembly.instances['Jaw-1-rad-2'].faces.getSequenceFromMask(
+    ('[#80400 ]', ), ), name='Set-9')
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Step-2', 
+    distributionType=UNIFORM, fieldName='', fixed=ON, localCsys=None, name=
+    'BC-8', region=mdb.models['Model-1'].rootAssembly.sets['Set-9'], u1=SET, 
+    u2=SET, u3=SET, ur1=SET, ur2=SET, ur3=SET)
+mdb.models['Model-1'].rootAssembly.Set(faces=
+    mdb.models['Model-1'].rootAssembly.instances['Jaw-1-rad-1'].faces.getSequenceFromMask(
+    ('[#80400 ]', ), ), name='Set-10')
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Step-2', 
+    distributionType=UNIFORM, fieldName='', fixed=ON, localCsys=None, name=
+    'BC-9', region=mdb.models['Model-1'].rootAssembly.sets['Set-10'], u1=SET, 
+    u2=SET, u3=SET, ur1=SET, ur2=SET, ur3=SET)
+mdb.models['Model-1'].rootAssembly.Set(faces=
+    mdb.models['Model-1'].rootAssembly.instances['Jaw-1-rad-3'].faces.getSequenceFromMask(
+    ('[#80400 ]', ), ), name='Set-11')
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Step-2', 
+    distributionType=UNIFORM, fieldName='', fixed=ON, localCsys=None, name=
+    'BC-10', region=mdb.models['Model-1'].rootAssembly.sets['Set-11'], u1=SET, 
+    u2=SET, u3=SET, ur1=SET, ur2=SET, ur3=SET)
+mdb.models['Model-1'].boundaryConditions['DISPL-BC-1'].deactivate('Step-2')
+mdb.models['Model-1'].boundaryConditions['DISPL-BC-2'].deactivate('Step-2')
+mdb.models['Model-1'].boundaryConditions['DISPL-BC-3'].deactivate('Step-2')
+mdb.models['Model-1'].boundaryConditions['BC-8'].setValues(localCsys=
+    mdb.models['Model-1'].rootAssembly.datums[17], u1=SET, u2=SET, u3=SET, ur1=
+    SET, ur2=SET, ur3=SET)
+mdb.models['Model-1'].boundaryConditions['BC-9'].setValues(localCsys=
+    mdb.models['Model-1'].rootAssembly.datums[16], u1=SET, u2=SET, u3=SET, ur1=
+    SET, ur2=SET, ur3=SET)
+mdb.models['Model-1'].boundaryConditions['BC-10'].setValues(localCsys=
+    mdb.models['Model-1'].rootAssembly.datums[18], u1=SET, u2=SET, u3=SET, ur1=
+    SET, ur2=SET, ur3=SET)
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+mdb.jobs['Job-1']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'clientHost': 'PC', 'handle': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'DEGREE OF FREEDOM 4 IS NOT ACTIVE IN THIS MODEL AND CANNOT BE RESTRAINED.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'DEGREE OF FREEDOM 5 IS NOT ACTIVE IN THIS MODEL AND CANNOT BE RESTRAINED.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'DEGREE OF FREEDOM 6 IS NOT ACTIVE IN THIS MODEL AND CANNOT BE RESTRAINED.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'DEGREE OF FREEDOM 4 IS NOT ACTIVE IN THIS MODEL AND CANNOT BE RESTRAINED.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'DEGREE OF FREEDOM 5 IS NOT ACTIVE IN THIS MODEL AND CANNOT BE RESTRAINED.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'DEGREE OF FREEDOM 6 IS NOT ACTIVE IN THIS MODEL AND CANNOT BE RESTRAINED.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'DEGREE OF FREEDOM 4 IS NOT ACTIVE IN THIS MODEL AND CANNOT BE RESTRAINED.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'DEGREE OF FREEDOM 5 IS NOT ACTIVE IN THIS MODEL AND CANNOT BE RESTRAINED.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'DEGREE OF FREEDOM 6 IS NOT ACTIVE IN THIS MODEL AND CANNOT BE RESTRAINED.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FILE, {'phase': BATCHPRE_PHASE, 
+    'file': 'C:\\DASworkspace\\Job-1.odb', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(COMPLETED, {'phase': BATCHPRE_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'clientHost': 'PC', 'handle': 9476, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.0, 'attempts': 0, 
+    'timeIncrement': 1.0, 'increment': 0, 'stepTime': 0.0, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 0, 'phase': STANDARD_PHASE, 
+    'equilibrium': 0})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THERE ARE 4 UNCONNECTED REGIONS IN THE MODEL.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'Job-1', 'memory': 180.0})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 2 of 1 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_2_1_1_1_1.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 3 of 1 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_3_1_1_1_1.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.0, 'attempts': ' 1U', 
+    'timeIncrement': 1.0, 'increment': 1, 'stepTime': 0.0, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 11, 'iterations': 11, 
+    'phase': STANDARD_PHASE, 'equilibrium': 0})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 1 of 2 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_1_1_1_1_2.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 2 of 2 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_2_1_1_1_2.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'Solver problem. Zero pivot when processing D.O.F. 3 of 1 nodes. The nodes have been identified in node set WarnNodeSolvProbZeroPiv_3_1_1_1_2.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 1, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.25, 'attempts': 2, 
+    'timeIncrement': 0.25, 'increment': 1, 'stepTime': 0.25, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 5, 'iterations': 8, 'phase': STANDARD_PHASE, 
+    'equilibrium': 3})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 2, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.5, 'attempts': 1, 
+    'timeIncrement': 0.25, 'increment': 2, 'stepTime': 0.5, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 2, 'phase': STANDARD_PHASE, 
+    'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 3, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 0.875, 'attempts': 1, 
+    'timeIncrement': 0.375, 'increment': 3, 'stepTime': 0.875, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 2, 'phase': STANDARD_PHASE, 
+    'equilibrium': 2})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 4, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.0, 'attempts': 1, 
+    'timeIncrement': 0.125, 'increment': 4, 'stepTime': 1.0, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 
+    'equilibrium': 1})
+mdb.jobs['Job-1']._Message(END_STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STEP, {'phase': STANDARD_PHASE, 'stepId': 2, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.0, 'attempts': 0, 
+    'timeIncrement': 1.0, 'increment': 0, 'stepTime': 0.0, 'step': 2, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 
+    'equilibrium': 1})
+mdb.jobs['Job-1']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'Job-1', 'memory': 192.0})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 1, 
+    'frame': 1, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 2.0, 'attempts': 1, 
+    'timeIncrement': 1.0, 'increment': 1, 'stepTime': 1.0, 'step': 2, 
+    'jobName': 'Job-1', 'severe': 1, 'iterations': 2, 'phase': STANDARD_PHASE, 
+    'equilibrium': 1})
+mdb.jobs['Job-1']._Message(END_STEP, {'phase': STANDARD_PHASE, 'stepId': 2, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(COMPLETED, {'phase': STANDARD_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(JOB_COMPLETED, {'time': 'Mon Feb 15 20:20:55 2016', 
+    'jobName': 'Job-1'})
+# Save by Pete on 2016_02_15-20.24.34; build 6.14-1 2014_06_05-01.11.02 134264

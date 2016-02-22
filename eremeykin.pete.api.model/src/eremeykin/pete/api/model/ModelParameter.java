@@ -88,7 +88,7 @@ public final class ModelParameter implements ModelParameterChangedListener {
     }
 
     public void setValue(String value) {
-        NumberFormat formatter = new DecimalFormat("#0.0###");
+        NumberFormat formatter = new DecimalFormat("#0.0#####");
         Double d = null;
         String res = null;
         try {

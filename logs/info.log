@@ -1,30 +1,86 @@
-2016-02-08T22:09:51,685 [INFO ] - The directory "C:\DASworkspace" has been successfully set as a workspace. 
-2016-02-08T22:09:53,257 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:09:53,506 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:10:03,284 [INFO ] - Model has been successfully loaded. 
-2016-02-08T22:10:03,458 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:10:41,939 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:11:07,209 [INFO ] - Model has been successfully loaded. 
-2016-02-08T22:11:07,477 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:11:38,272 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:12:00,037 [INFO ] - Model has been successfully loaded. 
-2016-02-08T22:12:00,199 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:12:02,496 [INFO ] - Model has been successfully loaded. 
-2016-02-08T22:12:02,515 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:12:22,750 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:14:07,783 [INFO ] - Model has been successfully loaded. 
-2016-02-08T22:14:07,808 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:14:28,174 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:15:54,643 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:15:54,654 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:17:17,168 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:17:17,185 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:19:24,064 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:19:24,072 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:20:05,593 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:20:05,602 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:20:35,989 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:20:35,996 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:21:21,009 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:21:21,041 [INFO ] - Antialiasing is supported: true 
-2016-02-08T22:22:24,652 [INFO ] - Antialiasing is supported: true 
+2016-02-22T10:15:27,658 [INFO ] - The directory "C:\DASworkspace" has been successfully set as a workspace. 
+2016-02-22T10:15:29,392 [INFO ] - Antialiasing is supported: true 
+2016-02-22T10:15:29,560 [INFO ] - Antialiasing is supported: true 
+2016-02-22T10:15:46,793 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,796 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,796 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,796 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,796 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,797 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,797 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,797 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,798 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,798 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,798 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,798 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,798 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,798 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,798 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,798 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,799 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,799 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,799 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,799 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,799 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,799 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,799 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,800 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,800 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,821 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,822 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,822 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,822 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,822 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,823 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,823 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,823 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,824 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,849 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,873 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,874 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,874 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,874 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,874 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,875 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,875 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,875 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,875 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,875 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,876 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,876 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,876 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,876 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,876 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,876 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,876 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,877 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,877 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,877 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,877 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,877 [INFO ] - Lmgrd started. 
+2016-02-22T10:15:46,878 [INFO ] - Lmgrd started. 
+2016-02-22T10:16:04,175 [INFO ] - Lmgrd started. 
+2016-02-22T10:16:04,176 [INFO ] - Lmgrd started. 
+2016-02-22T10:16:04,178 [INFO ] - Lmgrd started. 
+2016-02-22T10:16:47,968 [INFO ] - Lmgrd started. 
+2016-02-22T10:16:47,970 [INFO ] - Lmgrd started. 
+2016-02-22T10:18:21,989 [INFO ] - Lmgrd started. 
+2016-02-22T10:18:21,990 [INFO ] - Lmgrd started. 
+2016-02-22T10:29:48,645 [INFO ] - Lmgrd started. 
+2016-02-22T10:29:48,647 [INFO ] - Lmgrd started. 
+2016-02-22T10:29:56,657 [INFO ] - Lmgrd started. 
+2016-02-22T10:29:56,658 [INFO ] - Lmgrd started. 
+2016-02-22T10:34:56,478 [INFO ] - Lmgrd started. 
+2016-02-22T10:34:56,479 [INFO ] - Lmgrd started. 
+2016-02-22T10:36:24,497 [INFO ] - Lmgrd started. 
+2016-02-22T10:36:24,497 [INFO ] - Lmgrd started. 
+2016-02-22T10:37:22,297 [INFO ] - Lmgrd started. 
+2016-02-22T10:37:22,299 [INFO ] - Lmgrd started. 
+2016-02-22T10:38:50,317 [INFO ] - Lmgrd started. 
+2016-02-22T10:38:50,324 [INFO ] - Lmgrd started. 
+2016-02-22T10:47:02,930 [INFO ] - Lmgrd started. 
+2016-02-22T10:47:02,932 [INFO ] - Lmgrd started. 
+2016-02-22T10:48:42,951 [INFO ] - Lmgrd started. 
+2016-02-22T10:48:42,954 [INFO ] - Lmgrd started. 
+2016-02-22T10:51:01,434 [INFO ] - Lmgrd started. 
+2016-02-22T10:51:01,436 [INFO ] - Lmgrd started. 

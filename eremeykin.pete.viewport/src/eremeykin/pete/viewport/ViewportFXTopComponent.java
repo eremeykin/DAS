@@ -94,7 +94,7 @@ public final class ViewportFXTopComponent extends TopComponent implements TaskLi
         jButton1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ModelParameter p = model.getParameterByID(model.getRoot(), 32);
+                ModelParameter p = model.getParameterByID(model.getRoot(), 33);
                 Double value = Double.valueOf(p.getValue());
                 value += 0.1;
                 p.setValue(Double.toString(value));
@@ -107,7 +107,7 @@ public final class ViewportFXTopComponent extends TopComponent implements TaskLi
         jButton2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ModelParameter p = model.getParameterByID(model.getRoot(), 32);
+                ModelParameter p = model.getParameterByID(model.getRoot(), 33);
                 Double value = Double.valueOf(p.getValue());
                 value -= 0.1;
                 p.setValue(Double.toString(value));
@@ -119,7 +119,7 @@ public final class ViewportFXTopComponent extends TopComponent implements TaskLi
         jButton3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ModelParameter p = model.getParameterByID(model.getRoot(), 29);
+                ModelParameter p = model.getParameterByID(model.getRoot(), 30);
                 Double angle = Double.valueOf(p.getValue());
                 angle -= 15.0;
                 p.setValue(Double.toString(angle));
@@ -130,7 +130,7 @@ public final class ViewportFXTopComponent extends TopComponent implements TaskLi
         jButton4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ModelParameter p = model.getParameterByID(model.getRoot(), 29);
+                ModelParameter p = model.getParameterByID(model.getRoot(), 30);
                 Double angle = Double.valueOf(p.getValue());
                 angle += 15.0;
                 p.setValue(Double.toString(angle));
@@ -327,6 +327,7 @@ public final class ViewportFXTopComponent extends TopComponent implements TaskLi
         builder = new ModelSceneBuilder(model != null ? model.getModelFile() : null);
         if (model != null) {
             model.addModelChangedListener(builder);
+            model.refresh();
         }
         Scene scene = builder.getScene();
         fxPanel.setScene(scene);
