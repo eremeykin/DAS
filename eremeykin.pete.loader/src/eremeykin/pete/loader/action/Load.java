@@ -8,8 +8,8 @@ package eremeykin.pete.loader.action;
 import eremeykin.pete.api.core.centrallookupapi.CentralLookup;
 import eremeykin.pete.api.core.workspace.WorkspaceManager;
 import eremeykin.pete.api.model.Model;
-import eremeykin.pete.loader.DBModelLoader;
 import eremeykin.pete.loader.ModelLoader;
+import eremeykin.pete.loader.ModelLoaderFactory;
 import eremeykin.pete.loader.XlsxModelLoader;
 import eremeykin.pete.loader.dao.DaoException;
 import java.awt.event.ActionEvent;
@@ -73,13 +73,11 @@ public final class Load implements ActionListener, Lookup.Provider {
                     Files.deleteIfExists(newModel.toPath());
                     Files.copy(toAdd.toPath(), newModel.toPath());
                     Model m = null;
-                    if (toAdd.getName().endsWith("sqlite")) {
-                        ModelLoader loader = new DBModelLoader(toAdd);
-                        m = loader.load();
-                    } else if (toAdd.getName().endsWith("xlsx")) {
-                        ModelLoader loader = new XlsxModelLoader(toAdd);
+                    ModelLoader loader = ModelLoaderFactory.getInstance().createModelDAO(toAdd);
+                    if (loader!=null){
                         m = loader.load();
                     }
+                    else{throw new DaoException("Error during creating loader");}
                     CentralLookup cl = CentralLookup.getDefault();
                     Collection parameters = cl.lookupAll(Model.class);
                     if (!parameters.isEmpty()) {

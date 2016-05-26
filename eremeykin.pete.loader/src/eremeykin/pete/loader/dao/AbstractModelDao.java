@@ -21,7 +21,6 @@ public abstract class AbstractModelDao implements ModelDao {
         ModelParameterDao modelParameterDao = getDao();
         ModelParameter root = modelParameterDao.getRoot();
         Model model = new Model(root);
-
         return model;
     }
 

@@ -14,6 +14,7 @@ import eremeykin.pete.api.model.ModelChangedEvent;
 import eremeykin.pete.api.model.ModelChangedListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Shape;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
@@ -25,15 +26,19 @@ import java.util.Map;
 import java.util.Scanner;
 import javafx.application.Platform;
 import javax.swing.JOptionPane;
+import javax.swing.JSpinner;
 import javax.swing.SwingWorker;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PolarPlot;
+import org.jfree.chart.renderer.DefaultPolarItemRenderer;
+import org.jfree.chart.renderer.PolarItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.util.ShapeUtilities;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.util.Lookup;
@@ -69,26 +74,26 @@ public final class PolarPlotterTopComponent extends TopComponent implements Look
     Model model;
     private Lookup.Result<Model> modelResult = null;
 
-    
     private final FileWatcher watchThread = new FileWatcher(this);
     private ChartPanel chartPanel;
     private PolarPlot plot;
+    private double scale=1;
 
     public PolarPlotterTopComponent() {
         initComponents();
         setName(Bundle.CTL_PolarPlotterTopComponent());
         setToolTipText(Bundle.HINT_PolarPlotterTopComponent());
         final XYSeriesCollection dataset = new XYSeriesCollection();
-        
+
         final XYSeries toleranceSeries = new XYSeries("Tolerance");
-        final XYSeries dataSeries = new XYSeries("Deformation");
-        
+        final XYSeries dataSeries = new XYSeries("U");
+
         dataset.addSeries(dataSeries);
         dataset.addSeries(toleranceSeries);
         final JFreeChart chart = createChart(dataset);
         chartPanel = new ChartPanel(chart);
-        setLayout(new java.awt.BorderLayout());
-        add(chartPanel, BorderLayout.CENTER);
+        jPanel1.setLayout(new java.awt.BorderLayout());
+        jPanel1.add(chartPanel, BorderLayout.CENTER);
         validate();
 
     }
@@ -101,17 +106,72 @@ public final class PolarPlotterTopComponent extends TopComponent implements Look
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jSpinner1 = new javax.swing.JSpinner();
+        jLabel1 = new javax.swing.JLabel();
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 417, Short.MAX_VALUE)
+        );
+
+        jSpinner1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSpinner1StateChanged(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(PolarPlotterTopComponent.class, "PolarPlotterTopComponent.jLabel1.text")); // NOI18N
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jSpinner1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner1StateChanged
+        // TODO add your handling code here:
+        JSpinner source = (JSpinner)(evt.getSource());
+        scale = Double.valueOf(source.getValue().toString());
+        update();
+    }//GEN-LAST:event_jSpinner1StateChanged
 
     @Override
     public void componentOpened() {
@@ -195,8 +255,10 @@ public final class PolarPlotterTopComponent extends TopComponent implements Look
     }
 
     protected void fillData(List<Map.Entry<Double, Double>> tmpList) {
-        XYSeries toleranceSeries =  new XYSeries("Tolerance");
-        XYSeries dataSeries =  new XYSeries("Deformation");
+        XYSeries toleranceSeries1 = new XYSeries("ei");
+        XYSeries toleranceSeries2 = new XYSeries("es");
+        XYSeries dataSeries = new XYSeries("U");
+        XYSeries diameter = new XYSeries("d");
         Double x1 = tmpList.get(0).getKey();
         Double x2 = tmpList.get(0).getKey();
         double delta = x2 - x1;
@@ -213,33 +275,49 @@ public final class PolarPlotterTopComponent extends TopComponent implements Look
                 min = yv;
             }
         }
+        diameter.clear();
         dataSeries.clear();
-        toleranceSeries.clear();
+        toleranceSeries1.clear();
+        toleranceSeries2.clear();
+        double d = Double.valueOf(model.getParameterByID(model.getRoot(), 3).getValue());
         for (Map.Entry<Double, Double> point : tmpList) {
             Double xv = point.getKey();
             Double yv = point.getValue();
             if (xv == null || yv == null) {
                 continue;
             }
-            dataSeries.add(xv * 360 / (xLast + delta), Math.abs(min) + yv);
-            toleranceSeries.add(xv * 360 / (xLast + delta), Double.valueOf(model.getParameterByID(model.getRoot(), 5).getValue()));
+            dataSeries.add(xv * 360 / (xLast + delta), d + scale*yv);
+            toleranceSeries1.add(xv * 360 / (xLast + delta), d + scale*Double.valueOf(model.getParameterByID(model.getRoot(), 5).getValue()));
+            toleranceSeries2.add(xv * 360 / (xLast + delta), d + scale*Math.copySign(Double.valueOf(model.getParameterByID(model.getRoot(), 5).getValue()), -1));
+            diameter.add(xv * 360 / (xLast + delta), d);
             XYSeriesCollection ds = new XYSeriesCollection();
             ds.addSeries(dataSeries);
-            ds.addSeries(toleranceSeries);
+            ds.addSeries(toleranceSeries1);
+            ds.addSeries(toleranceSeries2);
+            ds.addSeries(diameter);
             plot.setDataset(ds);
         }
     }
 
     JFreeChart createChart(XYDataset dataset) {
-        final JFreeChart chart = ChartFactory.createPolarChart("Деформации детали", dataset, true, true, false);
+        final JFreeChart chart = ChartFactory.createPolarChart("Узловые перемещения", dataset, true, true, false);
         chart.setBackgroundPaint(Color.white);
         plot = (PolarPlot) chart.getPlot();
         plot.setBackgroundPaint(Color.WHITE);
         plot.setAngleGridlinePaint(Color.BLACK);
         plot.setRadiusGridlinePaint(Color.LIGHT_GRAY);
-        final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-        renderer.setSeriesLinesVisible(0, true);
-        renderer.setSeriesShapesVisible(0, false);
+        final DefaultPolarItemRenderer renderer = new DefaultPolarItemRenderer();
+        renderer.setSeriesShape(1, ShapeUtilities.createDiamond(1));
+        renderer.setSeriesShape(2, ShapeUtilities.createDiamond(1));
+        renderer.setSeriesShape(3, ShapeUtilities.createDiamond(1));
+        renderer.setSeriesPaint(0, Color.RED);
+        renderer.setSeriesPaint(1, Color.BLUE);
+        renderer.setSeriesPaint(2, Color.BLUE);
+        renderer.setSeriesPaint(3, Color.BLACK);
+        plot.setRenderer(renderer);
+        chart.setTitle(
+                new org.jfree.chart.title.TextTitle("Узловые перемещения",
+                        new java.awt.Font("Arial", java.awt.Font.PLAIN, 16)));
         return chart;
     }
 
@@ -273,5 +351,9 @@ public final class PolarPlotterTopComponent extends TopComponent implements Look
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JSpinner jSpinner1;
     // End of variables declaration//GEN-END:variables
 }

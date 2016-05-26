@@ -227,32 +227,5 @@ public abstract class PlotterTopComponent extends TopComponent implements Lookup
     abstract FilenameFilter filter();
     
     abstract JFreeChart createChart(XYDataset dataset);
-    
-//    private static JFreeChart createChart(XYDataset dataset) {
-//        final JFreeChart chart = ChartFactory.createPolarChart("Деформации детали", dataset, true, true, false);
-//        chart.setBackgroundPaint(Color.white);
-//        final PolarPlot plot = (PolarPlot) chart.getPlot();
-//        plot.setBackgroundPaint(Color.WHITE);
-//        plot.setAngleGridlinePaint(Color.BLACK);
-//        plot.setRadiusGridlinePaint(Color.LIGHT_GRAY);
-//        final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-//        renderer.setSeriesLinesVisible(0, true);
-//        renderer.setSeriesShapesVisible(0, false);
-//        return chart;
-//    }
-
-//    @Override
-//    public void modelChanged(ModelChangedEvent evt) {
-//            update(home);
-//    }
-//
-//    @Override
-//    public void resultChanged(LookupEvent ev) {
-//        Collection<? extends Model> allModels = modelResult.allInstances();
-//        if (!allModels.isEmpty()) {
-//            model = allModels.iterator().next();
-//            modelChanged(null);
-//        }
-//    }
-
+   
 }

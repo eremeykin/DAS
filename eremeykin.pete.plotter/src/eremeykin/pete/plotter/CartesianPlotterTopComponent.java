@@ -12,6 +12,7 @@ import eremeykin.pete.api.core.workspace.WorkspaceManager;
 import eremeykin.pete.api.model.Model;
 import eremeykin.pete.api.model.ModelChangedEvent;
 import eremeykin.pete.api.model.ModelChangedListener;
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.io.File;
@@ -87,7 +88,7 @@ public final class CartesianPlotterTopComponent extends TopComponent implements 
         final XYSeriesCollection dataset = new XYSeriesCollection();
 
         final XYSeries toleranceSeries = new XYSeries("Tolerance");
-        final XYSeries dataSeries = new XYSeries("Deformation");
+        final XYSeries dataSeries = new XYSeries("U");
 
         dataset.addSeries(dataSeries);
         dataset.addSeries(toleranceSeries);
@@ -203,10 +204,11 @@ public final class CartesianPlotterTopComponent extends TopComponent implements 
 
     protected void fillData(List<Map.Entry<Double, Double>> tmpList) {
         final XYSeriesCollection dataset = new XYSeriesCollection();
-
-        final XYSeries toleranceSeries = new XYSeries("Tolerance");
-        final XYSeries dataSeries = new XYSeries("Deformation");
-
+        final XYSeries toleranceSeries1 = new XYSeries("es");
+        final XYSeries toleranceSeries2 = new XYSeries("ei");
+        final XYSeries dataSeries = new XYSeries("U");
+        final XYSeries diameter = new XYSeries("d");
+        
         for (Map.Entry<Double, Double> point : tmpList) {
             Double xv = point.getKey();
             Double yv = point.getValue();
@@ -214,47 +216,52 @@ public final class CartesianPlotterTopComponent extends TopComponent implements 
                 continue;
             }
             dataSeries.add(xv, yv);
-            toleranceSeries.add(xv, Double.valueOf(model.getParameterByID(model.getRoot(), 5).getValue()));
+            toleranceSeries1.add(xv, Double.valueOf(model.getParameterByID(model.getRoot(), 5).getValue()));
+            toleranceSeries2.add(xv, Double.valueOf("-"+model.getParameterByID(model.getRoot(), 5).getValue()));
+            diameter.add(xv,Double.valueOf(0));
         }
         dataset.addSeries(dataSeries);
-        dataset.addSeries(toleranceSeries);
+        dataset.addSeries(toleranceSeries1);
+        dataset.addSeries(toleranceSeries2);
+        dataset.addSeries(diameter);
         plot.setDataset(dataset);
     }
 
     JFreeChart createChart(XYDataset dataset) {
         // create the chart...
         final JFreeChart chart = ChartFactory.createXYLineChart(
-                "Деформации детали", // chart title
+                "Узловые перемещения", // chart title
                 "Расстояние", // x axis label
-                "Величина деформации", // y axis label
+                "Величина", // y axis label
                 dataset, // data
                 PlotOrientation.VERTICAL,
                 true, // include legend
                 true, // tooltips
                 false // urls
         );
+               
+    chart.setTitle(
+        new org.jfree.chart.title.TextTitle("Узловые перемещения",
+            new java.awt.Font("Arial", java.awt.Font.PLAIN, 16)));
 
         chart.setBackgroundPaint(Color.white);
         plot = chart.getXYPlot();
         plot.setBackgroundPaint(Color.WHITE);
         //    plot.setAxisOffset(new Spacer(Spacer.ABSOLUTE, 5.0, 5.0, 5.0, 5.0));
         plot.setDomainGridlinePaint(Color.DARK_GRAY);
-        plot.setRangeGridlinePaint(Color.DARK_GRAY);
+        plot.setRangeGridlinePaint(Color.DARK_GRAY);     
         final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-        renderer.setSeriesLinesVisible(0, true);
-        renderer.setSeriesShapesVisible(0, false);
+        renderer.setSeriesShapesVisible(0, true);
+        renderer.setSeriesShapesVisible(1, false);
+        renderer.setSeriesShapesVisible(2, false);
+        renderer.setSeriesShapesVisible(3, false);
+        renderer.setSeriesPaint(0, Color.RED);
+        renderer.setSeriesPaint(1, Color.BLUE);
+        renderer.setSeriesPaint(2, Color.BLUE);
+        renderer.setSeriesPaint(3, Color.BLACK);
+//        renderer.setSeriesStroke(1, new BasicStroke(1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1.0f, new float[] {6.0f, 6.0f}, 0.0f ));
         plot.setRenderer(renderer);
         return chart;
-//        final JFreeChart chart = ChartFactory.createPolarChart("Деформации детали", dataset, true, true, false);
-//        chart.setBackgroundPaint(Color.white);
-//        final PolarPlot plot = (PolarPlot) chart.getPlot();
-//        plot.setBackgroundPaint(Color.WHITE);
-//        plot.setAngleGridlinePaint(Color.BLACK);
-//        plot.setRadiusGridlinePaint(Color.LIGHT_GRAY);
-//        final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-//        renderer.setSeriesLinesVisible(0, true);
-//        renderer.setSeriesShapesVisible(0, false);
-//        return chart;
     }
 
     FilenameFilter filter() {
@@ -262,7 +269,7 @@ public final class CartesianPlotterTopComponent extends TopComponent implements 
 
             @Override
             public boolean accept(File dir, String name) {
-                return name.endsWith("A.rpt");
+                return name.endsWith("Z.rpt");
             }
         };
     }
