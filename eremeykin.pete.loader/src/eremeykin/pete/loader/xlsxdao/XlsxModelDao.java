@@ -48,6 +48,40 @@ public class XlsxModelDao extends AbstractModelDao {
             }
         }
     }
+    
+    private String getTableTillEndContent(String table) throws DaoException {
+        FileInputStream excelFile = null;
+        try {
+            excelFile = new FileInputStream(source);
+            XSSFWorkbook wb = new XSSFWorkbook(excelFile);
+            XSSFSheet sheet = wb.getSheet(table);
+            Integer numRow = sheet.getPhysicalNumberOfRows();
+            StringBuffer sb = new StringBuffer();
+            for (int i=1;i<numRow; i++){
+                String s = sheet.getRow(i).getCell(0).getStringCellValue();
+                sb.append(sheet.getRow(i).getCell(0).getStringCellValue());
+                if (! s.endsWith("\n")){
+                    sb.append("\n");
+                }
+            }
+            System.out.println(sb.toString());
+            return sb.toString();                    
+//            return sheet.getRow(1).getCell(0).getStringCellValue();
+        } catch (FileNotFoundException ex) {
+            throw new DaoException("Can't find excel file " + source, ex);
+        } catch (IOException ex) {
+            throw new DaoException("Can't open excel file " + source, ex);
+        } finally {
+            try {
+                if (excelFile != null) {
+                    excelFile.close();
+                }
+            } catch (IOException ex) {
+                throw new DaoException("Can't close excel file " + source, ex);
+            }
+        }
+    }
+    
 
     @Override
     protected ModelParameterDao getDao() {
@@ -56,7 +90,7 @@ public class XlsxModelDao extends AbstractModelDao {
 
     @Override
     public String getScript() throws DaoException {
-        return getTableContent(XlsxConstants.SCRIPT_SHEET);
+        return getTableTillEndContent(XlsxConstants.SCRIPT_SHEET);
     }
 
     @Override

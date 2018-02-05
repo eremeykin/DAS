@@ -1,4 +1,13 @@
-2016-02-03T10:48:17,387 [INFO ] - The directory "C:\DASworkspace" has been successfully set as a workspace. 
-2016-02-03T10:48:18,104 [INFO ] - Antialiasing is supported: true 
-2016-02-03T10:48:23,843 [INFO ] - Model has been successfully loaded. 
-2016-02-03T10:48:23,950 [INFO ] - Antialiasing is supported: true 
+2017-12-17T19:37:10,596 [INFO ] - The directory "D:\projects\DAS\Workspace" has been successfully set as a workspace. 
+2017-12-17T19:37:11,503 [INFO ] - Antialiasing is supported: true 
+2017-12-17T19:37:11,597 [INFO ] - Antialiasing is supported: true 
+2017-12-17T19:38:09,686 [INFO ] - Model has been successfully loaded. 
+2017-12-17T19:38:09,817 [INFO ] - Antialiasing is supported: true 
+2017-12-17T19:38:49,116 [ERROR] - com.interactivemesh.jfx.importer.ImportException: ObjModelImporter read(File file) : file doesn't exist ! 
+2017-12-17T19:39:35,560 [INFO ] - Antialiasing is supported: true 
+2017-12-17T19:39:51,121 [INFO ] - Model has been successfully loaded. 
+2017-12-17T19:39:51,156 [INFO ] - Antialiasing is supported: true 
+2017-12-17T19:40:27,009 [INFO ] - Antialiasing is supported: true 
+2017-12-17T19:41:54,848 [INFO ] - Model has been successfully loaded. 
+2017-12-17T19:41:54,868 [INFO ] - Antialiasing is supported: true 
+2017-12-17T19:44:49,629 [INFO ] - Antialiasing is supported: true 
