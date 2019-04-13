@@ -8,6 +8,7 @@ package eremeykin.pete.calculator;
 import eremeykin.pete.api.core.centrallookupapi.CentralLookup;
 import eremeykin.pete.api.model.Model;
 import eremeykin.pete.api.model.ModelParameter;
+import java.awt.Font;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Collection;
@@ -57,6 +58,23 @@ public final class CalculatorOutputTopComponent extends TopComponent implements 
         CentralLookup cl = CentralLookup.getDefault();
         stepResult = cl.lookup(template);
         stepResult.addLookupListener(this);
+        ((javax.swing.border.TitledBorder) jPanel2.getBorder()).setTitleFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jLabel9.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jLabel10.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jLabel11.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jLabel12.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jLabel13.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jLabel14.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jLabel15.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        
+        this.jFormattedTextField4.setFont(new Font("Tahoma", Font.PLAIN, 12));      
+        this.jFormattedTextField5.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jFormattedTextField6.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jFormattedTextField7.setFont(new Font("Tahoma", Font.PLAIN, 12));       
+        this.jFormattedTextField8.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jFormattedTextField9.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jFormattedTextField10.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jButton1.setFont(new Font("Tahoma", Font.PLAIN, 12));
     }
 
     @Override
@@ -117,23 +135,18 @@ public final class CalculatorOutputTopComponent extends TopComponent implements 
         jPanel2.setMinimumSize(new java.awt.Dimension(10, 10));
         jPanel2.setPreferredSize(new java.awt.Dimension(200, 253));
 
-        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel9, org.openide.util.NbBundle.getMessage(CalculatorOutputTopComponent.class, "CalculatorOutputTopComponent.jLabel9.text")); // NOI18N
         jLabel9.setMinimumSize(new java.awt.Dimension(7, 15));
 
-        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel10, org.openide.util.NbBundle.getMessage(CalculatorOutputTopComponent.class, "CalculatorOutputTopComponent.jLabel10.text")); // NOI18N
         jLabel10.setMinimumSize(new java.awt.Dimension(7, 15));
 
-        jLabel11.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel11, org.openide.util.NbBundle.getMessage(CalculatorOutputTopComponent.class, "CalculatorOutputTopComponent.jLabel11.text")); // NOI18N
         jLabel11.setMinimumSize(new java.awt.Dimension(7, 15));
 
-        jLabel12.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel12, org.openide.util.NbBundle.getMessage(CalculatorOutputTopComponent.class, "CalculatorOutputTopComponent.jLabel12.text")); // NOI18N
         jLabel12.setMinimumSize(new java.awt.Dimension(7, 15));
 
-        jLabel13.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel13, org.openide.util.NbBundle.getMessage(CalculatorOutputTopComponent.class, "CalculatorOutputTopComponent.jLabel13.text")); // NOI18N
         jLabel13.setMinimumSize(new java.awt.Dimension(7, 15));
 
@@ -144,11 +157,9 @@ public final class CalculatorOutputTopComponent extends TopComponent implements 
             }
         });
 
-        jLabel14.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel14, org.openide.util.NbBundle.getMessage(CalculatorOutputTopComponent.class, "CalculatorOutputTopComponent.jLabel14.text")); // NOI18N
         jLabel14.setMinimumSize(new java.awt.Dimension(7, 15));
 
-        jLabel15.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel15, org.openide.util.NbBundle.getMessage(CalculatorOutputTopComponent.class, "CalculatorOutputTopComponent.jLabel15.text")); // NOI18N
         jLabel15.setMinimumSize(new java.awt.Dimension(7, 15));
 
@@ -156,34 +167,28 @@ public final class CalculatorOutputTopComponent extends TopComponent implements 
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(18, 18, Short.MAX_VALUE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(13, 13, 13)))
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jFormattedTextField10)
-                            .addComponent(jFormattedTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
-                            .addComponent(jFormattedTextField6)
-                            .addComponent(jFormattedTextField7)
-                            .addComponent(jFormattedTextField8)
-                            .addComponent(jFormattedTextField4, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jFormattedTextField9, javax.swing.GroupLayout.Alignment.TRAILING))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
+                            .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE))
+                    .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
+                    .addComponent(jFormattedTextField10)
+                    .addComponent(jFormattedTextField5)
+                    .addComponent(jFormattedTextField6)
+                    .addComponent(jFormattedTextField7)
+                    .addComponent(jFormattedTextField8)
+                    .addComponent(jFormattedTextField9, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jFormattedTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -219,7 +224,7 @@ public final class CalculatorOutputTopComponent extends TopComponent implements 
                     .addComponent(jFormattedTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
-                .addContainerGap(91, Short.MAX_VALUE))
+                .addContainerGap(94, Short.MAX_VALUE))
         );
 
         jScrollPane1.setViewportView(jPanel2);
@@ -228,13 +233,11 @@ public final class CalculatorOutputTopComponent extends TopComponent implements 
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 

@@ -436,7 +436,8 @@ public class TurningStepBean {
 
     public static enum TurningType {
 
-        ROUGH("Черновое"),
+//        ROUGH("Черновое"),
+        ROUGH("Rough"),
         SEMI_ROUGH("Получистовое"),
         FINISH("Чистовое");
         private final String name;
@@ -454,7 +455,8 @@ public class TurningStepBean {
 
     public static enum ProcessKind {
 
-        EXTERNAL_TURNING("Внешнее точение"),
+//        EXTERNAL_TURNING("Внешнее точение"),
+        EXTERNAL_TURNING("External turning"),
         BORING("Растачивание"),
         GROOVING("Подрезание"),
         PARTING("Отрезание");
@@ -475,7 +477,8 @@ public class TurningStepBean {
 
     public static enum WorkpieceMaterial {
 
-        STEEL("Сталь"),
+//        STEEL("Сталь"),
+        STEEL("Steel"),
         CAST_IRON("Чугун");
         private final String name;
 
@@ -493,7 +496,8 @@ public class TurningStepBean {
 
         FORGING("Поковка"),
         CASTING("Отливка"),
-        ROLLING("Прокат"),
+//        ROLLING("Прокат"),
+        ROLLING("Rolling"),
         CRUSTLESS("Полуфабрикат без корки");
         private final String name;
 

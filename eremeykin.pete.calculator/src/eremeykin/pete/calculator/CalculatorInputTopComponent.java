@@ -8,6 +8,7 @@ package eremeykin.pete.calculator;
 import eremeykin.pete.api.core.centrallookupapi.CentralLookup;
 import eremeykin.pete.api.core.logger.Logger;
 import eremeykin.pete.api.core.logger.LoggerManager;
+import java.awt.Font;
 import java.util.Collection;
 import java.util.Iterator;
 import javax.swing.DefaultComboBoxModel;
@@ -59,7 +60,29 @@ public final class CalculatorInputTopComponent extends TopComponent {
         jComboBox6.setModel(new DefaultComboBoxModel(new Double[]{20d, 30d, 40d, 60d, 90d}));
         jComboBox7.setModel(new DefaultComboBoxModel(new Double[]{0.63d, 1.25d, 2.50d, 3.2d, 6.30d, 12.5d}));
         rManager.insert(step);
-
+        int fontSize = 12;
+        ((javax.swing.border.TitledBorder) jPanel1.getBorder()).setTitleFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jPanel1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jLabel1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jLabel2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jLabel3.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jLabel4.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jLabel5.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jLabel6.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jLabel7.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jLabel8.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jLabel15.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jFormattedTextField1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jFormattedTextField3.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jComboBox1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jComboBox2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jComboBox3.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jComboBox4.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jComboBox5.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jComboBox7.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jComboBox6.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        this.jButton1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+               
         setName(Bundle.CTL_CalculatorInputTopComponent());
         setToolTipText(Bundle.HINT_CalculatorInputTopComponent());
 
@@ -106,43 +129,35 @@ public final class CalculatorInputTopComponent extends TopComponent {
 
         jComboBox4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(CalculatorInputTopComponent.class, "CalculatorInputTopComponent.jLabel6.text")); // NOI18N
         jLabel6.setMinimumSize(new java.awt.Dimension(7, 15));
 
         jComboBox5.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
-        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel7, org.openide.util.NbBundle.getMessage(CalculatorInputTopComponent.class, "CalculatorInputTopComponent.jLabel7.text")); // NOI18N
         jLabel7.setMinimumSize(new java.awt.Dimension(7, 15));
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(CalculatorInputTopComponent.class, "CalculatorInputTopComponent.jLabel1.text")); // NOI18N
         jLabel1.setMinimumSize(new java.awt.Dimension(7, 15));
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(CalculatorInputTopComponent.class, "CalculatorInputTopComponent.jLabel2.text")); // NOI18N
         jLabel2.setMinimumSize(new java.awt.Dimension(7, 15));
 
         jComboBox1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(CalculatorInputTopComponent.class, "CalculatorInputTopComponent.jLabel3.text")); // NOI18N
         jLabel3.setMinimumSize(new java.awt.Dimension(7, 15));
 
         jComboBox2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(CalculatorInputTopComponent.class, "CalculatorInputTopComponent.jLabel4.text")); // NOI18N
         jLabel4.setMinimumSize(new java.awt.Dimension(7, 15));
 
         jComboBox3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
-        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel8, org.openide.util.NbBundle.getMessage(CalculatorInputTopComponent.class, "CalculatorInputTopComponent.jLabel8.text")); // NOI18N
         jLabel8.setMinimumSize(new java.awt.Dimension(7, 15));
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(CalculatorInputTopComponent.class, "CalculatorInputTopComponent.jLabel5.text")); // NOI18N
         jLabel5.setMinimumSize(new java.awt.Dimension(7, 15));
 
@@ -151,7 +166,6 @@ public final class CalculatorInputTopComponent extends TopComponent {
 
         jFormattedTextField3.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
 
-        jLabel15.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel15, org.openide.util.NbBundle.getMessage(CalculatorInputTopComponent.class, "CalculatorInputTopComponent.jLabel15.text")); // NOI18N
         jLabel15.setMinimumSize(new java.awt.Dimension(7, 15));
 

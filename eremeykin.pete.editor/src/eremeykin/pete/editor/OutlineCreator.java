@@ -34,7 +34,8 @@ public class OutlineCreator {
     public OutlineCreator(ModelParameter root) {
 
         TreeModel treeMdl = new TreeModel(root);
-        OutlineModel mdl = DefaultOutlineModel.createOutlineModel(treeMdl, new TableModel(), true, "Название");
+        OutlineModel mdl = DefaultOutlineModel.createOutlineModel(treeMdl, new TableModel(), true, "Name");
+//        OutlineModel mdl = DefaultOutlineModel.createOutlineModel(treeMdl, new TableModel(), true, "Название");
         outline = new Outline() {
 
             @Override
@@ -189,7 +190,8 @@ public class OutlineCreator {
 
         @Override
         public String getColumnName(int column) {
-            return column == 0 ? "Комментарий" : "Значение";
+//            return column == 0 ? "Комментарий" : "Значение";
+            return column == 0 ? "Comment" : "Value";
         }
 
         @Override
